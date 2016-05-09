@@ -1,0 +1,6 @@
+[30-Apr-2016 13:56:26 America/Mexico_City] PHP Warning:  require(load.php): failed to open stream: No such file or directory in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6
+[30-Apr-2016 13:56:26 America/Mexico_City] PHP Warning:  require(load.php): failed to open stream: No such file or directory in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6
+[30-Apr-2016 13:56:26 America/Mexico_City] PHP Fatal error:  require(): Failed opening required 'load.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6
+[30-Apr-2016 13:56:30 America/Mexico_City] PHP Warning:  require(load.php): failed to open stream: No such file or directory in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6
+[30-Apr-2016 13:56:30 America/Mexico_City] PHP Warning:  require(load.php): failed to open stream: No such file or directory in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6
+[30-Apr-2016 13:56:30 America/Mexico_City] PHP Fatal error:  require(): Failed opening required 'load.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/estilizame/public_html/_nuevo/estilizame_sitio2/sitio/index.php on line 6

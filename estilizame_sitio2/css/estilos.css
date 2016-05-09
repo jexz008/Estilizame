@@ -1,0 +1,116 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+
+body > *{
+  font-family: Oswald !important;
+}
+body {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  /*background: #000 url("../img/bg.jpg") no-repeat fixed;
+  background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -wenkit-background-size: cover;*/
+  background:radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  background:-moz-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  background:-o-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  background:-webkit-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  margin: 0px;
+  padding: 0px;
+  padding-top: 70px;  
+  color: #FFF;
+  text-rendering: optimizeLegibility;
+  min-width: 320px;
+  /*padding-top: 20px;*/ /* Se agrego para el menu fixed*/
+}
+.row{
+  padding-bottom: 10px;
+}
+.row-banners img{
+  min-height: 190px;
+  max-height: 190px;
+  height: 190px;
+  width: 100%;
+}
+/*.banner > .item > a > img, .banner > .item > img{
+  max-height: 190px;
+  height: 190px;
+  width: 100%;
+}*/
+
+
+.contacto, .nosotros{
+  height: 325px;
+  cursor: pointer;  
+}
+.contacto{
+  background: rgba(0, 0, 0, 0) url("../img/CONTACTO-A.png") no-repeat scroll center center;
+}
+.contacto:hover{
+  background: rgba(0, 0, 0, 0) url("../img/CONTACTO-B.png") no-repeat scroll center center;
+}
+.nosotros{
+  background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-A.png") no-repeat scroll center center;
+}
+.nosotros:hover{
+  background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-b.png") no-repeat scroll center center;
+}
+
+/* Modal */
+.modal-header {
+    background: #a4ddd8 none repeat scroll 0 0 !important;
+    color: #fff !important;
+    text-align: center;
+}
+.modal-body{
+  color: black;
+}
+/* Fin Modal */
+
+.h1-verde {
+    background: #2db9b3 none repeat scroll 0 0 !important;
+    border: medium none;
+    color: #fff !important;
+    font-family: Oswald;
+    font-size: 48pt;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.rojo{
+  color: red;
+}
+.form-group i{
+  font-size: 20pt;
+}
+.i-rojo{
+  color: red;
+}
+.i-rojo, .i-negro{
+  color: red;
+  font-size: 20pt;
+}
+.form-horizontal .control-label {
+  padding-left: 20px;
+  text-align: left;
+}
+.my-popover-content{
+  display: none;
+}
+.popover-content ol{
+  padding-left: 10px;
+}  
+.popover{
+  max-width: 500px
+}
+footer{
+    background: #2db9b3 none repeat scroll 0 0 !important;
+    padding-top: 12px;
+    vertical-align: middle;
+}
+
+*::-moz-placeholder, .help-block {
+    font-size: 8pt !important;
+    font-weight: lighter;
+    text-transform: none;
+}

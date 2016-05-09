@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+
+Options +FollowSymlinks
+RewriteEngine on
+RewriteBase /
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+
+
+RewriteRule ^(.*)/(\w+)/(.*)/([0-9]+)/(.*)/(.*)/(.*)/(.*)?$ $1/index.php?option=$2&$3=$4&$5=$6&$7=$8 [L] 
+RewriteRule ^(.*)/(\w+)/(.*)/([0-9]+)/?$ $1/index.php?option=$2&$3=$4 [L] 
+# perfil/option/xvariable/valor xvariable
+RewriteRule ^(.*)/(\w+)/?$ $1/index.php?option=$2 [L]
+
+#RewriteRule ^(.*)/(\w+)/([0-9]+)/?$ $1/index.php?option=$2&p=$3 [L]
+#RewriteRule ^(.*)/(\w+)/?$ $1/index.php?option=$2 [L]
+
+
+</IfModule>
