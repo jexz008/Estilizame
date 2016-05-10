@@ -3,7 +3,7 @@
 require("config.inc.php");
 require("conexion/conexion.php");
 require("includes/funciones.inc.php");
-require("libs/class.upload.php");
+require("libs/class.upload/src/class.upload.php");
 $_GET = sanitize($_GET);
 $_POST = sanitize($_POST);
 require("class/db.class.php");

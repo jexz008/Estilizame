@@ -5,8 +5,16 @@ class DB{
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 	public static function execute_sql($sql,$function=""){
-		$sql=mysql_query($sql) or die(mysql_error()." ".$function);
-        return $sql;
+		//$sql = mysql_query($sql) or die(mysql_error()." ".$function);
+            try{
+		if($sql = mysql_query($sql)){
+                return $sql;
+                }else{
+                    throw new Exception(mysql_error());
+                }
+            }catch(Exception $e){
+                throw $e;
+            }
 	}
 	public static function num_rows($sql){
 		$sql=mysql_num_rows($sql);// or die(mysql_error()." ERROR num_rows");
@@ -17,13 +25,14 @@ class DB{
         return $sql;
 	}
 	public static function begin(){
-		@mysql_query("BEGIN");
+		#mysql_query("BEGIN");
+                mysql_query("START TRANSACTION");
 	}
 	public static function commit(){
-		@mysql_query("COMMIT");
+		mysql_query("COMMIT");
 	}
 	public static function rollback(){
-		@mysql_query("ROLLBACK");
+		mysql_query("ROLLBACK");
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	

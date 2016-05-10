@@ -9,6 +9,7 @@ $( document ).ajaxStop(function() {
 
 $(document).ready(function(){
     modales();
+    setRegistro();
 });
 
 // Carousel Bootstrap 
@@ -131,7 +132,7 @@ function getFormRegistro(){
                         $(".modal-body").html(html);
                         changeCategoria();
                         changeEstado();
-                        setRegistro();
+                        //setRegistro();
 
                         $('[data-toggle="popover-maps"]').popover({
                             html: true,
@@ -198,11 +199,12 @@ function setRegistro(){
                 success:function(data){
                     if ( data.success ){
                         console.log(data);
-                        alert("Mensaje enviado correctamente.");
+                        alert(data.message);
                         $('#myModal').modal('hide');
                         //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
                     }else{
                         alert("ERROR: " + data.message);
+                        $("#btnSigInUp").show();
                         //alert("ERROR: Error when trying to change status");
                     }
                 }

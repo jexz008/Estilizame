@@ -8,14 +8,14 @@ class PaisEstados{
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-	public function getEstados(){
+	public static function getEstados(){
 			$sql = <<<SQL
 				SELECT * FROM pais_estados 
 SQL;
 		return $data = DB::execute_sql($sql);
 	}
 
-	public function getMunicipios($estado){
+	public static function getMunicipios($estado){
 			$sql = <<<SQL
 				SELECT * FROM pais_estados_codigos
 				WHERE ESTADO = '{$estado}' GROUP BY MUNICIPIO
