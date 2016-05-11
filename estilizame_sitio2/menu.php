@@ -47,8 +47,8 @@ HTML;
       
       <ul class="nav navbar-nav navbar-right">
         <!--<li><a href="/"><i class="glyphicon glyphicon-user"></i> <?=$_SESSION['xc_usuario_nombre']?></a></li>-->
-        <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnLogin"><i class="glyphicon glyphicon-on"></i> Iniciar Sesión</a></li>
-        <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSigIn"><i class="glyphicon glyphicon-off"></i> Registrate</a></li>
+        <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li>
+        <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSigIn"><i class="fa fa-user-plus"></i> Registrate</a></li>
       </ul>
       <!--<ul class="nav navbar-nav navbar-right">
         <li><a href="/<?=$profile?>/mydata" id="menuMyData" ><i class="glyphicon glyphicon-user"></i> <?=$_SESSION['xc_usuario_nombre']?></a></li>

@@ -64,6 +64,7 @@ try{
   	</label>
     <div class="col-sm-8">
       <?=PaisEstados::selectEstados()?>
+        <input type="hidden" name="registro_estado_nombre" id="registro_estado_nombre" >
     </div>
 	</div>
 
@@ -92,13 +93,13 @@ try{
     <div class="col-sm-8">
     	<div class="row">
 			<div class="col-xs-4">
-                <input type="text" class="form-control" name="registro_telefono[]" id="registro_telefono_1" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
+                <input type="tel" class="form-control" name="registro_telefono[]" id="registro_telefono_1" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
 			</div>  
 			<div class="col-xs-4">
-                <input type="text" class="form-control" name="registro_telefono[]" id="registro_telefono_2" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
+                <input type="tel" class="form-control" name="registro_telefono[]" id="registro_telefono_2" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
 			</div>  
 			<div class="col-xs-4">
-                <input type="text" class="form-control" name="registro_telefono[]" id="registro_telefono_3" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
+                <input type="tel" class="form-control" name="registro_telefono[]" id="registro_telefono_3" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>
 			</div>  						  		
     	</div>
     </div>

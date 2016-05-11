@@ -163,6 +163,7 @@ function changeCategoria(){
 }
 function changeEstado(){
     $("#registro_estado").on("change",function(){
+        $("#registro_estado_nombre").val($("#registro_estado option:selected").text());
         var estado = $("#registro_estado").val(); console.log('estado:'+estado);
             $.ajax({
                 url:'index.php?module=pais_estados&action=getMunicipios&format=raw',

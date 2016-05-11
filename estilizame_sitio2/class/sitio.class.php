@@ -13,7 +13,7 @@ class sitio{
 	public function getBanners($celda = 1, $fila = 1, $jerarquia = ""){
 		if(empty($jerarquia)){
 			$sql = <<<SQL
-				SELECT B.imagen_url FROM banner AS B
+				SELECT B.imagen_url, B.nombre, B.empresa_id_fk FROM banner AS B
 				INNER JOIN entidad EN ON EN.entidad_id_fk = B.id AND EN.estatus = 1 AND EN.tipo='banner'
 				WHERE 
 				B.celda = {$celda}
@@ -22,7 +22,7 @@ class sitio{
 SQL;
 		}else{
 			$sql = <<<SQL
-				SELECT E.id, E.nombre, B.imagen_url FROM banner AS B
+				SELECT E.id, E.nombre, B.imagen_url, B.nombre, B.empresa_id_fk FROM banner AS B
 				INNER JOIN empresa E ON B.empresa_id_fk = E.id 
 				INNER JOIN jerarquia J ON E.jerarquia_id_fk = J.id 
 				INNER JOIN entidad EN ON EN.entidad_id_fk = B.id AND EN.estatus = 1 AND EN.tipo='banner'
@@ -46,7 +46,7 @@ SQL;
 		$bannersArray = array();
 
 		$bannersPremium = crearArraySQL($this->getBanners(1, 1, 'Premium'));
-		$bannersArray[] = $this->createHtmlSlider($bannersPremium);
+		$bannersArray[] = $this->createHtmlSlider($bannersPremium, 'banner', 'cabecera');
 
 		$banners = crearArraySQL($this->getBanners(2, 1));
 		$html = '';
@@ -90,7 +90,7 @@ SQL;
 		$slidersArray = array();
 
 		$slidersPrincipal = crearArraySQL($this->getSliders('principal'));
-		$slidersArray[] = $this->createHtmlSlider($slidersPrincipal);
+		$slidersArray[] = $this->createHtmlSlider($slidersPrincipal, 'slider');
 
 		return $slidersArray;
 	}
@@ -125,14 +125,22 @@ SQL;
 //////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////
-	private function createHtmlSlider($data){
-		$i=0;
+	private function createHtmlSlider($data, $tipo, $carpeta = ""){
+                global $_Storage_Banners, $_Storage_Banners_Prefix, $_Storage_Sliders, $_Storage_Sliders_Prefix;
+            if($tipo == 'banner'){
+                $path = $_Storage_Banners.$_Storage_Banners_Prefix;
+            }elseif ($tipo == 'slider') {
+                $path = $_Storage_Sliders.$_Storage_Sliders_Prefix;            
+            }
+            $carpeta = ($carpeta == "") ? : "/".$carpeta;
+		$i = 0;
 		$html = '';
 		foreach ($data as $key => $value) {
 			$active = ($i++ == 0) ? "active" : "";
+                        $src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path.$value['empresa_id_fk'].$carpeta."/".$value['imagen_url'];
 			$html .= <<<HTML
 				    <div class="item {$active}">
-				      <img src="{$value['imagen_url']}" alt="{$value['nombre']}">
+				      <img src="{$src}" alt="{$value['nombre']}">
 				      <div class="carousel-caption">
 				        &nbsp;
 				      </div>
