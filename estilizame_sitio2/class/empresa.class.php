@@ -153,18 +153,52 @@ SQL;
         }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    public function getEmpresas($param) {
+    public function getEmpresas($categoriaId = NULL) {
 	$sql = <<<SQL
-            SELECT E.id, E.nombre, B.imagen_url, B.nombre, B.empresa_id_fk FROM banner AS B
-				INNER JOIN empresa E ON B.empresa_id_fk = E.id 
-				INNER JOIN jerarquia J ON E.jerarquia_id_fk = J.id 
-				INNER JOIN entidad EN ON EN.entidad_id_fk = B.id AND EN.estatus = 1 AND EN.tipo='banner'
-				INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
-				WHERE 
-				B.celda = {$celda}
-				AND B.fila = {$fila}		
-				AND J.nombre = '{$jerarquia}'
+            SELECT E.*, ES.nombre, J.nombre, C.Nombre
+                FROM empresa AS E
+		INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
+                INNER JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
+                INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
+        	INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
+                INNER JOIN categoria AS C ON C.id = E.categoria_id_fk
 SQL;
+        if($categoriaId){
+            $sql .= " WHERE E.categoria_id_fk = {$categoriaId} ";
+        }
+    }
+    
+    public function gridEmpresas($empresas) {
+        $html = <<<HTML
+            <table>
+            <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Dirección</th>
+                <tr/>
+            </thead>
+            <tbody>
+HTML;
+        foreach ((object)$empresas as $key => $e) {
+            $html .= <<<HTML
+                <tr>
+                    <td>{$e->logo}<td>
+                    <td>{$e->nombre}<td>
+                    <td>{$e->email}<td>
+                    <td>{$e->telefono}<td>
+                    <td>{$e->estado}<td>
+                    <td>{$e->direccion}<td>
+                </tr>
+HTML;
+        }  
+        $html .= <<<HTML
+            </tbody>
+        </table>
+HTML;
+        
     }
 }
 
