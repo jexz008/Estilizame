@@ -46,7 +46,7 @@ SQL;
 		$bannersArray = array();
 
 		$bannersPremium = crearArraySQL($this->getBanners(1, 1, 'Premium'));
-		$bannersArray[] = $this->createHtmlSlider($bannersPremium, 'banner', 'cabecera');
+		$bannersArray[] = $this->createHtmlSlider($bannersPremium, 'cabecera');
 
 		$banners = crearArraySQL($this->getBanners(2, 1));
 		$html = '';
@@ -125,16 +125,14 @@ SQL;
 //////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////
-	private function createHtmlSlider($data, $tipo, $carpeta = ""){
-                global $_Storage_Banners, $_Storage_Banners_Prefix, $_Storage_Sliders, $_Storage_Sliders_Prefix;
-            if($tipo == 'banner'){
-                $path = $_Storage_Banners.$_Storage_Banners_Prefix;
-            }elseif ($tipo == 'slider') {
-                $path = $_Storage_Sliders.$_Storage_Sliders_Prefix;            
-            }
-            $carpeta = ($carpeta == "") ? : "/".$carpeta;
-		$i = 0;
-		$html = '';
+	private function createHtmlSlider($data, $carpeta = ""){
+                global $_Storage_Images, $_Storage_Images_Prefix;
+
+                $path       = $_Storage_Images.$_Storage_Images_Prefix;
+                $carpeta    = ($carpeta == "") ? : "/".$carpeta;
+
+                $i      = 0;
+		$html   = '';
 		foreach ($data as $key => $value) {
 			$active = ($i++ == 0) ? "active" : "";
                         $src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path.$value['empresa_id_fk'].$carpeta."/".$value['imagen_url'];

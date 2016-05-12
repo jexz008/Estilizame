@@ -57,7 +57,6 @@ INSERT INTO empresa_especialidad (empresa_id_fk, especialidad_id_fk)
 VALUES ({$empresaId}, {$especialidad})
 SQL;
                     $this->db->execute_sql($sql);
-                    $bannerId = $this->db->last_insert();                    
                 }
                 
                 // Banners
@@ -66,8 +65,9 @@ INSERT INTO banner (nombre, imagen_url, celda, fila, empresa_id_fk)
 VALUES ('{$nombre}', '{$foto_cabecera}', 1, 1, {$empresaId})
 SQL;
                 $this->db->execute_sql($sql);
+                $bannerId = $this->db->last_insert();                    
                     
-                $sql = <<<SQL
+                echo $sql = <<<SQL
 INSERT INTO `entidad` (`tipo`, `entidad_id_fk`, `estatus`, `fecha_creacion`, `usuario_id_fk`, `usuario_mod_id_fk`) VALUES
 ('banner', {$bannerId}, 1, CURRENT_TIMESTAMP, {$usuarioId}, {$usuarioId})
 SQL;
@@ -89,42 +89,65 @@ SQL;
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
-	public function registraEmpresa($data, $files){
-                global $_Storage_Banners, $_Storage_Banners_Prefix;
-            
+	public function registraEmpresa($data, $files){           
 		extract($data); 
-		
+		$ext = ".jpg";
                 $registro_telefono      = implode(",", $registro_telefono);
                 $registro_estado        = $registro_estado_nombre;
-                $registro_foto_perfil   = $files['registro_foto_perfil']['name'];
-                $registro_foto_cabecera = $files['registro_foto_cabecera']['name'];
+                $registro_foto_perfil   = "perfil-".str_replace(" ", "", $registro_empresa);
+                $registro_foto_cabecera = "cabecera-".str_replace(" ", "", $registro_empresa);
                 $registro_especialidades = $registro_especialidad[$registro_categoria];
                 $registro_jerarquia     = 1;
 
-                $empresa_id = $this->setEmpresa($registro_empresa, $registro_descripcion, $registro_email, $registro_telefono, $logo, $registro_estado, $registro_municipio, $registro_direccion, $registro_foto_perfil, $registro_foto_cabecera, $registro_video, $registro_facebook, $registro_twitter, $registro_google, $registro_instagram, $registro_ubicacion, $registro_categoria, $registro_jerarquia, $registro_password, $registro_especialidades, $registro_galeria);
-                #$empresa_id = 1;
+                $empresaId = $this->setEmpresa($registro_empresa, $registro_descripcion, $registro_email, $registro_telefono, $logo, $registro_estado, $registro_municipio, $registro_direccion, $registro_foto_perfil.$ext, $registro_foto_cabecera.$ext, $registro_video, $registro_facebook, $registro_twitter, $registro_google, $registro_instagram, $registro_ubicacion, $registro_categoria, $registro_jerarquia, $registro_password, $registro_especialidades, $registro_galeria);
                 
-                $handle = new upload($files['registro_foto_cabecera'], 'es_Es');
-                if ($handle->uploaded) {
-                  $handle->file_new_name_body   = 'image_resized';
-                  $handle->image_resize         = true;
-                  $handle->image_x              = 100;
-                  $handle->image_ratio_y        = true;
-                  $handle->process($_Storage_Banners.$_Storage_Banners_Prefix.$empresa_id.'/cabecera/');
-                  if ($handle->processed) {
-                    echo 'image resized';
-                    $handle->clean();
-                  } else {
-                    echo 'error : ' . $handle->error;
-                  }
-                }                
+                $this->uploadImgCabecera($files['registro_foto_cabecera'], $empresaId, $registro_foto_cabecera);
+                $this->uploadImgPerfil($files['registro_foto_perfil'], $empresaId, $registro_foto_perfil);
                 
                 return FALSE;
-
-                
-
 	}
 
+        public function uploadImgCabecera($file, $empresaId, $name) {
+                global $_Storage_Images, $_Storage_Images_Prefix, $_Banners_Width, $_Banners_Height;
+
+                $handle = new upload($file, 'es_Es');
+                if ($handle->uploaded) {
+                  $handle->file_new_name_body   = $name; //'image_resized';
+                  $handle->image_resize         = true;
+                  $handle->image_ratio_crop     = true;
+                  $handle->image_x              = $_Banners_Width;
+                  $handle->image_y              = $_Banners_Height;
+                  $handle->image_convert        = 'jpg';
+                  //$handle->image_ratio_y        = true;
+                  $handle->process($_Storage_Images.$_Storage_Images_Prefix.$empresaId.'/cabecera/');
+                  if ($handle->processed) {
+                    $handle->clean();
+                  } else {
+                      throw new Exception ($handle->error);
+                  }
+                }                            
+        }
+        
+        public function uploadImgPerfil($file, $empresaId, $name) {
+                global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
+
+                $handle = new upload($file, 'es_Es');
+                if ($handle->uploaded) {
+                  $handle->file_new_name_body   = $name; //'image_resized';
+                  $handle->image_resize         = true;
+                  $handle->image_ratio_crop     = true;
+                  $handle->image_x              = $_Perfil_Width;
+                  $handle->image_y              = $_Perfil_Height;
+                  $handle->image_convert        = 'jpg';
+                  //$handle->image_ratio_y        = true;
+                  $handle->process($_Storage_Images.$_Storage_Images_Prefix.$empresaId.'/');
+                  if ($handle->processed) {
+                    $handle->clean();
+                  } else {
+                      throw new Exception ($handle->error);
+                  }
+                }                            
+        }        
 }//Fin class Empresa
 
 ?>
