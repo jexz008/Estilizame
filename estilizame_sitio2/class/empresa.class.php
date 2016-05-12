@@ -147,7 +147,16 @@ SQL;
                       throw new Exception ($handle->error);
                   }
                 }                            
-        }        
+        }      
+//256 x 256 en 32 bits
+//48 x 48 en 32 bits
+//32 x 32 en 32 bits
+//16 x 16 en 32 bits
+// 	
+//256 x 256 en 8 bits (256 colores)
+//48 x 48 en 8 bits (256 colores)
+//32 x 32 en 8 bits (256 colores)
+//16 x 16 en 8 bits (256 colores)        
 }//Fin class Empresa
 
 ?>
