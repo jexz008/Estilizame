@@ -201,6 +201,12 @@ HTML;
 HTML;
         
     }
+    
+    public function createGridEmpresas($categoriaId){
+        $empresas = $this->getEmpresas($categoriaId);
+        return $this->gridEmpresas($empresas);
+    }
+    
 }
 
 //Fin class Empresa

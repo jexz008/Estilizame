@@ -37,7 +37,7 @@ array('nombre' => 'Eventos', 'link' => 'eventos' ),
         foreach($menus as $menu){
           $activeClass = ($_GET['option']==$menu['nombre']) ? 'active' : '';
           echo <<<HTML
-            <li class="{$activeClass}"><a href="index.php?option={$menu['link']}"><i class="glyphicon"></i> {$menu['nombre']}</a></li>
+            <li class="{$activeClass}"><a href="index.php?module={$menu['link']}"><i class="glyphicon"></i> {$menu['nombre']}</a></li>
 HTML;
         } 
         ?>
