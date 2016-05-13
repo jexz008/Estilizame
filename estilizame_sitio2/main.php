@@ -83,8 +83,61 @@ $sliders = $sitio->createSliders();
             <div class="alert alert-default h1-verde">Menú de especialidades</div>
 		</div>
 	</div><!-- row -->
+        
+	<div class="row row-banners2">
+            
+            <div class="col-md-4 text-center">
+                <div id="carousel-colores" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner banner" role="listbox">
+                        <?= $banners[0] ?>
+                    </div>
+                    <a class="left carousel-control" href="#carousel-colores" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-colores" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>    
+                </div>                    
+            </div> 
 
-</div>
+            <div class="col-md-4 text-center">
+                <div id="carousel-peinados" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner banner" role="listbox">
+                        <?= $banners[0] ?>
+                    </div>
+                    <a class="left carousel-control" href="#carousel-peinados" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-peinados" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>    
+                </div>                     
+            </div>    
+            
+            
+            <div class="col-md-4 text-center">
+                <div id="carousel-expo" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner banner" role="listbox">
+                        <?= $banners[0] ?>
+                    </div>
+                    <a class="left carousel-control" href="#carousel-expo" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-expo" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>    
+                </div>                     
+                </div> 
+	
+
+        </div><!-- row -->
+</div><!-- container-fluid -->
 
 
 <!-- -------------------------------------- Contacto, Nosotros ---------------------------------------- -->

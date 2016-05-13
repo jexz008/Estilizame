@@ -68,7 +68,7 @@ SQL;
             $this->db->execute_sql($sql);
             $bannerId = $this->db->last_insert();
 
-            echo $sql = <<<SQL
+            $sql = <<<SQL
 INSERT INTO `entidad` (`tipo`, `entidad_id_fk`, `estatus`, `fecha_creacion`, `usuario_id_fk`, `usuario_mod_id_fk`) VALUES
 ('banner', {$bannerId}, 1, CURRENT_TIMESTAMP, {$usuarioId}, {$usuarioId})
 SQL;
@@ -114,6 +114,7 @@ SQL;
 
         $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/cabecera/';
 
+        $file = new upload($file, 'es_Es');
         $this->uploadImg($file, $name, $path, $_Banners_Width, $_Banners_Height);
     }
 
@@ -122,18 +123,18 @@ SQL;
 
         $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/';
 
-        $this->uploadImg($file, $name, $path, $_Perfil_Width, $_Perfil_Height);
+        $file = new upload($file, 'es_Es');
+        $this->uploadImg($file, $name, $path, $_Perfil_Width, $_Perfil_Height, FALSE);
         // Creando thumbs
-        $this->uploadImg($file, $name."_256x256", $path, 256, 256);
-        $this->uploadImg($file, $name."_48x48", $path, 48, 48);        
-        $this->uploadImg($file, $name."_32x32", $path, 32, 32);        
+        $this->uploadImg($file, $name."_256x256", $path, 256, 256, FALSE);
+        $this->uploadImg($file, $name."_48x48", $path, 48, 48, FALSE);        
+        $this->uploadImg($file, $name."_32x32", $path, 32, 32, FALSE);        
         $this->uploadImg($file, $name."_16x16", $path, 16, 16);        
     }
 
 
-    public function uploadImg($file, $name, $path, $width, $height) {
-        
-        $handle = new upload($file, 'es_Es');
+    public function uploadImg($handle, $name, $path, $width, $height, $clean = TRUE) {
+                
         if ($handle->uploaded) {
             // Procesando
             $handle->file_new_name_body = $name; //'image_resized';
@@ -145,7 +146,7 @@ SQL;
             //$handle->image_ratio_y        = true;
             $handle->process($path);
             if ($handle->processed) {
-                $handle->clean();
+                if($clean) $handle->clean();
                 return TRUE;
             } else {
                 throw new Exception($handle->error);

@@ -205,15 +205,18 @@ function setRegistro(){
                         //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
                     }else{
                         alert("ERROR: " + data.message);
-                        $("#btnSigInUp").show();
                         //alert("ERROR: Error when trying to change status");
                     }
+                    $("#btnSigInUp").show();
                 }
             });
             return false;         
         });    
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getModulo(){
+    
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////Reportes

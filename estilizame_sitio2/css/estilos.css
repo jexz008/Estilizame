@@ -32,6 +32,12 @@ body {
   height: 190px;
   width: 100%;
 }
+.row-banners2 img{
+  min-height: 300px;
+  max-height: 300px;
+  height: 300px;
+  width: 100%;
+}
 /*.banner > .item > a > img, .banner > .item > img{
   max-height: 190px;
   height: 190px;
