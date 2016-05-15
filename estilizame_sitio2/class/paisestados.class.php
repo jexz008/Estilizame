@@ -24,11 +24,11 @@ SQL;
 	}
 
 
-	public static function selectEstados($current = ""){
+	public static function selectEstados($name, $current = ""){
 		$data = crearArraySQL(self::getEstados());
 		$html = '';
 		if($data){
-			$html .= '<select class="form-control" name="registro_estado" id="registro_estado" required="required">';
+			$html .= '<select class="form-control" name="'.$name.'" id="'.$name.'" required="required">';
 			$html .= '<option value="">-Selecciona Estado-</option>';
 			foreach ($data as $key => $value) {
 				$selected = ($value['CLAVE'] == $current) ? ' selected="selected" ' : '';

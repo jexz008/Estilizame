@@ -63,7 +63,7 @@ try{
   		<i class="fa fa-globe i-rojo"></i> Estado:
   	</label>
     <div class="col-sm-8">
-      <?=PaisEstados::selectEstados()?>
+      <?=PaisEstados::selectEstados("registro_estado")?>
         <input type="hidden" name="registro_estado_nombre" id="registro_estado_nombre" >
     </div>
 	</div>

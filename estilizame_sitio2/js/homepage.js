@@ -10,6 +10,7 @@ $( document ).ajaxStop(function() {
 $(document).ready(function(){
     modales();
     setRegistro();
+    filtroEmpresas();
 });
 
 // Carousel Bootstrap 
@@ -164,7 +165,7 @@ function changeCategoria(){
 function changeEstado(){
     $("#registro_estado").on("change",function(){
         $("#registro_estado_nombre").val($("#registro_estado option:selected").text());
-        var estado = $("#registro_estado").val(); console.log('estado:'+estado);
+        var estado = $("#registro_estado").val();
             $.ajax({
                 url:'index.php?module=pais_estados&action=getMunicipios&format=raw',
                 type:'POST',
@@ -181,6 +182,7 @@ function changeEstado(){
             });
     });
 }
+
 function setRegistro(){
         $("#myModal form").on("submit", function(event){
             event.stopPropagation();
@@ -214,8 +216,30 @@ function setRegistro(){
         });    
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function getModulo(){
+function filtroEmpresas(){
+    $("#filtro_estado").on("change",function(){
+        $("#filtro_estado_nombre").val($("#filtro_estado option:selected").text());
+    });
     
+        $("#form_filtro_grid").on("submit", function(event){
+            event.stopPropagation();
+            event.preventDefault();
+            $.ajax({
+                url:'index.php?module=getGrid&action=getGrid&format=raw',
+                type:'POST',
+                data: $( this ).serialize(),
+                //dataType:'JSON',
+                success:function(data){
+                    if ( data ){
+                        console.log(data);
+                        $('#grid-section').html(data);
+                    }else{
+                        alert("ERROR: al intentar obtener los datos");
+                    }
+                }
+            });
+            return false;         
+        });    
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

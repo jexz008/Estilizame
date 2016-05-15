@@ -23,7 +23,7 @@ array('nombre' => 'Eventos', 'link' => 'eventos' ),
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<?$_app->url?>">
+      <a class="navbar-brand" href="<?=$_app->url?>">
         <img alt="LOGO" src="<?=$_app->logo_menu?>" alt="<?=$_app->nombre?>" style="max-height:70px">
       </a>
     </div>
@@ -35,7 +35,7 @@ array('nombre' => 'Eventos', 'link' => 'eventos' ),
         <!--<li><a href="<?$_app->url?>" style="padding:0"><img alt="LOGO" src="<?=$_app->logo_menu?>" style="max-height:70px">&nbsp</a></li>-->
         <?php
         foreach($menus as $menu){
-          $activeClass = ($_GET['option']==$menu['nombre']) ? 'active' : '';
+          $activeClass = ($_GET['module']==$menu['link']) ? 'active' : '';
           echo <<<HTML
             <li class="{$activeClass}"><a href="index.php?module={$menu['link']}"><i class="glyphicon"></i> {$menu['nombre']}</a></li>
 HTML;

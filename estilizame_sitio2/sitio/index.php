@@ -7,22 +7,25 @@ require "load.php";
 
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : "";
 $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : "";
-$option = isset($_GET['option']) ? $_GET['option'] : "inicio";
+//$option = isset($_GET['option']) ? $_GET['option'] : "inicio";
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 
 $sesion_id = (!isset($_SESSION['xc_usuario_id'])) ? NULL : $_SESSION['xc_usuario_id'];
 
-$sections = array('uploadfw','reports','mydata','mail_contacto', 'registro_form','registro_registrar','pais_estados','academias');
+$sections = array('uploadfw','reports','mydata','mail_contacto', 'registro_form','registro_registrar','pais_estados','academias'
+        ,'distribuidores','marcas','salones','getGrid');
 
 if($module=="inicio"){
 	$include = "main.php"; 
 }elseif($module=="mydata"){
 	$include = "mydata.php"; 		
 }else{
-	if(in_array($module, $sections))
-	$include = "sitio/".$module.".php";
-	else
-	$include = "main.php";
+	if(in_array($module, $sections)){
+            $_Modulo = ucwords(strtolower($module));
+            $include = "sitio/".$module.".php";
+        }else{
+            $include = "main.php";
+        }
 }
 
 if($format == "raw"){
@@ -37,6 +40,7 @@ include "head.php";
 ?>
 
 <body>
+    <div class="blur-background"></div>
 <?php
 include "social.php";
 include "menu.php";
@@ -45,6 +49,8 @@ include "menu.php";
 
 <?php
 include $include;
+
+include 'foot.php';
 ?>
 
 <!--<div style="padding-top:400px"></div>

@@ -20,13 +20,15 @@ SQL;
 
 	}
 
-	private function getCategoriaEspecialidad(){
+	private function getCategoriaEspecialidad($categoriaId = ""){
+                        $condicion = (!empty($categoriaId)) ? " WHERE C.id='{$categoriaId}' " : "";
 			$sql = <<<SQL
 				SELECT E.id especialidad_id, E.nombre especialidad_nombre, C.id categoria_id, C.nombre categoria_nombre FROM especialidad AS E
 				INNER JOIN categoria_especialidad CE ON CE.especialidad_id_fk = E.id
 				INNER JOIN categoria C ON CE.categoria_id_fk = C.id
 				INNER JOIN entidad EN ON EN.entidad_id_fk = E.id AND EN.estatus = 1 AND EN.tipo='especialidad'
 				INNER JOIN entidad ENT ON ENT.entidad_id_fk = C.id AND EN.estatus = 1 AND ENT.tipo='categoria'
+                                {$condicion}
 				ORDER BY C.nombre, E.nombre
 SQL;
 		return $data = $this->db->execute_sql($sql);
@@ -49,9 +51,26 @@ HTML;
 		}
 		return $html;
 	}
+        
+	public function selectEspecialidades($name, $categoriaId = "", $current = "", $required = FALSE){
+		$data = crearArraySQL($this->getCategoriaEspecialidad($categoriaId));
+                $required = ($required) ? 'required="required"' : '';
+		$html = '';
+		if($data){
+			$html .= '<select class="form-control" name="'.$name.'" id="'.$name.'" '.$required.' >';
+			$html .= '<option value="">-Selecciona Especialidad-</option>';
+			foreach ($data as $key => $value) {
+				$selected = ($value['especialidad_id'] == $current) ? ' selected="selected" ' : '';
+				$html .= <<<HTML
+				<option value="{$value['especialidad_id']}" {$selected} >{$value['especialidad_nombre']}</option>
+HTML;
+			}
+			$html .= '</select>';
+		}
+		return $html;
+	}
 
-
-function checkboxCategoriaEspecialidad(){
+        function checkboxCategoriaEspecialidad(){
 		$data = crearArraySQL($this->getCategoriaEspecialidad());
 		$html = '';
 		if($data){

@@ -1,6 +1,6 @@
 <?php
 $sitio = new sitio();
-$categoriaId = 2; // Academia
+$categoriaId = 1; // Salones
 ?>
 
 <div class="container">

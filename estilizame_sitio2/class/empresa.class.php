@@ -112,7 +112,7 @@ SQL;
     public function uploadImgCabecera($file, $empresaId, $name) {
         global $_Storage_Images, $_Storage_Images_Prefix, $_Banners_Width, $_Banners_Height;
 
-        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/cabecera/';
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/banners/';
 
         $file = new upload($file, 'es_Es');
         $this->uploadImg($file, $name, $path, $_Banners_Width, $_Banners_Height);
@@ -154,44 +154,87 @@ SQL;
         }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    public function getEmpresas($categoriaId = NULL) {
+    public function getEmpresas($categoriaId = NULL, $estado = NULL, $especialidadId = NULL) {
+        $condicion = array();
 	$sql = <<<SQL
-            SELECT E.*, ES.nombre, J.nombre, C.Nombre
+            SELECT E.*, J.nombre AS jerarquia, C.Nombre AS categoria
                 FROM empresa AS E
 		INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
-                INNER JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
-                INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
         	INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
                 INNER JOIN categoria AS C ON C.id = E.categoria_id_fk
+                
+                LEFT JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
+                LEFT JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
 SQL;
         if($categoriaId){
-            $sql .= " WHERE E.categoria_id_fk = {$categoriaId} ";
+            $condicion[] = " E.categoria_id_fk = {$categoriaId} ";
         }
+        if($estado){
+            $condicion[] = " E.estado = '{$estado}' ";
+        }
+        if($especialidadId){
+            $condicion[] = " EES.especialidad_id_fk = {$especialidadId} ";
+        }
+        if(!empty($condicion)){
+            $condicion = implode("AND", $condicion);
+            $sql .= " WHERE {$condicion} ";            
+        }
+
+        return crearArraySQL($this->db->execute_sql($sql));
     }
     
-    public function gridEmpresas($empresas) {
+    public function getEmpresaEspecialidades($empresaId) {
+	$sql = <<<SQL
+            SELECT E.*
+                FROM especialidad AS E
+                INNER JOIN empresa_especialidad AS ES ON ES.especialidad_id_fk = E.id
+                WHERE ES.empresa_id_fk = {$empresaId}               
+SQL;
+		/*INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
+                INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
+        	INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
+                INNER JOIN categoria AS C ON C.id = E.categoria_id_fk     */           
+        return crearArraySQL($this->db->execute_sql($sql));
+    }    
+    
+    public function gridEmpresas($empresas) {  
+        global $_Modulo, $_Storage_Images, $_Storage_Images_Prefix;
+
+        $count = count($empresas);
         $html = <<<HTML
-            <table>
+            <h3>{$_Modulo} <small>({$count} Resultados)</small> </H3>    
+            <table class="table table-hover table-striped table-responsive">
             <thead>
                 <tr>
                     <th>Logo</th>
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Estado</th>
+                    <th>Empresa</th>
                     <th>Dirección</th>
+                    <th>Estado</th>
+                    <th>Especialidad</th>
                 <tr/>
             </thead>
             <tbody>
 HTML;
-        foreach ((object)$empresas as $key => $e) {
+        foreach ($empresas as $key => $e) { $e = (object)$e;
+            $src = $_Storage_Images.$_Storage_Images_Prefix.$e->id."/".$e->foto_perfil;
+
+            $htmlEsp = '';
+            foreach ($e->especialidades as $k => $esp) {
+                $htmlEsp .= <<<HTML
+                        <i class="glyphicon glyphicon-tag" aria-hidden="true"></i>{$esp['nombre']}<br>
+HTML;
+            }
             $html .= <<<HTML
                 <tr>
-                    <td>{$e->logo}<td>
-                    <td>{$e->nombre}<td>
-                    <td>{$e->email}<td>
-                    <td>{$e->telefono}<td>
-                    <td>{$e->estado}<td>
-                    <td>{$e->direccion}<td>
+                    <td><img width="128" height="128" src="{$src}" alt="{$src}"></td>
+                    <td><i class="glyphicon glyphicon-user" aria-hidden="true"></i>{$e->nombre}</td>
+                    <td>
+                        <i class="glyphicon glyphicon-home" aria-hidden="true"></i> {$e->direccion} {$e->municipio}
+                        <br><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i> {$e->telefono}
+                        <br><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i> {$e->email}
+                    </td>
+                    <td>{$e->estado}</td>
+                    <td>{$htmlEsp}</td>
                 </tr>
 HTML;
         }  
@@ -199,11 +242,14 @@ HTML;
             </tbody>
         </table>
 HTML;
-        
+        return $html;
     }
     
-    public function createGridEmpresas($categoriaId){
-        $empresas = $this->getEmpresas($categoriaId);
+    public function createGridEmpresas($categoriaId, $estado = NULL, $especialidadId = NULL){
+        $empresas = $this->getEmpresas($categoriaId, $estado, $especialidadId);
+        foreach ($empresas as $key => $e) {
+            $empresas[$key]['especialidades'] = $this->getEmpresaEspecialidades($e['id']);
+        }
         return $this->gridEmpresas($empresas);
     }
     

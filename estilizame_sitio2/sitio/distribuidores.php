@@ -1,6 +1,6 @@
 <?php
 $sitio = new sitio();
-$categoriaId = 2; // Academia
+$categoriaId = 4; // Distribuidores
 ?>
 
 <div class="container">

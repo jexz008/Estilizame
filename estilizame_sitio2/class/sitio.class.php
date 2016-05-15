@@ -1,6 +1,6 @@
 <?php
 
-class sitio{
+class Sitio{
 	#public static $db;
 	public $db;
 
@@ -46,7 +46,7 @@ SQL;
 		$bannersArray = array();
 
 		$bannersPremium = crearArraySQL($this->getBanners(1, 1, 'Premium'));
-		$bannersArray[] = $this->createHtmlSlider($bannersPremium, 'cabecera');
+		$bannersArray[] = $this->createHtmlSlider($bannersPremium, 'banners');
 
 		$banners = crearArraySQL($this->getBanners(2, 1));
 		$html = '';

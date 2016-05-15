@@ -2,26 +2,47 @@
 @import url(https://fonts.googleapis.com/css?family=Oswald);
 
 body > *{
-  font-family: Oswald !important;
+  /*font-family: Oswald !important;*/
 }
 body {
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  /*background: #000 url("../img/bg.jpg") no-repeat fixed;
-  background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  -wenkit-background-size: cover;*/
-  background:radial-gradient(ellipse cover, #FFF, #D5D5D5);
-  background:-moz-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  /*font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;*/
+
+  /*background:radial-gradient(ellipse cover, #F7F2F2, #FFF);
+  background:-moz-radial-gradient(ellipse cover, #F7F2F2, #FFF);
   background:-o-radial-gradient(ellipse cover, #FFF, #D5D5D5);
-  background:-webkit-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+  background:-webkit-radial-gradient(ellipse cover, #FFF, #D5D5D5);*/
   margin: 0px;
   padding: 0px;
   padding-top: 70px;  
-  color: #FFF;
+  /*color: #FFF;*/
   text-rendering: optimizeLegibility;
   min-width: 320px;
   /*padding-top: 20px;*/ /* Se agrego para el menu fixed*/
+}
+.blur-background{
+  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url("../img/logo-menu.png") no-repeat fixed;
+  background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -wenkit-background-size: cover;
+  filter: blur(10px);
+position: fixed;
+    width : 100%;
+    height: 100%;  
+    margin: 0px;
+    top: 0;
+    left: 0;
+}
+.grid-section{
+    background-color: #FFF;
+    border: 1px solid #eaeaea
+}
+table > * {
+    color: #252523 !important;
+    font-family: Raleway;
+}
+header{
+    font-family: Oswald !important;
 }
 .row{
   padding-bottom: 10px;
@@ -63,7 +84,7 @@ body {
 }
 
 /* Modal */
-.modal-header {
+.modal-header, .c-panel-header {
     background: #a4ddd8 none repeat scroll 0 0 !important;
     color: #fff !important;
     text-align: center;
@@ -79,6 +100,16 @@ body {
     color: #fff !important;
     font-family: Oswald;
     font-size: 48pt;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.h5-verde {
+    background: #2db9b3 none repeat scroll 0 0 !important;
+    border: medium none;
+    color: #fff !important;
+    font-family: Oswald;
+    font-size: 14pt;
     letter-spacing: 2px;
     text-align: center;
     text-transform: uppercase;
