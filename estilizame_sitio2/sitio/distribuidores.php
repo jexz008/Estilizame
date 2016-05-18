@@ -4,9 +4,9 @@ $categoriaId = 4; // Distribuidores
 ?>
 
 <div class="container">
-    
+
     <?php include 'banners.php'; ?>
-    
+
     <div class="row">
         <div class="col-md-8">
             <?php include 'gridFiltro.php'; ?>         

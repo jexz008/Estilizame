@@ -52,13 +52,7 @@ SQL;
 
 
             // Especialidades
-            foreach ($especialidades as $especialidad) {
-                $sql = <<<SQL
-INSERT INTO empresa_especialidad (empresa_id_fk, especialidad_id_fk) 
-VALUES ({$empresaId}, {$especialidad})
-SQL;
-                $this->db->execute_sql($sql);
-            }
+            $this->setEmpresaEspecialidades($empresaId, $especialidades);
 
             // Banners
             $sql = <<<SQL
@@ -76,7 +70,6 @@ SQL;
 
             $this->db->commit();
             return $empresaId;
-            
         } catch (Exception $e) {
             $this->db->rollback();
             if (strpos($e->getMessage(), "Duplicate entry") !== false) {
@@ -89,22 +82,47 @@ SQL;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
+    private function deleteEmpresa($empresaId) {
+        $sql = <<<SQL
+UPDATE empresa AS E 
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.tipo='empresa' 
+SET ENT.estatus = 0 
+WHERE ENT.entidad_id_fk = {$empresaId}
+SQL;
+        $this->db->execute_sql($sql);
+    }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////	
+    private function updateEmpresa($empresaId, $campo, $valor) {
+        $sql = <<<SQL
+UPDATE empresa AS E 
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 ENT.tipo='empresa' 
+SET E.{$campo} = '{$valor}'
+WHERE E.id = {$empresaId}
+SQL;
+        $this->db->execute_sql($sql);
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////    
     public function registraEmpresa($data, $files) {
         extract($data);
-        
+
         $ext = ".jpg";
         $registro_telefono      = implode(",", $registro_telefono);
         $registro_estado        = $registro_estado_nombre;
         $registro_foto_perfil   = "perfil-" . str_replace(" ", "", $registro_empresa);
         $registro_foto_cabecera = "cabecera-" . str_replace(" ", "", $registro_empresa);
+        $registro_foto_galeria  = "galeria-" . str_pad("1", 5, "0", STR_PAD_LEFT); // galeria-00001
+
         $registro_especialidades = $registro_especialidad[$registro_categoria];
-        $registro_jerarquia     = 1; // 1:Normal, 2:Premium
+        $registro_jerarquia = 1; // 1:Normal, 2:Premium
 
         $empresaId = $this->setEmpresa($registro_empresa, $registro_descripcion, $registro_email, $registro_telefono, $logo, $registro_estado, $registro_municipio, $registro_direccion, $registro_foto_perfil . $ext, $registro_foto_cabecera . $ext, $registro_video, $registro_facebook, $registro_twitter, $registro_google, $registro_instagram, $registro_ubicacion, $registro_categoria, $registro_jerarquia, $registro_password, $registro_especialidades, $registro_galeria);
 
         $this->uploadImgCabecera($files['registro_foto_cabecera'], $empresaId, $registro_foto_cabecera);
         $this->uploadImgPerfil($files['registro_foto_perfil'], $empresaId, $registro_foto_perfil);
+        $this->uploadImgPerfil($files['registro_foto_galeria'], $empresaId, $registro_foto_galeria);
 
         return FALSE;
     }
@@ -126,15 +144,28 @@ SQL;
         $file = new upload($file, 'es_Es');
         $this->uploadImg($file, $name, $path, $_Perfil_Width, $_Perfil_Height, FALSE);
         // Creando thumbs
-        $this->uploadImg($file, $name."_256x256", $path, 256, 256, FALSE);
-        $this->uploadImg($file, $name."_48x48", $path, 48, 48, FALSE);        
-        $this->uploadImg($file, $name."_32x32", $path, 32, 32, FALSE);        
-        $this->uploadImg($file, $name."_16x16", $path, 16, 16);        
+        $this->uploadImg($file, $name . "_256x256", $path, 256, 256, FALSE);
+        $this->uploadImg($file, $name . "_48x48", $path, 48, 48, FALSE);
+        $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
+        $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
     }
 
+    public function uploadImgGaleria($file, $empresaId, $name) {
+        global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
+
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/galeria/';
+
+        $file = new upload($file, 'es_Es');
+        $this->uploadImg($file, $name, $path, $_Perfil_Width, $_Perfil_Height, FALSE);
+        // Creando thumbs
+        $this->uploadImg($file, $name . "_256x256", $path, 256, 256, FALSE);
+        $this->uploadImg($file, $name . "_48x48", $path, 48, 48, FALSE);
+        $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
+        $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
+    }
 
     public function uploadImg($handle, $name, $path, $width, $height, $clean = TRUE) {
-                
+
         if ($handle->uploaded) {
             // Procesando
             $handle->file_new_name_body = $name; //'image_resized';
@@ -146,58 +177,80 @@ SQL;
             //$handle->image_ratio_y        = true;
             $handle->process($path);
             if ($handle->processed) {
-                if($clean) $handle->clean();
+                if ($clean)
+                    $handle->clean();
                 return TRUE;
             } else {
                 throw new Exception($handle->error);
             }
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
     public function getEmpresas($categoriaId = NULL, $estado = NULL, $especialidadId = NULL) {
         $condicion = array();
-	$sql = <<<SQL
-            SELECT E.*, J.nombre AS jerarquia, C.Nombre AS categoria
-                FROM empresa AS E
-		INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
-        	INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
-                INNER JOIN categoria AS C ON C.id = E.categoria_id_fk
+        $sql = <<<SQL
+SELECT E.*, J.nombre AS jerarquia, C.Nombre AS categoria
+FROM empresa AS E
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
+INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
+INNER JOIN categoria AS C ON C.id = E.categoria_id_fk
                 
-                LEFT JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
-                LEFT JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
+LEFT JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
+LEFT JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
 SQL;
-        if($categoriaId){
+        if ($categoriaId) {
             $condicion[] = " E.categoria_id_fk = {$categoriaId} ";
         }
-        if($estado){
+        if ($estado) {
             $condicion[] = " E.estado = '{$estado}' ";
         }
-        if($especialidadId){
+        if ($especialidadId) {
             $condicion[] = " EES.especialidad_id_fk = {$especialidadId} ";
         }
-        if(!empty($condicion)){
+        if (!empty($condicion)) {
             $condicion = implode("AND", $condicion);
-            $sql .= " WHERE {$condicion} ";            
+            $sql .= " WHERE {$condicion} ";
         }
 
         return crearArraySQL($this->db->execute_sql($sql));
     }
-    
+
     public function getEmpresaEspecialidades($empresaId) {
-	$sql = <<<SQL
-            SELECT E.*
-                FROM especialidad AS E
-                INNER JOIN empresa_especialidad AS ES ON ES.especialidad_id_fk = E.id
-                WHERE ES.empresa_id_fk = {$empresaId}               
+        $sql = <<<SQL
+SELECT E.*
+FROM especialidad AS E
+INNER JOIN empresa_especialidad AS ES ON ES.especialidad_id_fk = E.id
+WHERE ES.empresa_id_fk = {$empresaId}               
 SQL;
-		/*INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
-                INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
-        	INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
-                INNER JOIN categoria AS C ON C.id = E.categoria_id_fk     */           
+        /* INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
+          INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
+          INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
+          INNER JOIN categoria AS C ON C.id = E.categoria_id_fk */
         return crearArraySQL($this->db->execute_sql($sql));
-    }    
-    
-    public function gridEmpresas($empresas) {  
+    }
+
+    private function setEmpresaEspecialidades($empresaId, $especialidades) {
+
+        $sql = <<<SQL
+DELETE FROM empresa_especialidad WHERE empresa_id_fk = {$empresaId}
+SQL;
+        $this->db->execute_sql($sql);
+
+        foreach ($especialidades as $especialidad) {
+            $sql = <<<SQL
+INSERT INTO empresa_especialidad (empresa_id_fk, especialidad_id_fk) 
+VALUES ({$empresaId}, {$especialidad})
+SQL;
+            $this->db->execute_sql($sql);
+        }
+    }
+
+    private function updatetEmpresaEspecialidades($empresaId, $especialidades) {
+        $this->setEmpresaEspecialidades($empresaId, $especialidades);
+    }
+
+    public function gridEmpresas($empresas) {
         global $_Modulo, $_Storage_Images, $_Storage_Images_Prefix;
 
         $count = count($empresas);
@@ -215,8 +268,9 @@ SQL;
             </thead>
             <tbody>
 HTML;
-        foreach ($empresas as $key => $e) { $e = (object)$e;
-            $src = $_Storage_Images.$_Storage_Images_Prefix.$e->id."/".$e->foto_perfil;
+        foreach ($empresas as $key => $e) {
+            $e = (object) $e;
+            $src = $_Storage_Images . $_Storage_Images_Prefix . $e->id . "/" . $e->foto_perfil;
 
             $htmlEsp = '';
             foreach ($e->especialidades as $k => $esp) {
@@ -237,22 +291,22 @@ HTML;
                     <td>{$htmlEsp}</td>
                 </tr>
 HTML;
-        }  
+        }
         $html .= <<<HTML
             </tbody>
         </table>
 HTML;
         return $html;
     }
-    
-    public function createGridEmpresas($categoriaId, $estado = NULL, $especialidadId = NULL){
+
+    public function createGridEmpresas($categoriaId, $estado = NULL, $especialidadId = NULL) {
         $empresas = $this->getEmpresas($categoriaId, $estado, $especialidadId);
         foreach ($empresas as $key => $e) {
             $empresas[$key]['especialidades'] = $this->getEmpresaEspecialidades($e['id']);
         }
         return $this->gridEmpresas($empresas);
     }
-    
+
 }
 
 //Fin class Empresa

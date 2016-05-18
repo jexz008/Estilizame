@@ -1,29 +1,29 @@
-
-$( document ).ajaxStart(function() {
-    html = '<div id="ajax-loader" style="position:fixed; z-index:10000000; top:1px; left:1px; "><div style="margin:auto; text-align:center;  "><img src="img/ajax-loader.gif" alt="LOADING" /></div></div>';
+$(document).ajaxStart(function () {
+    //html = '<div id="ajax-loader" style="position:fixed; z-index:10000000; top:1px; left:1px; "><div style="margin:auto; text-align:center;  "><img src="img/ajax-loader.gif" alt="LOADING" /></div></div>';
+    var html = '<div id="ajax-loader" style="position:fixed; z-index:10000000; top:1px; left:1px; "><div style="margin:auto; text-align:center;  "><i class="fa fa-spinner fa-5x fa-spin fa-fw" aria-hidden="true"></i><span class="sr-only">Cargando...</span></div></div>';
     $("html").append(html);
 });
-$( document ).ajaxStop(function() {
+$(document).ajaxStop(function () {
     $("#ajax-loader").remove();
 });
 
-$(document).ready(function(){
+$(document).ready(function () {
     modales();
-    setRegistro();
-    formContactanos();
-    formLogin();
+    /*setRegistro();
+     formContactanos();
+     formLogin();*/
     filtroEmpresas();
 });
 
 // Carousel Bootstrap 
 $('.carousel').carousel({
-  interval: 2000
-})  
+    interval: 2000
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// Modales
-function modales(){
-    $('#myModal').on('shown.bs.modal', function(event){
+function modales() {
+    $('#myModal').on('shown.bs.modal', function (event) {
         var html = '';
         var title = '';
         var footer = '';
@@ -33,22 +33,23 @@ function modales(){
         var boton = $(event.relatedTarget);
         var id = boton.attr('id');
 
-        switch(id){
+        switch (id) {
             case 'btnFormContactUs':
                 title = 'Contáctanos';
                 html = ' \n\
+                          <form class="form-horizontal" action="#" id="formContactanos" method="post">\n\
                           <div class="form-group"><div class="col-sm-12"><input type="text" name="contacto_nombre" class="form-control" placeholder="Nombre" required></div></div> \n\
                           <div class="form-group"><div class="col-sm-12"><input type="email" name="contacto_mail" class="form-control" placeholder="Email" required></div></div> \n\
                           <div class="form-group"><div class="col-sm-12"><input type="tel" name="contacto_telefono" class="form-control" placeholder="Teléfono" required></div></div> \n\
                           <div class="form-group"><div class="col-sm-12"><textarea name="name" name="contacto_mensaje" class="form-control" placeholder="Escribenos un comentario" required></textarea></div></div> \n\
-                    ';            
+                       </form>\n\
+                    ';
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     <button class="btn btn-success" type="submit" id="btnSendMailContact">Enviar</button>\
                     ';
-                    $("#myModal form").attr('id','formContactanos');
-                    formContactanos();
-            break;
+                formContactanos();
+                break;
             case 'btnModalNosotros':
                 title = 'SOBRE NOSOTROS';
                 html = ' \n\
@@ -58,20 +59,21 @@ function modales(){
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     ';
-            break;
+                break;
             case 'btnFormSignIn':
                 title = 'INICIAR SESION';
                 html = ' \n\
+                          <form class="form-horizontal" action="#" id="formLogin" method="post">\n\
                           <div class="form-group"><div class="col-sm-12"><input type="email" name="login_mail" class="form-control" placeholder="Email" required></div></div> \n\
                           <div class="form-group"><div class="col-sm-12"><input type="password" name="login_password" class="form-control" placeholder="Contraseña" required></div></div> \n\
-                        '; 
+                          </form>\n\
+                        ';
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     <button class="btn btn-success" type="submit" id="btnSigIn">Iniciar Sesión</button>\
                     ';
-                    $("#myModal form").attr('id','formLogin');
-                    formLogin();
-            break;
+                formLogin();
+                break;
             case 'btnFormSignUp':
                 title = 'REGISTRATE';
                 html = getFormRegistro();
@@ -80,467 +82,475 @@ function modales(){
                     <button class="btn btn-success" type="submit" id="btnSignUp">Registrarme</button>\
                     ';
                 large = true;
-                $("#myModal form").attr('id','formRegistro');
                 setRegistro();
-            break;            
+                break;
         }
         $(".modal-body").html(html);
         $(".modal-title").html(title);
-        $(".modal-footer").html(footer); 
-        $("#myModal form input:enabled:visible:first").focus();  
-        if(large){
+        $(".modal-footer").html(footer);
+        $("#myModal form input:enabled:visible:first").focus();
+        if (large) {
             $("#myModal").addClass('bs-example-modal-lg');
-            $(".modal-dialog").addClass('modal-lg'); 
-        }else{
+            $(".modal-dialog").addClass('modal-lg');
+        } else {
             $("#myModal").removeClass('bs-example-modal-lg');
-            $(".modal-dialog").removeClass('modal-lg');            
-        }  
+            $(".modal-dialog").removeClass('modal-lg');
+        }
 
     });
-    $('#myModal').on('hidden.bs.modal', function(event){
-        $(".modal-body").empty();        
-    });       
+    $('#myModal').on('hidden.bs.modal', function (event) {
+        $(".modal-body").empty();
+    });
 }
 
-function formContactanos(){
+function formContactanos() {
 //        $("#myModal form").on("submit", function(event){
-        $("form#formContactanos").submit( function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            $("#btnSendMailContact").hide();
-            $.ajax({
-                url:'index.php?module=mail_contacto&action=mail_contacto&format=raw',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                        console.log(data);
-                        alert("Mensaje enviado correctamente.");
-                        $('#myModal').modal('hide');
-                        //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
-                    }else{
-                        alert("ERROR: " + data.message);
-                        //alert("ERROR: Error when trying to change status");
-                    }
+    $("form#formContactanos").submit(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnSendMailContact").hide();
+        $.ajax({
+            url: 'index.php?module=mail_contacto&action=mail_contacto&format=raw',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    console.log(data);
+                    alert("Mensaje enviado correctamente.");
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $(".modal-body").empty();
+                    $(".modal-title").empty();
+                    $(".modal-footer").empty();
+                    $('#myModal').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    //alert("ERROR: Error when trying to change status");
                 }
-            });
-            //return false;         
-        });    
+            }
+        });
+        //return false;         
+    });
 }
-function getFormRegistro(){
+function getFormRegistro() {
     var html;
-    $("form-horizontal").attr("enctype","multipart/form-data");
-            $.ajax({
-                url:'index.php?module=registro_form&action=registro_form&format=raw',
-                type:'POST',
-                dataType:'html',
-                success:function(data){
-                    if ( data ){
-                        html = data;
-                        $(".modal-body").html(html);
-                        changeCategoria();
-                        changeEstado();
-                        //setRegistro();
+    $("form-horizontal").attr("enctype", "multipart/form-data");
+    $.ajax({
+        url: 'index.php?module=registro_form&action=registro_form&format=raw',
+        type: 'POST',
+        dataType: 'html',
+        success: function (data) {
+            if (data) {
+                html = data;
+                $(".modal-body").html(html);
+                changeCategoria();
+                changeEstado();
+                //setRegistro();
 
-                        $('[data-toggle="popover-maps"]').popover({
-                            html: true,
-                            content: function () {
-                                return content = $("#content-popover-maps").html();
-                            },                            
-                        });
-                        $('[data-toggle="popover-video"]').popover({
-                            html: true,
-                            content: function () {
-                                return content = $("#content-popover-video").html();
-                            },                            
-                        });
+                $('[data-toggle="popover-maps"]').popover({
+                    html: true,
+                    content: function () {
+                        return content = $("#content-popover-maps").html();
+                    },
+                });
+                $('[data-toggle="popover-video"]').popover({
+                    html: true,
+                    content: function () {
+                        return content = $("#content-popover-video").html();
+                    },
+                });
 
-                    }else{
-                        alert("ERROR: al intentar obtener el formulario de registro.");
-                    }
-                }
-            });
+            } else {
+                alert("ERROR: al intentar obtener el formulario de registro.");
+            }
+        }
+    });
     return html;
 }
-function changeCategoria(){
-    $("#registro_categoria").on("change",function(){
+function changeCategoria() {
+    $("#registro_categoria").on("change", function () {
         var categoriaId = $(this).val();
         $("div.checkbox[id^='categoria_especialidad_']").hide();
         $("#categoria_especialidad_" + categoriaId).show();
     });
 }
-function changeEstado(){
-    $("#registro_estado").on("change",function(){
+function changeEstado() {
+    $("#registro_estado").on("change", function () {
         $("#registro_estado_nombre").val($("#registro_estado option:selected").text());
         var estado = $("#registro_estado").val();
-            $.ajax({
-                url:'index.php?module=pais_estados&action=getMunicipios&format=raw',
-                type:'POST',
-                data: {'estado':estado},
-                dataType:'JSON',             
-                success:function(data){
-                    if ( data.success ){
-                        console.log(data);
-                        $('#div_registro_municipio').html(data.html);
-                    }else{
-                        alert("ERROR: " + data.message);
-                    }
+        $.ajax({
+            url: 'index.php?module=pais_estados&action=getMunicipios&format=raw',
+            type: 'POST',
+            data: {'estado': estado},
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    console.log(data);
+                    $('#div_registro_municipio').html(data.html);
+                } else {
+                    alert("ERROR: " + data.message);
                 }
-            });
+            }
+        });
     });
 }
 
-function setRegistro(){
+function setRegistro() {
 
-        $("form#formRegistro").submit( function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            $("#btnSignUp").hide();
-            var formData = new FormData(this);
-            //var formData = new FormData(document.getElementById('form_modal'));
-                        //formData.append("dato", "valor");
-            $.ajax({
-                ursetRegistrol:'index.php?module=registro_registrar&action=registro_registrar&format=raw',
-                type:'POST',
-                data: formData,///$( this ).serialize(),
-                dataType:'JSON',
-                cache: false,
-                contentType: false,
-                processData: false,                
-                success:function(data){
-                    if ( data.success ){
-                        console.log(data);
-                        alert(data.message);
-                        $('#myModal').modal('hide');
-                        //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
-                    }else{
-                        alert("ERROR: " + data.message);
-                        //alert("ERROR: Error when trying to change status");
-                    }
-                    $("#btnSignUp").show();
+    $("form#formRegistro").submit(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnSignUp").hide();
+        var formData = new FormData(this);
+        //var formData = new FormData(document.getElementById('form_modal'));
+        //formData.append("dato", "valor");
+        $.ajax({
+            ursetRegistrol: 'index.php?module=registro_registrar&action=registro_registrar&format=raw',
+            type: 'POST',
+            data: formData, ///$( this ).serialize(),
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    console.log(data);
+                    alert(data.message);
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $(".modal-body").empty();
+                    $(".modal-title").empty();
+                    $(".modal-footer").empty();
+                    $('#myModal').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    //alert("ERROR: Error when trying to change status");
                 }
-            });
-            //return false;         
-        });    
+                $("#btnSignUp").show();
+            }
+        });
+        //return false;         
+    });
 }
 
-function formLogin(){
+function formLogin() {
 
-    $("form#formLogin").submit( function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            $("#btnSigIn").hide();
- 
-            $.ajax({
-                url:'index.php?module=login&action=login&format=raw',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',               
-                success:function(data){
-                    if ( data.success ){
-                        console.log(data);
-                        alert(data.message);
-                        $('#myModal').modal('hide');
-                        //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
-                    }else{
-                        alert("ERROR: " + data.message);
-                        //alert("ERROR: Error when trying to change status");
-                    }
-                    $("#btnSigIn").show();
+    $("form#formLogin").submit(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnSigIn").hide();
+
+        $.ajax({
+            url: 'index.php?module=login&action=login&format=raw',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    console.log(data);
+                    alert(data.message);
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $(".modal-body").empty();
+                    $(".modal-title").empty();
+                    $(".modal-footer").empty();
+                    $('#myModal').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    //alert("ERROR: Error when trying to change status");
                 }
-            });
-            //return false;         
-        });    
+                $("#btnSigIn").show();
+            }
+        });
+        //return false;         
+    });
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function filtroEmpresas(){
-    $("#filtro_estado").on("change",function(){
+function filtroEmpresas() {
+    $("#filtro_estado").on("change", function () {
         $("#filtro_estado_nombre").val($("#filtro_estado option:selected").text());
     });
-    
-        $("#form_filtro_grid").on("submit", function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            $.ajax({
-                url:'index.php?module=getGrid&action=getGrid&format=raw',
-                type:'POST',
-                data: $( this ).serialize(),
-                //dataType:'JSON',
-                success:function(data){
-                    if ( data ){
-                        console.log(data);
-                        $('#grid-section').html(data);
-                    }else{
-                        alert("ERROR: al intentar obtener los datos");
-                    }
+
+    $("#form_filtro_grid").on("submit", function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $.ajax({
+            url: 'index.php?module=getGrid&action=getGrid&format=raw',
+            type: 'POST',
+            data: $(this).serialize(),
+            //dataType:'JSON',
+            success: function (data) {
+                if (data) {
+                    console.log(data);
+                    $('#grid-section').html(data);
+                } else {
+                    alert("ERROR: al intentar obtener los datos");
                 }
-            });
-            return false;         
-        });    
+            }
+        });
+        return false;
+    });
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////Reportes
 
 // Aprobar 
-function aprobar(){
-    $("button[id^='aprobar_']").on("click",function(){
+function aprobar() {
+    $("button[id^='aprobar_']").on("click", function () {
         var id = this.id.slice(8);
         console.log(id);
 
         $.ajax({
-            url:'/editar.php?action=aprobar',
-            type:'POST',
-            data: { "reporte_id": id },
-            dataType:'JSON',
-            success:function(data){
-                if ( data.success ){
+            url: '/editar.php?action=aprobar',
+            type: 'POST',
+            data: {"reporte_id": id},
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
                     console.log(id);
-                    $("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
-                }else{
+                    $("#row_" + id).removeClass("info").removeClass("danger").addClass("success");
+                } else {
                     alert("ERROR: Error when trying to change status");
                 }
             }
         });
 
-    });    
+    });
 }
 // Aprobar Todo
-function aprobarTodo(){
-    $("#aprobarTodo").on("click",function(){
+function aprobarTodo() {
+    $("#aprobarTodo").on("click", function () {
         //var ids = new Array();
         var ids = ""
-        $("#tblReportes > tbody > tr").each(function(index){
+        $("#tblReportes > tbody > tr").each(function (index) {
             var id = $(this).attr('id').slice(4);
             //ids.push(id);
-            ids += id+",";
+            ids += id + ",";
         });
         console.log(ids);
 
         $.ajax({
-            url:'/editar.php?action=aprobar',
-            type:'POST',
-            data: {"reporte_ids":ids},//{ "reporte_id": id },
-            dataType:'JSON',
-            success:function(data){
-                if ( data.success ){
-                    $("#tblReportes > tbody > tr[id!='row_0']").each(function(index){
+            url: '/editar.php?action=aprobar',
+            type: 'POST',
+            data: {"reporte_ids": ids}, //{ "reporte_id": id },
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    $("#tblReportes > tbody > tr[id!='row_0']").each(function (index) {
                         $(this).removeClass("info").removeClass("danger").addClass("success");
                     });
-                }else{
+                } else {
                     alert("ERROR: Error when trying to change status");
                 }
             }
         });
 
-    });    
+    });
 }
 
 // Rechazar 
-function rechazar(){
-    $("button[id^='rechazar_']").on("click",function(){
+function rechazar() {
+    $("button[id^='rechazar_']").on("click", function () {
         var id = this.id.slice(9);
         console.log(id);
-        
+
         $.ajax({
-            url:'/editar.php?action=rechazar',
-            type:'POST',
-            data: { "reporte_id": id },
-            dataType:'JSON',
-            success:function(data){
-                if ( data.success ){
+            url: '/editar.php?action=rechazar',
+            type: 'POST',
+            data: {"reporte_id": id},
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
                     console.log(id);
-                    $("#row_"+id).removeClass("info").addClass("danger");
-                }else{
+                    $("#row_" + id).removeClass("info").addClass("danger");
+                } else {
                     alert("ERROR: Error when trying to change status");
                 }
             }
         });
 
-    });    
+    });
 }
 
 // Rechazar Todo
-function rechazarTodo(){
-    $("#rechazarTodo").on("click",function(){
+function rechazarTodo() {
+    $("#rechazarTodo").on("click", function () {
         //var ids = new Array();
         var ids = ""
-        $("#tblReportes > tbody > tr").each(function(index){
+        $("#tblReportes > tbody > tr").each(function (index) {
             var id = $(this).attr('id').slice(4);
             //ids.push(id);
-            ids += id+",";
+            ids += id + ",";
         });
         console.log(ids);
 
         $.ajax({
-            url:'/editar.php?action=rechazar',
-            type:'POST',
-            data: {"reporte_ids":ids},//{ "reporte_id": id },
-            dataType:'JSON',
-            success:function(data){
-                if ( data.success ){
-                    $("#tblReportes > tbody > tr[id!='row_0']").each(function(index){
+            url: '/editar.php?action=rechazar',
+            type: 'POST',
+            data: {"reporte_ids": ids}, //{ "reporte_id": id },
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    $("#tblReportes > tbody > tr[id!='row_0']").each(function (index) {
                         $(this).removeClass("info").addClass("danger");
                     });
-                }else{
+                } else {
                     alert("ERROR: Error when trying to change status");
                 }
             }
         });
 
-    });    
+    });
 }
 
 // Borrar 
-function borrar(){
-    $("button[id^='borrar_']").on("click",function(){
+function borrar() {
+    $("button[id^='borrar_']").on("click", function () {
         var id = this.id.slice(7);
         console.log(id);
         var confirmar = confirm("You sure you want to delete?");
-        if(confirmar){
+        if (confirmar) {
             $.ajax({
-                url:'/editar.php?action=borrar',
-                type:'POST',
-                data: { "reporte_id": id },
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
+                url: '/editar.php?action=borrar',
+                type: 'POST',
+                data: {"reporte_id": id},
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
                         console.log(id);
-                        $("#row_"+id).hide();
-                    }else{
+                        $("#row_" + id).hide();
+                    } else {
                         alert("ERROR: Error when trying to delete");
                     }
                 }
             });
         }
-    });    
+    });
 }
 
 // Borrar Todo
-function borrarTodo(){
-    $("#borrarTodo").on("click",function(){
+function borrarTodo() {
+    $("#borrarTodo").on("click", function () {
         //var ids = new Array();
         var ids = ""
-        $("#tblReportes > tbody > tr").each(function(index){
+        $("#tblReportes > tbody > tr").each(function (index) {
             var id = $(this).attr('id').slice(4);
             //ids.push(id);
-            ids += id+",";
+            ids += id + ",";
         });
         console.log(ids);
 
         var confirmar = confirm("You sure you want to delete?");
-        if(confirmar){
+        if (confirmar) {
             $.ajax({
-                url:'/editar.php?action=borrar',
-                type:'POST',
-                data: {"reporte_ids":ids},//{ "reporte_id": id },
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                        $("#tblReportes > tbody > tr").each(function(index){
+                url: '/editar.php?action=borrar',
+                type: 'POST',
+                data: {"reporte_ids": ids}, //{ "reporte_id": id },
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
+                        $("#tblReportes > tbody > tr").each(function (index) {
                             $(this).hide();
                         });
-                    }else{
+                    } else {
                         alert("ERROR: Error when trying to delete");
                     }
                 }
             });
-        }  
+        }
 
-    });    
+    });
 }
 
 // Editar 
-function editar(){
-    $("span[id^='editar_']").on("click",function(){
+function editar() {
+    $("span[id^='editar_']").on("click", function () {
         var id = this.id.slice(7);
         console.log(id);
         var numeroSemanaActual = $("#numeroSemanaActual").val();
         var numeroAnoActual = $("#numeroAnoActual").val();
         $("#reporte_id").val(id);
-        $("#myModalLabel").text( $("#row_"+id+">td").eq(1).text() );
+        $("#myModalLabel").text($("#row_" + id + ">td").eq(1).text());
         $("#ano").val($("#numeroAnoActual").val());
         $("#semana").val($("#numeroSemanaActual").val());
 
-        $("#reporte_horas_lunes").val( $("#row_"+id+">td").eq(3).text() );
-        $("#reporte_proyecto_lunes").val( $("#row_"+id+">td").eq(4).text() );
-		
-        $("#reporte_horas_martes").val( $("#row_"+id+">td").eq(5).text() );
-        $("#reporte_proyecto_martes").val( $("#row_"+id+">td").eq(6).text() );
-		
-        $("#reporte_horas_miercoles").val( $("#row_"+id+">td").eq(7).text() );
-        $("#reporte_proyecto_miercoles").val( $("#row_"+id+">td").eq(8).text() );
-		
-        $("#reporte_horas_jueves").val( $("#row_"+id+">td").eq(9).text() );
-        $("#reporte_proyecto_jueves").val( $("#row_"+id+">td").eq(10).text() );
-		
-        $("#reporte_horas_viernes").val( $("#row_"+id+">td").eq(11).text() );
-        $("#reporte_proyecto_viernes").val( $("#row_"+id+">td").eq(12).text() );
-		
-        $("#reporte_horas_sabado").val( $("#row_"+id+">td").eq(13).text() );
-        $("#reporte_proyecto_sabado").val( $("#row_"+id+">td").eq(14).text() );
-		
-        $("#reporte_horas_domingo").val( $("#row_"+id+">td").eq(15).text() );
-        $("#reporte_proyecto_domingo").val( $("#row_"+id+">td").eq(16).text() );
-		
+        $("#reporte_horas_lunes").val($("#row_" + id + ">td").eq(3).text());
+        $("#reporte_proyecto_lunes").val($("#row_" + id + ">td").eq(4).text());
+
+        $("#reporte_horas_martes").val($("#row_" + id + ">td").eq(5).text());
+        $("#reporte_proyecto_martes").val($("#row_" + id + ">td").eq(6).text());
+
+        $("#reporte_horas_miercoles").val($("#row_" + id + ">td").eq(7).text());
+        $("#reporte_proyecto_miercoles").val($("#row_" + id + ">td").eq(8).text());
+
+        $("#reporte_horas_jueves").val($("#row_" + id + ">td").eq(9).text());
+        $("#reporte_proyecto_jueves").val($("#row_" + id + ">td").eq(10).text());
+
+        $("#reporte_horas_viernes").val($("#row_" + id + ">td").eq(11).text());
+        $("#reporte_proyecto_viernes").val($("#row_" + id + ">td").eq(12).text());
+
+        $("#reporte_horas_sabado").val($("#row_" + id + ">td").eq(13).text());
+        $("#reporte_proyecto_sabado").val($("#row_" + id + ">td").eq(14).text());
+
+        $("#reporte_horas_domingo").val($("#row_" + id + ">td").eq(15).text());
+        $("#reporte_proyecto_domingo").val($("#row_" + id + ">td").eq(16).text());
+
 
         $("#myModal").modal('show');
         //$("#"+this.id).modal('show');
 
     });
 
-    $("#frm_editar_registro").on("submit",function(event){
+    $("#frm_editar_registro").on("submit", function (event) {
 
-            $.ajax({
-                url:'/editar.php?action=update',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                        $("#row_"+data.reporte_id+">td").eq(3).text( $("#reporte_horas_lunes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(4).text( $("#reporte_proyecto_lunes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(5).text( $("#reporte_horas_martes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(6).text( $("#reporte_proyecto_martes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(7).text( $("#reporte_horas_miercoles").val() );
-                        $("#row_"+data.reporte_id+">td").eq(8).text( $("#reporte_proyecto_miercoles").val() );
-                        $("#row_"+data.reporte_id+">td").eq(9).text( $("#reporte_horas_jueves").val() );
-                        $("#row_"+data.reporte_id+">td").eq(10).text( $("#reporte_proyeco_jueves").val() );
-                        $("#row_"+data.reporte_id+">td").eq(11).text( $("#reporte_horas_viernes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(12).text( $("#reporte_proyecto_viernes").val() );
-                        $("#row_"+data.reporte_id+">td").eq(13).text( $("#reporte_horas_sabado").val() );
-                        $("#row_"+data.reporte_id+">td").eq(14).text( $("#reporte_proyecto_sabado").val() );
-                        $("#row_"+data.reporte_id+">td").eq(15).text( $("#reporte_horas_domingo").val() );
-                        $("#row_"+data.reporte_id+">td").eq(16).text( $("#reporte_proyecto_domingo").val() );
-                        $("#row_"+data.reporte_id+">td").eq(17).text( data.total );
-                        $("#row_"+data.reporte_id).removeClass("danger").addClass("info");
+        $.ajax({
+            url: '/editar.php?action=update',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    $("#row_" + data.reporte_id + ">td").eq(3).text($("#reporte_horas_lunes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(4).text($("#reporte_proyecto_lunes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(5).text($("#reporte_horas_martes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(6).text($("#reporte_proyecto_martes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(7).text($("#reporte_horas_miercoles").val());
+                    $("#row_" + data.reporte_id + ">td").eq(8).text($("#reporte_proyecto_miercoles").val());
+                    $("#row_" + data.reporte_id + ">td").eq(9).text($("#reporte_horas_jueves").val());
+                    $("#row_" + data.reporte_id + ">td").eq(10).text($("#reporte_proyeco_jueves").val());
+                    $("#row_" + data.reporte_id + ">td").eq(11).text($("#reporte_horas_viernes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(12).text($("#reporte_proyecto_viernes").val());
+                    $("#row_" + data.reporte_id + ">td").eq(13).text($("#reporte_horas_sabado").val());
+                    $("#row_" + data.reporte_id + ">td").eq(14).text($("#reporte_proyecto_sabado").val());
+                    $("#row_" + data.reporte_id + ">td").eq(15).text($("#reporte_horas_domingo").val());
+                    $("#row_" + data.reporte_id + ">td").eq(16).text($("#reporte_proyecto_domingo").val());
+                    $("#row_" + data.reporte_id + ">td").eq(17).text(data.total);
+                    $("#row_" + data.reporte_id).removeClass("danger").addClass("info");
 
-                        $("#myModal").modal('hide');
+                    $("#myModal").modal('hide');
 
-                    }else{
-                        alert("ERROR: Error when trying to change status");
-                    }
+                } else {
+                    alert("ERROR: Error when trying to change status");
                 }
-            });
+            }
+        });
 
         event.preventDefault();
-        console.log( $( this ).serialize() );
+        console.log($(this).serialize());
     });
 }
 
 
 
 //Exportar Excel
-function exportExcel(){
-	$("#exportarExcel").on("submit",function(event){
-		var data = $("#frmFiltro").serialize();
-		console.log(data);
-		$("#exportarExcel").attr('action','/exportar.php?'+data);
-	    //event.preventDefault();
+function exportExcel() {
+    $("#exportarExcel").on("submit", function (event) {
+        var data = $("#frmFiltro").serialize();
+        console.log(data);
+        $("#exportarExcel").attr('action', '/exportar.php?' + data);
+        //event.preventDefault();
 
-	});
+    });
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -551,137 +561,137 @@ function exportExcel(){
 /////Supervisor
 
 // Editar 
-function editarSupervisor(){
-    $("span[id^='editar_']").click(function(event){
-    //$("span[id^='editar_']").on("click",function(){
- 		event.stopPropagation();
-        
+function editarSupervisor() {
+    $("span[id^='editar_']").click(function (event) {
+        //$("span[id^='editar_']").on("click",function(){
+        event.stopPropagation();
+
         var id = this.id.slice(7);
         console.log(id);
         var numeroSemanaActual = $("#numeroSemanaActual").val();
         var numeroAnoActual = $("#numeroAnoActual").val();
         $("#usuario_id").val(id);
-        $("#myModalLabel").text( $("#row_"+id+">td").eq(1).text() );
+        $("#myModalLabel").text($("#row_" + id + ">td").eq(1).text());
 
-        $("#usuario_email").val( $("#row_"+id+">td").eq(0).text() );
-        $("#usuario_nombre").val( $("#row_"+id+">td").eq(1).text() );
+        $("#usuario_email").val($("#row_" + id + ">td").eq(0).text());
+        $("#usuario_nombre").val($("#row_" + id + ">td").eq(1).text());
 
         $("#myModal").modal('show');
-   		$(".checkbox").show();
+        $(".checkbox").show();
 
         $("#divChangePass").hide();
-        $("#chkChangePass").on("click",function(){
-            if($(this).is(':checked')){
-              $("#divChangePass").show();
-            }else{
-              $("#divChangePass").hide();
+        $("#chkChangePass").on("click", function () {
+            if ($(this).is(':checked')) {
+                $("#divChangePass").show();
+            } else {
+                $("#divChangePass").hide();
             }
         });
         //$("#"+this.id).modal('show');
 
 //    });
 
-    $("#frm_editar_registro").off("submit");
-    $("#frm_editar_registro").submit(function(event){
-    //$("#frm_editar_registro").on("submit",function(event){
- 		event.stopPropagation();
+        $("#frm_editar_registro").off("submit");
+        $("#frm_editar_registro").submit(function (event) {
+            //$("#frm_editar_registro").on("submit",function(event){
+            event.stopPropagation();
 
             $.ajax({
-                url:'../editar.php?action=updateSupervisor',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                        $("#row_"+data.usuario_id+">td").eq(0).text( $("#usuario_email").val() );
-                        $("#row_"+data.usuario_id+">td").eq(1).text( $("#usuario_nombre").val() );
+                url: '../editar.php?action=updateSupervisor',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
+                        $("#row_" + data.usuario_id + ">td").eq(0).text($("#usuario_email").val());
+                        $("#row_" + data.usuario_id + ">td").eq(1).text($("#usuario_nombre").val());
 
                         $("#myModal").modal('hide');
 
-                    }else{
+                    } else {
                         alert("ERROR: Error when trying to change status");
                     }
                 }
             });
 
-        event.preventDefault();
-        console.log( $( this ).serialize() );
-    });
+            event.preventDefault();
+            console.log($(this).serialize());
+        });
     });
 }
 
 // Nuevo Supervisor
-function nuevoSupervisor(){
-	$("#addNewSupervisor").click(function(event){
-	//$("#addNewSupervisor").on("click",function(event){
- 		event.stopPropagation();
+function nuevoSupervisor() {
+    $("#addNewSupervisor").click(function (event) {
+        //$("#addNewSupervisor").on("click",function(event){
+        event.stopPropagation();
 
-		$("#myModal").modal('show');
-		$(".checkbox").hide();
-		$("#divChangePass").show();
-		$("#myModalLabel").text("New Supervisor");
-		$("#usuario_id").val('');
-		$("#usuario_email").val('');
-		$("#usuario_nombre").val('');
+        $("#myModal").modal('show');
+        $(".checkbox").hide();
+        $("#divChangePass").show();
+        $("#myModalLabel").text("New Supervisor");
+        $("#usuario_id").val('');
+        $("#usuario_email").val('');
+        $("#usuario_nombre").val('');
 //	});
 
-    $("#frm_editar_registro").off("submit");
-    $("#frm_editar_registro").submit(function(event){
-    //$("#frm_editar_registro").on("submit",function(event){
- 		event.stopPropagation();
+        $("#frm_editar_registro").off("submit");
+        $("#frm_editar_registro").submit(function (event) {
+            //$("#frm_editar_registro").on("submit",function(event){
+            event.stopPropagation();
 
             $.ajax({
-                url:'../editar.php?action=newSupervisor',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                    	$("#tblSupervisores tbody").append(data.html);
-						editarSupervisor();
-						activarSupervisor();
+                url: '../editar.php?action=newSupervisor',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
+                        $("#tblSupervisores tbody").append(data.html);
+                        editarSupervisor();
+                        activarSupervisor();
                         $("#myModal").modal('hide');
 
-                    }else{
+                    } else {
                         alert("ERROR: Error when trying to change status");
                     }
                 }
             });
 
-        event.preventDefault();
-        console.log( $( this ).serialize() );
-    });	
-	});
+            event.preventDefault();
+            console.log($(this).serialize());
+        });
+    });
 }
 
 // Rechazar 
-function activarSupervisor(){
-    $("button[id^='activar_']").on("click",function(){
+function activarSupervisor() {
+    $("button[id^='activar_']").on("click", function () {
         var id = this.id.slice(8);
         console.log(id);
-        var status = $("#row_"+id+">td").eq(2).text();
+        var status = $("#row_" + id + ">td").eq(2).text();
 
         $.ajax({
-            url:'../editar.php?action=activarSupervisor',
-            type:'POST',
-            data: { "usuario_id": id, "usuario_status": status},
-            dataType:'JSON',
-            success:function(data){
-                if ( data.success ){
-                    if(data.usuario_status==1){
-                        $("#row_"+data.usuario_id+">td").eq(2).text("Active");
-                        $("#activar_"+data.usuario_id).html('<span class="glyphicon glyphicon-remove"></span> Deactivate');
-                    }else{
-                        $("#row_"+data.usuario_id+">td").eq(2).text("Inactive");
-                        $("#activar_"+data.usuario_id).html('<span class="glyphicon glyphicon-ok"></span> Activate');
-                  }
-                }else{
+            url: '../editar.php?action=activarSupervisor',
+            type: 'POST',
+            data: {"usuario_id": id, "usuario_status": status},
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    if (data.usuario_status == 1) {
+                        $("#row_" + data.usuario_id + ">td").eq(2).text("Active");
+                        $("#activar_" + data.usuario_id).html('<span class="glyphicon glyphicon-remove"></span> Deactivate');
+                    } else {
+                        $("#row_" + data.usuario_id + ">td").eq(2).text("Inactive");
+                        $("#activar_" + data.usuario_id).html('<span class="glyphicon glyphicon-ok"></span> Activate');
+                    }
+                } else {
                     alert("ERROR: Error when trying to change status");
                 }
             }
         });
 
-    });    
+    });
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -691,63 +701,63 @@ function activarSupervisor(){
 ///// Empleados
 
 // Editar 
-function editarEmpleado(){
-    $("span[id^='editar_']").on("click",function(){
+function editarEmpleado() {
+    $("span[id^='editar_']").on("click", function () {
         var id = this.id.slice(7);
         console.log(id);
         var numeroSemanaActual = $("#numeroSemanaActual").val();
         var numeroAnoActual = $("#numeroAnoActual").val();
         $("#empleado_id").val(id);
-        $("#myModalLabel").text( $("#row_"+id+">td").eq(1).text() );
+        $("#myModalLabel").text($("#row_" + id + ">td").eq(1).text());
 
 
-        $("#empleado_no").val( $("#row_"+id+">td").eq(0).text() );
-        $("#empleado_nombre").val( $("#row_"+id+">td").eq(1).text() );
+        $("#empleado_no").val($("#row_" + id + ">td").eq(0).text());
+        $("#empleado_nombre").val($("#row_" + id + ">td").eq(1).text());
 
 
         $("#myModal").modal('show');
 
         $("#divChangePass").hide();
-        $("#chkChangePass").on("click",function(){
-            if($(this).is(':checked')){
-              $("#divChangePass").show();
-            }else{
-              $("#divChangePass").hide();
+        $("#chkChangePass").on("click", function () {
+            if ($(this).is(':checked')) {
+                $("#divChangePass").show();
+            } else {
+                $("#divChangePass").hide();
             }
         });
         //$("#"+this.id).modal('show');
 
     });
 
-    $("#frm_editar_registro").on("submit",function(event){
+    $("#frm_editar_registro").on("submit", function (event) {
 
-            $.ajax({
-                url:'../editar.php?action=updateEmpleado',
-                type:'POST',
-                data: $( this ).serialize(),
-                dataType:'JSON',
-                success:function(data){
-                    if ( data.success ){
-                        $("#row_"+data.empleado_id+">td").eq(0).text( $("#empleado_no").val() );
-                        $("#row_"+data.empleado_id+">td").eq(1).text( $("#empleado_nombre").val() );
+        $.ajax({
+            url: '../editar.php?action=updateEmpleado',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.success) {
+                    $("#row_" + data.empleado_id + ">td").eq(0).text($("#empleado_no").val());
+                    $("#row_" + data.empleado_id + ">td").eq(1).text($("#empleado_nombre").val());
 
-                        $("#myModal").modal('hide');
+                    $("#myModal").modal('hide');
 
-                    }else{
-                        alert("ERROR: Error when trying to change status");
-                    }
+                } else {
+                    alert("ERROR: Error when trying to change status");
                 }
-            });
+            }
+        });
 
         event.preventDefault();
-        console.log( $( this ).serialize() );
+        console.log($(this).serialize());
     });
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function changeYear(element){
-    $("#action").val('');    
+function changeYear(element) {
+    $("#action").val('');
     element.form.submit();
 
 }

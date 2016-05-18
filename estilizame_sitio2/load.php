@@ -14,6 +14,4 @@ require("class/especialidad.class.php");
 require("class/empresa.class.php");
 require("class/paisestados.class.php");
 require("class/login.class.php");
-
-
 ?>

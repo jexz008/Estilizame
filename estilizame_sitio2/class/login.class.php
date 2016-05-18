@@ -51,8 +51,8 @@ SQL;
               define('TARGET', 'supervisor/');
               $_SESSION['xc_ruta'] = 'supervisor/';
               } */
-            define('TARGET', 'sitio/');
-            $_SESSION['xc_ruta'] = 'sitio/';
+            define('TARGET', 'perfil');
+            $_SESSION['xc_ruta'] = TARGET;
         }
         /* if ($password != '_compudirecto_' . date('Y-m-d')) {
           $sqli = "INSERT INTO log VALUES ('', " . $_SESSION['xc_usuario_id'] . ", '" . $_SERVER['REMOTE_ADDR'] . "', CURDATE(), CURTIME())";

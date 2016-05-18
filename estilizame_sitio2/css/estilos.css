@@ -2,31 +2,31 @@
 @import url(https://fonts.googleapis.com/css?family=Oswald);
 
 body > *{
-  /*font-family: Oswald !important;*/
+    /*font-family: Oswald !important;*/
 }
 body {
-  /*font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;*/
+    /*font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;*/
 
-  /*background:radial-gradient(ellipse cover, #F7F2F2, #FFF);
-  background:-moz-radial-gradient(ellipse cover, #F7F2F2, #FFF);
-  background:-o-radial-gradient(ellipse cover, #FFF, #D5D5D5);
-  background:-webkit-radial-gradient(ellipse cover, #FFF, #D5D5D5);*/
-  margin: 0px;
-  padding: 0px;
-  padding-top: 70px;  
-  /*color: #FFF;*/
-  text-rendering: optimizeLegibility;
-  min-width: 320px;
-  /*padding-top: 20px;*/ /* Se agrego para el menu fixed*/
+    /*background:radial-gradient(ellipse cover, #F7F2F2, #FFF);
+    background:-moz-radial-gradient(ellipse cover, #F7F2F2, #FFF);
+    background:-o-radial-gradient(ellipse cover, #FFF, #D5D5D5);
+    background:-webkit-radial-gradient(ellipse cover, #FFF, #D5D5D5);*/
+    margin: 0px;
+    padding: 0px;
+    padding-top: 70px;  
+    /*color: #FFF;*/
+    text-rendering: optimizeLegibility;
+    min-width: 320px;
+    /*padding-top: 20px;*/ /* Se agrego para el menu fixed*/
 }
 .blur-background{
-  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url("../img/logo-menu.png") no-repeat fixed;
-  background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  -wenkit-background-size: cover;
-  filter: blur(10px);
-position: fixed;
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url("../img/logo-menu.png") no-repeat fixed;
+    background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -wenkit-background-size: cover;
+    filter: blur(10px);
+    position: fixed;
     width : 100%;
     height: 100%;  
     margin: 0px;
@@ -45,19 +45,19 @@ header{
     font-family: Oswald !important;
 }
 .row{
-  padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 .row-banners img{
-  min-height: 190px;
-  max-height: 190px;
-  height: 190px;
-  width: 100%;
+    min-height: 190px;
+    max-height: 190px;
+    height: 190px;
+    width: 100%;
 }
 .row-banners2 img{
-  min-height: 300px;
-  max-height: 300px;
-  height: 300px;
-  width: 100%;
+    min-height: 300px;
+    max-height: 300px;
+    height: 300px;
+    width: 100%;
 }
 /*.banner > .item > a > img, .banner > .item > img{
   max-height: 190px;
@@ -67,20 +67,20 @@ header{
 
 
 .contacto, .nosotros{
-  height: 325px;
-  cursor: pointer;  
+    height: 325px;
+    cursor: pointer;  
 }
 .contacto{
-  background: rgba(0, 0, 0, 0) url("../img/CONTACTO-A.png") no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("../img/CONTACTO-A.png") no-repeat scroll center center;
 }
 .contacto:hover{
-  background: rgba(0, 0, 0, 0) url("../img/CONTACTO-B.png") no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("../img/CONTACTO-B.png") no-repeat scroll center center;
 }
 .nosotros{
-  background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-A.png") no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-A.png") no-repeat scroll center center;
 }
 .nosotros:hover{
-  background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-B.png") no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("../img/SOBRE-NOSOTROS-B.png") no-repeat scroll center center;
 }
 
 /* Modal */
@@ -90,7 +90,7 @@ header{
     text-align: center;
 }
 .modal-body{
-  color: black;
+    color: black;
 }
 /* Fin Modal */
 
@@ -115,30 +115,30 @@ header{
     text-transform: uppercase;
 }
 .rojo{
-  color: red;
+    color: red;
 }
 .form-group i{
-  font-size: 20pt;
+    font-size: 20pt;
 }
 .i-rojo{
-  color: red;
+    color: red;
 }
 .i-rojo, .i-negro{
-  color: red;
-  font-size: 20pt;
+    color: red;
+    font-size: 20pt;
 }
 .form-horizontal .control-label {
-  padding-left: 20px;
-  text-align: left;
+    padding-left: 20px;
+    text-align: left;
 }
 .my-popover-content{
-  display: none;
+    display: none;
 }
 .popover-content ol{
-  padding-left: 10px;
+    padding-left: 10px;
 }  
 .popover{
-  max-width: 500px
+    max-width: 500px
 }
 footer{
     background: #2db9b3 none repeat scroll 0 0 !important;
