@@ -96,7 +96,7 @@ $sliders = $sitio->createSliders();
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <div class="circulares contacto" data-toggle="modal" data-target="#myModal" id="btnModalContacto">
+          <div class="circulares contacto" data-toggle="modal" data-target="#myModal" id="btnFormContactUs">
           </div>
         </div>
         <div class="col-md-4" align="center">

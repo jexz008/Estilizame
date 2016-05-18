@@ -20,7 +20,7 @@
           </footer>
 	<!-- End Footer -->
 
-<!-- -------------------------------------- Modal ---------------------------------------- -->
+<!-- -------------------------------------- Modales ---------------------------------------- -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
   <form class="form-horizontal" action="#" id="form_modal" method="post">

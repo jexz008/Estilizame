@@ -10,6 +10,8 @@ $( document ).ajaxStop(function() {
 $(document).ready(function(){
     modales();
     setRegistro();
+    formContactanos();
+    formLogin();
     filtroEmpresas();
 });
 
@@ -32,7 +34,7 @@ function modales(){
         var id = boton.attr('id');
 
         switch(id){
-            case 'btnModalContacto':
+            case 'btnFormContactUs':
                 title = 'Contáctanos';
                 html = ' \n\
                           <div class="form-group"><div class="col-sm-12"><input type="text" name="contacto_nombre" class="form-control" placeholder="Nombre" required></div></div> \n\
@@ -44,7 +46,8 @@ function modales(){
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     <button class="btn btn-success" type="submit" id="btnSendMailContact">Enviar</button>\
                     ';
-                formContactanos();   
+                    $("#myModal form").attr('id','formContactanos');
+                    formContactanos();
             break;
             case 'btnModalNosotros':
                 title = 'SOBRE NOSOTROS';
@@ -56,7 +59,7 @@ function modales(){
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     ';
             break;
-            case 'btnLogin':
+            case 'btnFormSignIn':
                 title = 'INICIAR SESION';
                 html = ' \n\
                           <div class="form-group"><div class="col-sm-12"><input type="email" name="login_mail" class="form-control" placeholder="Email" required></div></div> \n\
@@ -64,17 +67,21 @@ function modales(){
                         '; 
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnLogin">Iniciar Sesión</button>\
+                    <button class="btn btn-success" type="submit" id="btnSigIn">Iniciar Sesión</button>\
                     ';
+                    $("#myModal form").attr('id','formLogin');
+                    formLogin();
             break;
-            case 'btnFormSigIn':
+            case 'btnFormSignUp':
                 title = 'REGISTRATE';
                 html = getFormRegistro();
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnSigInUp">Registrarme</button>\
+                    <button class="btn btn-success" type="submit" id="btnSignUp">Registrarme</button>\
                     ';
                 large = true;
+                $("#myModal form").attr('id','formRegistro');
+                setRegistro();
             break;            
         }
         $(".modal-body").html(html);
@@ -96,7 +103,8 @@ function modales(){
 }
 
 function formContactanos(){
-        $("#myModal form").on("submit", function(event){
+//        $("#myModal form").on("submit", function(event){
+        $("form#formContactanos").submit( function(event){
             event.stopPropagation();
             event.preventDefault();
             $("#btnSendMailContact").hide();
@@ -117,11 +125,11 @@ function formContactanos(){
                     }
                 }
             });
-            return false;         
+            //return false;         
         });    
 }
 function getFormRegistro(){
-    var html
+    var html;
     $("form-horizontal").attr("enctype","multipart/form-data");
             $.ajax({
                 url:'index.php?module=registro_form&action=registro_form&format=raw',
@@ -184,15 +192,16 @@ function changeEstado(){
 }
 
 function setRegistro(){
-        $("#myModal form").on("submit", function(event){
+
+        $("form#formRegistro").submit( function(event){
             event.stopPropagation();
             event.preventDefault();
-            $("#btnSigInUp").hide();
+            $("#btnSignUp").hide();
             var formData = new FormData(this);
             //var formData = new FormData(document.getElementById('form_modal'));
                         //formData.append("dato", "valor");
             $.ajax({
-                url:'index.php?module=registro_registrar&action=registro_registrar&format=raw',
+                ursetRegistrol:'index.php?module=registro_registrar&action=registro_registrar&format=raw',
                 type:'POST',
                 data: formData,///$( this ).serialize(),
                 dataType:'JSON',
@@ -209,12 +218,42 @@ function setRegistro(){
                         alert("ERROR: " + data.message);
                         //alert("ERROR: Error when trying to change status");
                     }
-                    $("#btnSigInUp").show();
+                    $("#btnSignUp").show();
                 }
             });
-            return false;         
+            //return false;         
         });    
 }
+
+function formLogin(){
+
+    $("form#formLogin").submit( function(event){
+            event.stopPropagation();
+            event.preventDefault();
+            $("#btnSigIn").hide();
+ 
+            $.ajax({
+                url:'index.php?module=login&action=login&format=raw',
+                type:'POST',
+                data: $( this ).serialize(),
+                dataType:'JSON',               
+                success:function(data){
+                    if ( data.success ){
+                        console.log(data);
+                        alert(data.message);
+                        $('#myModal').modal('hide');
+                        //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    }else{
+                        alert("ERROR: " + data.message);
+                        //alert("ERROR: Error when trying to change status");
+                    }
+                    $("#btnSigIn").show();
+                }
+            });
+            //return false;         
+        });    
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function filtroEmpresas(){
     $("#filtro_estado").on("change",function(){

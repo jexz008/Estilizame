@@ -13,7 +13,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : "";
 $sesion_id = (!isset($_SESSION['xc_usuario_id'])) ? NULL : $_SESSION['xc_usuario_id'];
 
 $sections = array('uploadfw','reports','mydata','mail_contacto', 'registro_form','registro_registrar','pais_estados','academias'
-        ,'distribuidores','marcas','salones','getGrid');
+        ,'distribuidores','marcas','salones','getGrid','login');
 
 if($module=="inicio"){
 	$include = "main.php"; 
