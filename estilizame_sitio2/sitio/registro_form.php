@@ -7,7 +7,7 @@ try {
     echo 'Excepción capturada: ' . $e->getMessage() . "\n";
 }
 ?>
-<form class="form-horizontal" action="#" id="formRegistro" method="post">\n\
+<form class="form-horizontal" action="#" id="formRegistro" method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="2000000" />
 
     <div>

@@ -1,8 +1,8 @@
 <?php
 session_start();
-session_destroy();
+//session_destroy();
 /*
-<!-- //		Compudirecto -->
+<!-- //		Sisneting -->
 <!-- //
 **********************************************************************************************
 *       							ESTILIZAME v1.0		 									 *
@@ -20,7 +20,7 @@ session_destroy();
 **********************************************************************************************
 -->
 */
-$profile = ($_SESSION['xc_usuario_tipo']=="Z" or $_SESSION['xc_usuario_tipo']=="A") ? "administrator" : "sitio"; 
+//$profile = ($_SESSION['xc_usuario_tipo']=="Z" or $_SESSION['xc_usuario_tipo']=="A") ? "administrator" : "sitio"; 
 
 include 'sitio/index.php';
 ?>

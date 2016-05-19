@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $menus = array(
     array('nombre' => 'Academias', 'link' => 'academias'),
     array('nombre' => 'Marcas', 'link' => 'marcas'),
@@ -47,8 +49,13 @@ HTML;
 
                 <ul class="nav navbar-nav navbar-right">
                   <!--<li><a href="/"><i class="glyphicon glyphicon-user"></i> <?= $_SESSION['xc_usuario_nombre'] ?></a></li>-->
+                    <?php if(!$_SESSION[$_app->prefijo.'_usuario_nombre']){ ?>
                     <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSignIn"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li>
                     <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSignUp"><i class="fa fa-user-plus"></i> Registrate</a></li>
+                    <?php }else{ ?>
+                    <li><a href="/"><i class="glyphicon glyphicon-user"></i> <?= $_SESSION[$_app->prefijo.'_usuario_nombre'] ?></a></li>
+                    <li><a href="#" id="btnFormSignOut"><i class="fa fa-sign-out"></i> Cerrar Sesión</a></li>
+                    <?php } ?>
                 </ul>
                 <!--<ul class="nav navbar-nav navbar-right">
                   <li><a href="/<?= $profile ?>/mydata" id="menuMyData" ><i class="glyphicon glyphicon-user"></i> <?= $_SESSION['xc_usuario_nombre'] ?></a></li>

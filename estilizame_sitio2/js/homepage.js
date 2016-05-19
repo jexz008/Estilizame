@@ -9,9 +9,9 @@ $(document).ajaxStop(function () {
 
 $(document).ready(function () {
     modales();
-    /*setRegistro();
-     formContactanos();
-     formLogin();*/
+    //setRegistro();
+    //formContactanos();
+    //formLogin();
     filtroEmpresas();
 });
 
@@ -46,9 +46,8 @@ function modales() {
                     ';
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnSendMailContact">Enviar</button>\
+                    <button class="btn btn-success" id="btnSendMailContact" >Enviar</button>\
                     ';
-                formContactanos();
                 break;
             case 'btnModalNosotros':
                 title = 'SOBRE NOSOTROS';
@@ -72,7 +71,6 @@ function modales() {
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     <button class="btn btn-success" type="submit" id="btnSigIn">Iniciar Sesión</button>\
                     ';
-                formLogin();
                 break;
             case 'btnFormSignUp':
                 title = 'REGISTRATE';
@@ -82,7 +80,6 @@ function modales() {
                     <button class="btn btn-success" type="submit" id="btnSignUp">Registrarme</button>\
                     ';
                 large = true;
-                setRegistro();
                 break;
         }
         $(".modal-body").html(html);
@@ -96,16 +93,29 @@ function modales() {
             $("#myModal").removeClass('bs-example-modal-lg');
             $(".modal-dialog").removeClass('modal-lg');
         }
+        // Eventos
+        switch (id) {
+            case 'btnFormContactUs':
+                $("#btnSendMailContact").on("click", formContactanos);
+            break;
+            case 'btnFormSignIn':
+                $("#btnSigIn").on("click", formLogin);
+            break;
+            case 'btnFormSignUp':
+                $("#btnSignUp").on("click", setRegistro);
+            break;
+        }
 
     });
     $('#myModal').on('hidden.bs.modal', function (event) {
         $(".modal-body").empty();
     });
+                    
+
 }
 
 function formContactanos() {
-//        $("#myModal form").on("submit", function(event){
-    $("form#formContactanos").submit(function (event) {
+      $("#formContactanos").on("submit", function(event){
         event.stopPropagation();
         event.preventDefault();
         $("#btnSendMailContact").hide();
@@ -115,8 +125,8 @@ function formContactanos() {
             data: $(this).serialize(),
             dataType: 'JSON',
             success: function (data) {
+                console.log(data);
                 if (data.success) {
-                    console.log(data);
                     alert("Mensaje enviado correctamente.");
                     //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
                     $(".modal-body").empty();
@@ -125,12 +135,15 @@ function formContactanos() {
                     $('#myModal').modal('hide');
                 } else {
                     alert("ERROR: " + data.message);
+                    $("#btnSendMailContact").show();
+                    $("#formContactanos").off();
                     //alert("ERROR: Error when trying to change status");
                 }
             }
         });
         //return false;         
     });
+    $("#formContactanos").submit();
 }
 function getFormRegistro() {
     var html;
@@ -197,7 +210,7 @@ function changeEstado() {
 
 function setRegistro() {
 
-    $("form#formRegistro").submit(function (event) {
+    $("form#formRegistro").on("submit", function (event) {
         event.stopPropagation();
         event.preventDefault();
         $("#btnSignUp").hide();
@@ -213,8 +226,8 @@ function setRegistro() {
             contentType: false,
             processData: false,
             success: function (data) {
+                console.log(data);
                 if (data.success) {
-                    console.log(data);
                     alert(data.message);
                     //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
                     $(".modal-body").empty();
@@ -224,17 +237,19 @@ function setRegistro() {
                 } else {
                     alert("ERROR: " + data.message);
                     //alert("ERROR: Error when trying to change status");
+                    $("#btnSignUp").show();
+                    $("#formRegistro").off();                    
                 }
-                $("#btnSignUp").show();
             }
         });
         //return false;         
     });
+    $("#formContactanos").submit();    
 }
 
 function formLogin() {
 
-    $("form#formLogin").submit(function (event) {
+    $("#formLogin").on("submit", function (event) {
         event.stopPropagation();
         event.preventDefault();
         $("#btnSigIn").hide();
@@ -245,23 +260,26 @@ function formLogin() {
             data: $(this).serialize(),
             dataType: 'JSON',
             success: function (data) {
+                console.log(data);
                 if (data.success) {
-                    console.log(data);
                     alert(data.message);
                     //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
                     $(".modal-body").empty();
                     $(".modal-title").empty();
                     $(".modal-footer").empty();
                     $('#myModal').modal('hide');
+                    document.location.href = "index.php?module=" + data.target//$(this).serialize();
                 } else {
                     alert("ERROR: " + data.message);
                     //alert("ERROR: Error when trying to change status");
+                    $("#btnSigIn").show();
+                    $("#formLogin").off();
                 }
-                $("#btnSigIn").show();
             }
         });
         //return false;         
     });
+    $("#formLogin").submit();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

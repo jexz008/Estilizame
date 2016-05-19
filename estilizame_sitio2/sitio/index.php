@@ -3,6 +3,7 @@ session_start();
 /* if (!isset($_SESSION['xc_usuario_id']) or $_SESSION['xc_usuario_tipo']!="S"){
   header ("Location: ../index.php");
   } */
+
 require "load.php";
 
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : "";
@@ -10,10 +11,10 @@ $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : "";
 //$option = isset($_GET['option']) ? $_GET['option'] : "inicio";
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 
-$sesion_id = (!isset($_SESSION['xc_usuario_id'])) ? NULL : $_SESSION['xc_usuario_id'];
+$sesion_id = (!isset($_SESSION[$_app->prefijo.'_usuario_id'])) ? NULL : $_SESSION[$_app->prefijo.'_usuario_id'];
 
 $sections = array('uploadfw', 'reports', 'mydata', 'mail_contacto', 'registro_form', 'registro_registrar', 'pais_estados', 'academias'
-    , 'distribuidores', 'marcas', 'salones', 'getGrid', 'login');
+    , 'distribuidores', 'marcas', 'salones', 'getGrid', 'login', 'perfil');
 
 if ($module == "inicio") {
     $include = "main.php";
