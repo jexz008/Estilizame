@@ -187,7 +187,7 @@ SQL;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    public function getEmpresas($categoriaId = NULL, $estado = NULL, $especialidadId = NULL) {
+    public function getEmpresas($empresaId = NULL, $categoriaId = NULL, $estado = NULL, $especialidadId = NULL) {
         $condicion = array();
         $sql = <<<SQL
 SELECT E.*, J.nombre AS jerarquia, C.Nombre AS categoria
@@ -208,6 +208,9 @@ SQL;
         if ($especialidadId) {
             $condicion[] = " EES.especialidad_id_fk = {$especialidadId} ";
         }
+        if ($especialidadId) {
+            $condicion[] = " E.id = {$empresaId} ";
+        }        
         if (!empty($condicion)) {
             $condicion = implode("AND", $condicion);
             $sql .= " WHERE {$condicion} ";
@@ -228,6 +231,17 @@ SQL;
           INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
           INNER JOIN categoria AS C ON C.id = E.categoria_id_fk */
         return crearArraySQL($this->db->execute_sql($sql));
+    }
+    
+    public function getEmpresaGaleria($empresaId) {
+        $sql = <<<SQL
+SELECT * FROM empresa_galeria WHERE empresa_id_fk = {$empresaId}               
+SQL;
+        return crearArraySQL($this->db->execute_sql($sql));
+    }    
+    
+    public function getEmpresa($empresaId) {
+        return $this->getEmpresas($empresaId);
     }
 
     private function setEmpresaEspecialidades($empresaId, $especialidades) {
@@ -300,11 +314,33 @@ HTML;
     }
 
     public function createGridEmpresas($categoriaId, $estado = NULL, $especialidadId = NULL) {
-        $empresas = $this->getEmpresas($categoriaId, $estado, $especialidadId);
+        $empresas = $this->getEmpresas(NULL, $categoriaId, $estado, $especialidadId);
         foreach ($empresas as $key => $e) {
             $empresas[$key]['especialidades'] = $this->getEmpresaEspecialidades($e['id']);
         }
         return $this->gridEmpresas($empresas);
+    }
+    
+    public function getPerfil($empresaId) {
+        global $_Storage_Images, $_Storage_Images_Prefix, $empresaId ;
+        
+        $data = array();
+        $data = $this->getEmpresa($empresaId);
+        $data = $data[0];
+        $data['especialidades'] = $this->getEmpresaEspecialidades($empresaId);
+        #$data['galeria'] = $Empresa->getEmpresaGaleria($empresaId);
+
+        $directorio = 'galeria';
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/' . $directorio;
+        $imgs = scandir($path);
+        $addPath = function($val) {
+            global $path;
+            return $path . "/" . $val;
+        };
+        $data['galeria'] = array_map($addPath, $imgs);
+        $data['promocion'] = $this->getPromociones($empresaId);
+        
+        return $object = json_decode(json_encode($data), FALSE);
     }
 
 }
