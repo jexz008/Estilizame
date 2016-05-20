@@ -46,7 +46,7 @@ function modales() {
                     ';
                 footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" id="btnSendMailContact" >Enviar</button>\
+                    <button class="btn btn-success" id="btnSendMailContact" data-loading-text="Loading...">Enviar</button>\
                     ';
                 break;
             case 'btnModalNosotros':
@@ -118,7 +118,7 @@ function formContactanos() {
       $("#formContactanos").on("submit", function(event){
         event.stopPropagation();
         event.preventDefault();
-        $("#btnSendMailContact").hide();
+        $("#btnSendMailContact").button('loading');//.hide();
         $.ajax({
             url: 'index.php?module=mail_contacto&action=mail_contacto&format=raw',
             type: 'POST',
@@ -135,7 +135,7 @@ function formContactanos() {
                     $('#myModal').modal('hide');
                 } else {
                     alert("ERROR: " + data.message);
-                    $("#btnSendMailContact").show();
+                    $("#btnSendMailContact").button('reset');//show();
                     $("#formContactanos").off();
                     //alert("ERROR: Error when trying to change status");
                 }

@@ -31,7 +31,7 @@ $pathImgs = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
                     <h3 class="panel-title">Foto de perfil</h3>
                 </div>
                 <div class="panel-body">
-                    <img class="img-responsive" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
+                    <img class="img-responsive img-rounded" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
                 </div>
             </div>
         </div>
@@ -76,7 +76,23 @@ HTML;
                 </div>
                 <div class="panel-body">
 
-            <h2><?=$Perfil->nombre?></h2>
+                    <dl>
+                        <dt>Nombre</dt>
+                        <dd><?=$Perfil->nombre?></dd>
+                        <dt>Categoria</dt>
+                        <dd><?=$Perfil->categoria?></dd>
+                        <dt>Especialidades</dt>
+                        <dd>
+                        <?php
+                        if($Perfil->especialidad):foreach ($Perfil->especialidad as $key => $value) {
+                            echo '<span class="label label-info">'.$value.'</span>';
+                        }else: echo '<span class="label label-default">Sin especialidades</span>'; endif;
+                        ?>
+                        </dd>
+                        <dt>Descripción</dt>
+                        <dd><?=$Perfil->descripcion?></dd>
+                    </dl>
+            <!--<h2><?=$Perfil->nombre?></h2>
             <h3>Categoria: <?=$Perfil->categoria?></h3>
             <h3>Especialidades:</h3>
             <?php
@@ -85,12 +101,8 @@ HTML;
             }else: echo '<span class="label label-default">Sin especialidades</span>'; endif;
             ?>
             <br><br>
-            <p class="text-justify"><?=$Perfil->descripcion?></p>
-            <!--<h4><?=$Perfil->direccion?></h4>
-            <h4><?=$Perfil->municipio?>, <?=$Perfil->estado?></h4>
-            <h4>Teléfonos</h4>
-            <h4><?=$Perfil->telefono?></h4>
-            <h4><?=$Perfil->email?></h4>-->
+            <p class="text-justify"><?=$Perfil->descripcion?></p>-->
+
             <address>
                 <strong><?= $Perfil->municipio ?>, <?= $Perfil->estado ?></strong><br>
                 <?= $Perfil->direccion ?><br>
@@ -125,7 +137,9 @@ HTML;
         </div>
         <div class="col-md-7">
             <!-- Ubicación google maps -->
+            <div class="embed-responsive embed-responsive-4by3">
             <?=$Perfil->ubicacion_html?>
+            </div>
 
             <!-- Video Youtube -->
             <?php if($Perfil->video != "http://www.youtube.com/embed/" ){ ?>
@@ -144,7 +158,7 @@ HTML;
                     <tr>
                         <th>Imagen</th>
                         <th>Promoción</th>
-                        <th>Termina</th>
+                        <th>Fecha termino</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,7 +166,7 @@ HTML;
                             <tr>
                                 <td><img src="<?= $p->img ?>" width="600" height="150" /></td>
                                 <td><?= $p->nombre ?></td>
-                                <td><?= $p->termio ?></td>
+                                <td><?= $p->fechaFin ?></td>
                             </tr>
                         <?php } else: echo '<td colspan="3">Sin Promociones</td>';
                     endif; ?>
@@ -163,7 +177,7 @@ HTML;
 
     <div class="row">
         <div class="col-md-4">
-            <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#Modal_Promocion">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Modal_Promocion">
                 PUBLICA UNA PROMOCION
             </button>
         </div>

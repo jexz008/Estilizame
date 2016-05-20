@@ -34,27 +34,21 @@
     <link rel="stylesheet" href="css/estilos.css?version=<?= $_app->version ?>">
 
 
-    <?php /*
-      <!-- FANCYBOX -->
-      <!--<script type="text/javascript" src="fancybox/source/jquery.fancybox.pack.js"></script>
-      <script type="text/javascript" src="fancybox/jquery.easing-1.4.pack.js"></script>
-      <script type="text/javascript" src="fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-      <link rel="stylesheet" href="fancybox/source/jquery.fancybox.css" type="text/css" media="screen" />-->
-      <!-- Add mousewheel plugin (this is optional) -->
-      <script type="text/javascript" src="/librerias/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+    <!-- FANCYBOX -->
+    <!-- Add mousewheel plugin (this is optional) -->
+    <script type="text/javascript" src="libs/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
 
-      <!-- Add fancyBox -->
-      <link rel="stylesheet" href="/librerias/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-      <script type="text/javascript" src="/librerias/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <!-- Add fancyBox -->
+    <link rel="stylesheet" href="libs/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+    <script type="text/javascript" src="libs/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
-      <!-- Optionally add helpers - button, thumbnail and/or media -->
-      <link rel="stylesheet" href="/librerias/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-      <script type="text/javascript" src="/librerias/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
-      <script type="text/javascript" src="/librerias/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
+    <!-- Optionally add helpers - button, thumbnail and/or media -->
+    <link rel="stylesheet" href="libs/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+    <script type="text/javascript" src="libs/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+    <script type="text/javascript" src="libs/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
 
-      <link rel="stylesheet" href="/librerias/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
-      <script type="text/javascript" src="/librerias/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
-     */ ?>
+    <link rel="stylesheet" href="libs/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+    <script type="text/javascript" src="libs/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
 
     <!--<link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Short+Stack' rel='stylesheet' type='text/css'>-->

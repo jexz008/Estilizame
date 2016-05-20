@@ -339,9 +339,51 @@ HTML;
             array_walk($imgs, $addPath, $path);
         }
         $data['galeria'] = $imgs;
-        #$data['promocion'] = $this->getPromociones($empresaId);
+        $data['promocion'] = $this->getPromociones($empresaId);
 
         return $object = json_decode(json_encode($data), FALSE);
+    }
+
+    public function getPromociones($empresaId) {
+            $sql = <<<SQL
+SELECT P.* FROM promocion AS P
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = P.id AND ENT.estatus = 1 AND ENT.tipo='promocion'
+WHERE P.empresa_id_fk = {$empresaId}
+SQL;
+            return crearArraySQL($this->db->execute_sql($sql));
+    }
+
+    public function setPromocion($nombre, $imagen, $descripcion, $fechaFin, $empresaId, $usuarioId) {
+            $sql = <<<SQL
+INSERT INTO `promocion` (`nombre`, `imagen`, `descripcion`, `fechafin`, `empresa_id_fk`) VALUES
+('{$nombre}', '{$imagen}', '{$descripcion}', '{$fechaFin}', '{$empresaId}')
+SQL;
+            $this->db->execute_sql($sql);
+            $promocionId = $this->db->last_insert();
+
+            $sql = <<<SQL
+INSERT INTO `entidad` (`tipo`, `entidad_id_fk`, `estatus`, `fecha_creacion`, `usuario_id_fk`, `usuario_mod_id_fk`) VALUES
+('promocion', {$promocionId}, 1, CURRENT_TIMESTAMP, {$usuarioId}, {$usuarioId})
+SQL;
+            $this->db->execute_sql($sql);
+            return $promocionId;
+    }
+
+    public function updatePromocion($promcionId, $imagen, $descripcion, $fechaFin, $usuarioId) {
+            $sql = <<<SQL
+UPDATE promocion AS P 
+INNER JOIN entidad AS ENT ON ENT.entidad_id_fk = P.id AND ENT.estatus = 1 AND ENT.tipo='promocion'
+SET P.nombre='{$nombre}', P.imagen='{$imagen}', P.descripcion='{$descripcion}', P.fecha_fin='{$fechaFin}', ENT.usuario_id_fk='{$usuarioId}'
+WHERE P.id = {$promcionId}
+SQL;
+            $this->db->execute_sql($sql);
+    }
+
+    public function deletePromocion($promocionId) {
+        $sql = <<<SQL
+UPDATE entidad SET estatus = 0 WHERE entidad_id_fk = {$promocionId} AND tipo = 'promocion'
+SQL;
+            $this->db->execute_sql($sql);
     }
 
 }

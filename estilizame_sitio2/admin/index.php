@@ -23,7 +23,7 @@ if ($module == "inicio") {
 } else {
     if (in_array($module, $sections)) {
         $_Modulo = ucwords(strtolower($module));
-        $include = "sitio/" . $module . ".php";
+        $include = "admin/" . $module . ".php";
     } else {
         $include = "main.php";
     }
