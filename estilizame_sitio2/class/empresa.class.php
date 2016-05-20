@@ -195,7 +195,7 @@ FROM empresa AS E
 INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
 INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
 INNER JOIN categoria AS C ON C.id = E.categoria_id_fk
-                
+
 LEFT JOIN empresa_especialidad AS EES ON EES.empresa_id_fk = E.id
 LEFT JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
 SQL;
@@ -208,9 +208,9 @@ SQL;
         if ($especialidadId) {
             $condicion[] = " EES.especialidad_id_fk = {$especialidadId} ";
         }
-        if ($especialidadId) {
+        if ($empresaId) {
             $condicion[] = " E.id = {$empresaId} ";
-        }        
+        }
         if (!empty($condicion)) {
             $condicion = implode("AND", $condicion);
             $sql .= " WHERE {$condicion} ";
@@ -320,26 +320,27 @@ HTML;
         }
         return $this->gridEmpresas($empresas);
     }
-    
+
     public function getPerfil($empresaId) {
         global $_Storage_Images, $_Storage_Images_Prefix, $empresaId ;
-        
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/galeria';
+
         $data = array();
         $data = $this->getEmpresa($empresaId);
         $data = $data[0];
         $data['especialidades'] = $this->getEmpresaEspecialidades($empresaId);
         #$data['galeria'] = $Empresa->getEmpresaGaleria($empresaId);
+        $imgs = NULL;
+        if(file_exists($path)){
+            $imgs = array_diff(scandir($path), array('..', '.'));
+            $addPath = function(&$val, $key, $path) {
+                $val = $path . "/" . $val;
+            };
+            array_walk($imgs, $addPath, $path);
+        }
+        $data['galeria'] = $imgs;
+        #$data['promocion'] = $this->getPromociones($empresaId);
 
-        $directorio = 'galeria';
-        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/' . $directorio;
-        $imgs = scandir($path);
-        $addPath = function($val) {
-            global $path;
-            return $path . "/" . $val;
-        };
-        $data['galeria'] = array_map($addPath, $imgs);
-        $data['promocion'] = $this->getPromociones($empresaId);
-        
         return $object = json_decode(json_encode($data), FALSE);
     }
 

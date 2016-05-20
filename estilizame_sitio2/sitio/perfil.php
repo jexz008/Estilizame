@@ -4,9 +4,11 @@ session_start();
   header ("Location: ../index.php");
   } */
 $empresaId = $_SESSION[$_app->prefijo . '_usuario_empresa_id'];
-
+if($_Pruebas) { $empresaId = $_REQUEST['perfil']?:$empresaId; } //Pruebas
 $Empresa = new Empresa();
 $Perfil = $Empresa->getPerfil($empresaId);
+$pathImgs = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
+
 ?>
 
 
@@ -14,83 +16,89 @@ $Perfil = $Empresa->getPerfil($empresaId);
 <div class="container">
 
     <div class="row">
-        <div class="col-md-12 grid-section" id="grid-section">         
+        <div class="col-md-12 grid-section" id="grid-section">
             <div class="page-header">
-                <h1>Consuelo Vizzuett Makeup Artist <small>Salones</small></h1>
-            </div>            
-            <img style="width: 100%; height: 250px" class="img-responsive" src="storage/img/empresas/empresa_10/banners/PORTADILLA.jpg">
+                <h1><?=$Perfil->nombre?> <small><?=$Perfil->categoria?></small></h1>
+            </div>
+            <img style="width: 100%; height: 250px" class="img-responsive" src="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>">
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-5">
-            <img class="img-responsive" src="storage/img/empresas/empresa_10/volante (1).jpg">
-        </div>        
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Foto de perfil</h3>
+                </div>
+                <div class="panel-body">
+                    <img class="img-responsive" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
+                </div>
+            </div>
+        </div>
         <div class="col-md-7">
             <button data-target="#Modal_Premium" data-toggle="modal" class="btn btn-info form-control" type="button">
                 ADQUIERE TU MEMBRESIA PREMIUM
             </button>
             <br><br>
-            <div class="row">
+            <!-- Galería -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Galería</h3>
+                </div>
+                <div class="panel-body">
 
+                    <div class="row">
+                        <?php
+                        if($Perfil->galeria):foreach ($Perfil->galeria as $key => $img) {
+                            echo <<<HTML
                 <div class="col-xs-6 col-md-3">
                     <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/tempFileForShare.jpg" style="width: 128px; height: 128px">
+                        <img class="img-thumbnai" src="{$img}" style="width: 128px; height: 128px">
                     </a>
                 </div>
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/aew.jpg" style="width: 128px; height: 128px">
-                    </a>
-                </div>
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/tempFileForShare.jpg" style="width: 128px; height: 128px">
-                    </a>
-                </div>
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/aew.jpg" style="width: 128px; height: 128px">
-                    </a>
-                </div>
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/tempFileForShare.jpg" style="width: 128px; height: 128px">
-                    </a>
-                </div>
-                <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img class="img-thumbnai" src="storage/img/empresas/empresa_10/galeria/aew.jpg" style="width: 128px; height: 128px">
-                    </a>
-                </div>
+HTML;
+                        }else: echo "Sin imágenes"; endif;
+                        ?>
+                    </div>
 
-            </div>    
+                </div>
+            </div>
 
-
-
-        </div>        
+        </div>
     </div>
 
     <div class="row">
         <div class="col-md-5">
             <!-- Información de Empresa -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mi información</h3>
+                </div>
+                <div class="panel-body">
+
             <h2><?=$Perfil->nombre?></h2>
             <h3>Categoria: <?=$Perfil->categoria?></h3>
             <h3>Especialidades:</h3>
             <?php
-            foreach ($Perfil->especialidad as $key => $value) {
-                echo "<h4>".$value."</h4>";
-            }
+            if($Perfil->especialidad):foreach ($Perfil->especialidad as $key => $value) {
+                echo '<span class="label label-info">'.$value.'</span>';
+            }else: echo '<span class="label label-default">Sin especialidades</span>'; endif;
             ?>
-            <br>
-            <h4><?=$Perfil->descripcion?></h4><br>
-            <h4><?=$Perfil->direccion?></h4>
+            <br><br>
+            <p class="text-justify"><?=$Perfil->descripcion?></p>
+            <!--<h4><?=$Perfil->direccion?></h4>
             <h4><?=$Perfil->municipio?>, <?=$Perfil->estado?></h4>
             <h4>Teléfonos</h4>
             <h4><?=$Perfil->telefono?></h4>
-            <h4><?=$Perfil->email?></h4>
+            <h4><?=$Perfil->email?></h4>-->
+            <address>
+                <strong><?= $Perfil->municipio ?>, <?= $Perfil->estado ?></strong><br>
+                <?= $Perfil->direccion ?><br>
+                <abbr title="Teléfonos">Tels:</abbr> <?= $Perfil->telefono ?><br>
+                <a href="mailto:#"><?=$Perfil->email?></a>
+            </address>
 
-            <!-- Redes Sociales --> 
+            <!-- Redes Sociales -->
             <?php
             if(!empty($Perfil->facebook)){
                 echo '<a href="'.$Perfil->facebook.'" target="_blank"><i class="fa fa-facebook-square socialmedia"></i></a>';
@@ -104,46 +112,55 @@ $Perfil = $Empresa->getPerfil($empresaId);
             if(!empty($Perfil->instagram)){
                 echo '<a href="'.$Perfil->instagram.'" target="_blank"><i class="fa fa-facebook-instagram socialmedia"></i></a>';
             }
-            
             ?>
+
+
+
+
+                </div>
+            </div>
+
+
+
         </div>
         <div class="col-md-7">
-            <!-- Ubicación google maps -->            
+            <!-- Ubicación google maps -->
             <?=$Perfil->ubicacion_html?>
-            
-            <!-- Video Youtube -->            
+
+            <!-- Video Youtube -->
             <?php if($Perfil->video != "http://www.youtube.com/embed/" ){ ?>
-                <div class="col-lg-12 banner text-right">
-                  <iframe width="730" height="360" src="<?=$Perfil->video?>"></iframe>
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe class="embed-responsive-item" src="<?= $Perfil->video ?>"></iframe>
                 </div>
-            <?php } ?>            
-        </div>          
+            <?php } ?>
+        </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <h2 class="text-info text-center">PROMOCIONES</h2>
             <table class="table table-responsive table-striped table-condensed table-hover table-bordered">
                 <thead>
-                <tr class="tabla_header">
-                    <th>Imagen</th>
-                    <th>Promoción</th>
-                    <th>Termina</th>
-                </tr>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Promoción</th>
+                        <th>Termina</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <?php   foreach ($Perfil->promocion as $key => $p) { ?>
-                    <tr>
-                        <td><img src="<?=$p->img?>" width="600" height="150" /></td>
-                        <td><?=$p->nombre?></td>
-                        <td><?=$p->termio?></td>
-                    </tr>
-                    <?php } ?>
+                    <?php if ($Perfil->promocion) : foreach ($Perfil->promocion as $key => $p) { ?>
+                            <tr>
+                                <td><img src="<?= $p->img ?>" width="600" height="150" /></td>
+                                <td><?= $p->nombre ?></td>
+                                <td><?= $p->termio ?></td>
+                            </tr>
+                        <?php } else: echo '<td colspan="3">Sin Promociones</td>';
+                    endif; ?>
                 </tbody>
             </table>
-        </div>        
-    </div>    
-    
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-4">
             <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#Modal_Promocion">
@@ -159,6 +176,6 @@ $Perfil = $Empresa->getPerfil($empresaId);
             <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#Modal_Modificar">
                 MODIFICA TU PERFIL
             </button>
-        </div>        
-    </div>    
+        </div>
+    </div>
 </div>
