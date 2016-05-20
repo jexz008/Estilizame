@@ -14,19 +14,8 @@ class Empresa {
         try {
             $this->db->begin();
             // Usuario
-            $sql = <<<SQL
-INSERT INTO `usuario` (`email`, `contrasena`, `empresa_id_fk`, `nombre`) VALUES
-('{$email}', SHA1({$password}), NULL, '{$nombre}')
-SQL;
-            $this->db->execute_sql($sql);
-            $usuarioId = $this->db->last_insert();
-
-            $sql = <<<SQL
-INSERT INTO `entidad` (`tipo`, `entidad_id_fk`, `estatus`, `fecha_creacion`, `usuario_id_fk`, `usuario_mod_id_fk`) VALUES
-('usuario', {$usuarioId}, 1, CURRENT_TIMESTAMP, {$usuarioId}, {$usuarioId})
-SQL;
-            $this->db->execute_sql($sql);
-
+            $Usuario = new Usuario();
+            $usuarioId = $Usuario->setUsuario($email, $password, $nombre);
 
             // Empresa
             $sql = <<<SQL
@@ -45,10 +34,11 @@ SQL;
             $this->db->execute_sql($sql);
 
             // Usuario
-            $sql = <<<SQL
+            $Usuario->updateUsuario($usuarioId, NULL, NULL, NULL, $empresaId);
+            /*$sql = <<<SQL
 UPDATE usuario SET empresa_id_fk = {$empresaId} WHERE id = {$usuarioId}
 SQL;
-            $this->db->execute_sql($sql);
+            $this->db->execute_sql($sql);*/
 
 
             // Especialidades
@@ -94,7 +84,7 @@ SQL;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    private function updateEmpresa($empresaId, $campo, $valor) {
+    private function updateEmpresa($empresaId, $campo, $valor) { //-> cambiar como la de usuario
         $sql = <<<SQL
 UPDATE empresa AS E 
 INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 ENT.tipo='empresa' 
@@ -253,7 +243,7 @@ SQL;
 
         foreach ($especialidades as $especialidad) {
             $sql = <<<SQL
-INSERT INTO empresa_especialidad (empresa_id_fk, especialidad_id_fk) 
+INSERT INTO empresa_especialidad (empresa_id_fk, especialidad_id_fk)
 VALUES ({$empresaId}, {$especialidad})
 SQL;
             $this->db->execute_sql($sql);
@@ -269,7 +259,7 @@ SQL;
 
         $count = count($empresas);
         $html = <<<HTML
-            <h3>{$_Modulo} <small>({$count} Resultados)</small> </H3>    
+            <h3>{$_Modulo} <small>({$count} Resultados)</small> </h3>
             <table class="table table-hover table-striped table-responsive">
             <thead>
                 <tr>
