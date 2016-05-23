@@ -1,5 +1,5 @@
 <?php
-$Categoria = new categoria();
+$Categoria = new Categoria();
 ?>
 <div class="panel panel-default">
     <div class="panel-heading c-panel-header">

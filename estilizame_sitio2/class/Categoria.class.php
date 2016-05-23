@@ -3,7 +3,7 @@
 class Categoria {
 
     public $db;
-
+    
     function __construct() {
         $this->db = new db();
     }
@@ -82,8 +82,8 @@ HTML;
         }
         return $html;
     }
-
-    function checkboxCategoriaEspecialidad() {
+    
+    public function checkboxCategoriaEspecialidad($categoriaId = NULL, $checkeds = array(), $prefix = 'registro') {
         $data = crearArraySQL($this->getCategoriaEspecialidad());
         $html = '';
         if ($data) {
@@ -100,20 +100,22 @@ HTML;
         if ($categoriaEspecialidad) {
             //$html .= '<select name="categoria" id="categoria" class="form-control">';
             foreach ($categoriaEspecialidad as $key => $especialidad) {
-                $html .= '<div class="checkbox" id="categoria_especialidad_' . $key . '" style="display:none">';
+                $style = ($key == $categoriaId) ? : 'style="display:none"';
+                $html .= '<div class="checkbox" id="categoria_especialidad_' . $key . '" '.$style.'>';
                 $i = 0;
                 $j = 0;
                 $numEspecialidades = count($especialidad);
 
                 foreach ($especialidad as $k => $value) {
+                    $checked = (in_array($value['especialidad_id'], $checkeds)) ? ' checked="checked" ' : '';
                     if ($i == 0) {
                         $html .= '<div class="row" >';
                     }
                     //$html .= $k ."=>". $value;
                     $html .= <<<HTML
                     <div class="col-xs-6">
-			<label for="registro_{$key}_{$value['especialidad_id']}" >
-                            <input type="checkbox" id="registro_{$key}_{$value['especialidad_id']}" value="{$value['especialidad_id']}" name="registro_especialidad[{$key}][{$value['especialidad_id']}]"> {$value['especialidad_nombre']} 
+			<label for="{$prefix}_{$key}_{$value['especialidad_id']}" >
+                            <input type="checkbox" id="{$prefix}_{$key}_{$value['especialidad_id']}" value="{$value['especialidad_id']}" name="{$prefix}_especialidad[{$key}][{$value['especialidad_id']}]" {$checked}> {$value['especialidad_nombre']} 
 			</label>
                     </div>
 HTML;

@@ -92,8 +92,19 @@ SET E.{$campo} = '{$valor}'
 WHERE E.id = {$empresaId}
 SQL;
         $this->db->execute_sql($sql);
+        /*$args = get_defined_vars();
+        $condiciones = array();
+        if($args):foreach ($args as $var => $val) {
+            if($key != 'empresaId'){
+                if(!empty($val)) $condiciones[] = $var . "= '" . $val . "'";
+            }
+        }endif;
+        if($condiciones){
+            $condicion = implode(", ", $condiciones);
+            $sql = "UPDATE `empresa` AS E SET ".$condicion." INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 ENT.tipo='empresa' WHERE E.id=".$empresaId;
+            $this->db->execute_sql($sql);
+        }*/
     }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
     public function registraEmpresa($data, $files) {
         extract($data);
@@ -220,7 +231,7 @@ SQL;
           INNER JOIN especialidad AS ES ON ES.id = EES.especialidad_id_fk
           INNER JOIN jerarquia J ON J.id = E.jerarquia_id_fk
           INNER JOIN categoria AS C ON C.id = E.categoria_id_fk */
-        return crearArraySQL($this->db->execute_sql($sql));
+        return $this->db->execute_sql($sql);
     }
     
     public function getEmpresaGaleria($empresaId) {
@@ -249,8 +260,7 @@ SQL;
             $this->db->execute_sql($sql);
         }
     }
-
-    private function updatetEmpresaEspecialidades($empresaId, $especialidades) {
+    public function updatetEmpresaEspecialidades($empresaId, $especialidades) {
         $this->setEmpresaEspecialidades($empresaId, $especialidades);
     }
 
@@ -306,7 +316,7 @@ HTML;
     public function createGridEmpresas($categoriaId, $estado = NULL, $especialidadId = NULL) {
         $empresas = $this->getEmpresas(NULL, $categoriaId, $estado, $especialidadId);
         foreach ($empresas as $key => $e) {
-            $empresas[$key]['especialidades'] = $this->getEmpresaEspecialidades($e['id']);
+            $empresas[$key]['especialidades'] = crearArraySQL($this->getEmpresaEspecialidades($e['id']));
         }
         return $this->gridEmpresas($empresas);
     }
@@ -318,7 +328,7 @@ HTML;
         $data = array();
         $data = $this->getEmpresa($empresaId);
         $data = $data[0];
-        $data['especialidades'] = $this->getEmpresaEspecialidades($empresaId);
+        $data['especialidades'] = crearArraySQL($this->getEmpresaEspecialidades($empresaId));
         #$data['galeria'] = $Empresa->getEmpresaGaleria($empresaId);
         $imgs = NULL;
         if(file_exists($path)){
@@ -345,7 +355,7 @@ SQL;
 
     public function setPromocion($nombre, $imagen, $descripcion, $fechaFin, $empresaId, $usuarioId) {
             $sql = <<<SQL
-INSERT INTO `promocion` (`nombre`, `imagen`, `descripcion`, `fechafin`, `empresa_id_fk`) VALUES
+INSERT INTO `promocion` (`nombre`, `imagen`, `descripcion`, `fecha_fin`, `empresa_id_fk`) VALUES
 ('{$nombre}', '{$imagen}', '{$descripcion}', '{$fechaFin}', '{$empresaId}')
 SQL;
             $this->db->execute_sql($sql);

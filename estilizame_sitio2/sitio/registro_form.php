@@ -1,6 +1,6 @@
 <?php
 try {
-    $categoria = new categoria();
+    $categoria = new Categoria();
     $selectCategorias = $categoria->selectCategorias();
     $checkboxCategoriaEspecialidad = $categoria->checkboxCategoriaEspecialidad();
 } catch (Exception $e) {

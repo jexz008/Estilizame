@@ -10,7 +10,7 @@ try {
         $eEspecialidades[] = $val['id'];
     }
 
-    $categoria = new categoria();
+    $categoria = new Categoria();
     echo $checkboxCategoriaEspecialidad = $categoria->checkboxCategoriaEspecialidad($categoriaId, $eEspecialidades, 'perfil');
     
 } catch (Exception $e) {
