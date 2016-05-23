@@ -50,11 +50,11 @@ SQL;
             $this->db->execute_sql($sql);
         }
     }
-    
+
     public function getUsuarios($empresaId = NULL, $usuarioId = NULL){
         $condiciones = array();
-        $condiciones[] = ($empresaId) ? ' U.empresa_id_fk = '.$empresaId;
-        $condiciones[] = ($usuarioId) ? ' U.id = '.$usuarioId;
+        if(!empty($empresaId)){ $condiciones[] = ' U.empresa_id_fk = '.$empresaId; }
+        if(!empty($empresaId)){ $condiciones[] = ' U.id = '.$usuarioId; }
         if($condiciones){
             $condicion = " WHERE " . implode("AND ", $condiciones);
         }
@@ -65,7 +65,7 @@ INNER JOIN entidad AS ENT ON ENT.entidad_id_fk = U.id AND ENT.estatus = 1 ENT.ti
 SQL;
         return crearArraySQL($this->db->execute_sql($sql));
     }
-    
+
     public function getUsuario($usuarioId){
         return $this->getUsuarios(NULL, $usuarioId);
     }

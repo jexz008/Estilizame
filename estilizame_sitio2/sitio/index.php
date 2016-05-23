@@ -14,7 +14,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : "";
 $sesion_id = (!isset($_SESSION[$_app->prefijo.'_usuario_id'])) ? NULL : $_SESSION[$_app->prefijo.'_usuario_id'];
 
 $sections = array('uploadfw', 'reports', 'mydata', 'mail_contacto', 'registro_form', 'registro_registrar', 'pais_estados', 'academias'
-    , 'distribuidores', 'marcas', 'salones', 'getGrid', 'login', 'perfil');
+    , 'distribuidores', 'marcas', 'salones', 'getGrid', 'login', 'perfil', 'getEspecialidades', 'registro_actualizar');
 
 if ($module == "inicio") {
     $include = "main.php";

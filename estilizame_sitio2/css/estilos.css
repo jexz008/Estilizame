@@ -151,3 +151,10 @@ footer{
     font-weight: lighter;
     text-transform: none;
 }
+
+/* Fancy Box */
+#tip7-title { text-align: left; }
+
+#tip7-title b { display: block; margin-right: 80px; }
+
+#tip7-title span { float: right; }

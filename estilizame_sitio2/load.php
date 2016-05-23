@@ -18,9 +18,10 @@ spl_autoload_register(function ($nombre_clase) {
     include 'class/'.$nombre_clase . '.php';
 });
 */
-spl_autoload_register(function ($nombre) {
+spl_autoload_register(function ($nombre_clase) {
     //echo "Intentando cargar $nombre.\n";
-    throw new Exception("Imposible cargar $nombre.");
+    include 'class/'.$nombre_clase . '.class.php';
+    //throw new Exception("Imposible cargar $nombre.");
 });
 /*
 try {

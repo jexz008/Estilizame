@@ -3,16 +3,17 @@ session_start();
 /* if (!isset($_SESSION['xc_usuario_id']) or $_SESSION['xc_usuario_tipo']!="S"){
   header ("Location: ../index.php");
   } */
-$empresaId = $_SESSION[$_app->prefijo . '_usuario_empresa_id'];
+$empresaId  = $_SESSION[$_app->prefijo . '_usuario_empresa_id'];
 if($_Pruebas) { $empresaId = $_REQUEST['perfil']?:$empresaId; } //Pruebas
-$Empresa = new Empresa();
-$Perfil = $Empresa->getPerfil($empresaId);
-$pathImgs = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
+$Empresa    = new Empresa();
+$Perfil     = $Empresa->getPerfil($empresaId);
+$pathImgs   = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
 
 ?>
 
 
-
+<input type="hidden" name="hdnPerfilCategoriaId" id="hdnPerfilCategoriaId" value="<?=$Perfil->categoria_id_fk?>" />
+<input type="hidden" name="hdnPerfilId" id="hdnPerfilId" value="<?=$Perfil->id?>" />
 <div class="container">
 
     <div class="row">
@@ -31,15 +32,15 @@ $pathImgs = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
                     <h3 class="panel-title">Foto de perfil</h3>
                 </div>
                 <div class="panel-body">
-                    <img class="img-responsive img-rounded" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
+                    <img class="img-responsive img-rounded center-block" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
                 </div>
             </div>
         </div>
         <div class="col-md-7">
-            <button data-target="#Modal_Premium" data-toggle="modal" class="btn btn-info form-control" type="button">
+            <button data-target="#Modal_Premium" data-toggle="modal" class="btn btn-primary btn-lg btn-block" type="button">
                 ADQUIERE TU MEMBRESIA PREMIUM
             </button>
-            <br><br>
+            <br>
             <!-- Galería -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -52,7 +53,7 @@ $pathImgs = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
                         if($Perfil->galeria):foreach ($Perfil->galeria as $key => $img) {
                             echo <<<HTML
                 <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
+                    <a href="{$img}" class="thumbnail grouped_elements" rel="group1">
                         <img class="img-thumbnai" src="{$img}" style="width: 128px; height: 128px">
                     </a>
                 </div>
@@ -77,20 +78,22 @@ HTML;
                 <div class="panel-body">
 
                     <dl>
-                        <dt>Nombre</dt>
-                        <dd><?=$Perfil->nombre?></dd>
+                        <!--<dt>Nombre</dt>-->
+                        <dd><h2><?=$Perfil->nombre?></h2></dd>
                         <dt>Categoria</dt>
                         <dd><?=$Perfil->categoria?></dd>
+                        <br>
                         <dt>Especialidades</dt>
                         <dd>
                         <?php
-                        if($Perfil->especialidad):foreach ($Perfil->especialidad as $key => $value) {
-                            echo '<span class="label label-info">'.$value.'</span>';
+                        if($Perfil->especialidades):foreach ($Perfil->especialidades as $key => $especialidad) {
+                            echo '<span class="label label-info">'.$especialidad->nombre.'</span> ';
                         }else: echo '<span class="label label-default">Sin especialidades</span>'; endif;
                         ?>
                         </dd>
+                        <br>
                         <dt>Descripción</dt>
-                        <dd><?=$Perfil->descripcion?></dd>
+                        <dd><p class="text-justify"><?=$Perfil->descripcion?></p></dd>
                     </dl>
             <!--<h2><?=$Perfil->nombre?></h2>
             <h3>Categoria: <?=$Perfil->categoria?></h3>
@@ -113,16 +116,16 @@ HTML;
             <!-- Redes Sociales -->
             <?php
             if(!empty($Perfil->facebook)){
-                echo '<a href="'.$Perfil->facebook.'" target="_blank"><i class="fa fa-facebook-square socialmedia"></i></a>';
+                echo '<a href="'.$Perfil->facebook.'" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
             }
             if(!empty($Perfil->twitter)){
-                echo '<a href="'.$Perfil->twitter.'" target="_blank"><i class="fa fa-twitter-square socialmedia"></i></a>';
+                echo '<a href="'.$Perfil->twitter.'" target="_blank"><i class="fa fa-twitter-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
             }
             if(!empty($Perfil->googleplus)){
-                echo '<a href="'.$Perfil->googleplus.'" target="_blank"><i class="fa fa-google-plus socialmedia"></i></a>';
+                echo '<a href="'.$Perfil->googleplus.'" target="_blank"><i class="fa fa-google-plus fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
             }
             if(!empty($Perfil->instagram)){
-                echo '<a href="'.$Perfil->instagram.'" target="_blank"><i class="fa fa-facebook-instagram socialmedia"></i></a>';
+                echo '<a href="'.$Perfil->instagram.'" target="_blank"><i class="fa fa-facebook-instagram fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
             }
             ?>
 
@@ -137,16 +140,29 @@ HTML;
         </div>
         <div class="col-md-7">
             <!-- Ubicación google maps -->
-            <div class="embed-responsive embed-responsive-4by3">
-            <?=$Perfil->ubicacion_html?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ubicación</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-4by3"><?=$Perfil->ubicacion_html?></div>
+                </div>
             </div>
+            
 
             <!-- Video Youtube -->
-            <?php if($Perfil->video != "http://www.youtube.com/embed/" ){ ?>
-                <div class="embed-responsive embed-responsive-4by3">
-                    <iframe class="embed-responsive-item" src="<?= $Perfil->video ?>"></iframe>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Video</h3>
                 </div>
-            <?php } ?>
+                <div class="panel-body">
+                <?php if($Perfil->video != "http://www.youtube.com/embed/" ){ ?>
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe class="embed-responsive-item" src="<?= $Perfil->video ?>"></iframe>
+                    </div>
+                <?php } ?>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -182,12 +198,12 @@ HTML;
             </button>
         </div>
         <div class="col-md-4">
-            <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#Modal_Eventos">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Modal_Eventos">
                 PUBLICA UN EVENTO
             </button>
         </div>
         <div class="col-md-4">
-            <button type="button" class="btn btn-info form-control" data-toggle="modal" data-target="#Modal_Modificar">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal" id="btnFormUpdatePerfil">
                 MODIFICA TU PERFIL
             </button>
         </div>
