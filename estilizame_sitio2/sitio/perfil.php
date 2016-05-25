@@ -9,6 +9,7 @@ $Empresa    = new Empresa();
 $Perfil     = $Empresa->getPerfil($empresaId);
 $pathImgs   = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
 
+list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 ?>
 
 
@@ -18,6 +19,17 @@ $pathImgs   = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
 <input type="hidden" name="hdnPerfilDescripcion" id="hdnPerfilDescripcion" value="<?=$Perfil->descripcion?>" />
 <input type="hidden" name="hdnPerfilEstado" id="hdnPerfilEstado" value="<?=$Perfil->estado?>" />
 <input type="hidden" name="hdnPerfilMunicipio" id="hdnPerfilMunicipio" value="<?=$Perfil->municipio?>" />
+<input type="hidden" name="hdnPerfilDireccion" id="hdnPerfilDireccion" value="<?= $Perfil->direccion ?>" />
+<input type="hidden" name="hdnPerfilTelefono1" id="hdnPerfilTelefono1" value="<?= $tel1 ?>" />
+<input type="hidden" name="hdnPerfilTelefono2" id="hdnPerfilTelefono2" value="<?= $tel2 ?>" />
+<input type="hidden" name="hdnPerfilTelefono3" id="hdnPerfilTelefono3" value="<?= $tel3 ?>" />
+<input type="hidden" name="hdnPerfilEmail" id="hdnPerfilEmail" value="<?=$Perfil->email?>" />
+<input type="hidden" name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" value="<?=$Perfil->ubicacion_html?>" />
+<input type="hidden" name="hdnPerfilVideo" id="hdnPerfilVideo" value="<?=$Perfil->video?>" />
+<input type="hidden" name="hdnPerfilFacebook" id="hdnPerfilFacebook" value="<?=$Perfil->facebook?>" />
+<input type="hidden" name="hdnPerfilTwitter" id="hdnPerfilTwitter" value="<?=$Perfil->twitter?>" />
+<input type="hidden" name="hdnPerfilGoogle" id="hdnPerfilGoogle" value="<?=$Perfil->googleplus?>" />
+<input type="hidden" name="hdnPerfilInstagram" id="hdnPerfilInstagram" value="<?=$Perfil->instagram?>" />
 
 <div class="container">
 

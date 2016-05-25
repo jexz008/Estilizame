@@ -36,11 +36,11 @@ HTML;
         return $html;
     }
 
-    public static function selectMunicipios($estado, $current = "") {
+    public static function selectMunicipios($estado, $current = "", $name = 'registro_municipio') {
         $data = crearArraySQL(self::getMunicipios($estado));
         $html = '';
         if ($data) {
-            $html .= '<select class="form-control" name="registro_municipio" id="registro_municipio" required="required">';
+            $html .= '<select class="form-control" name="'.$name.'" id="'.$name.'" required="required">';
             $html .= '<option value="">-Selecciona Municipio-</option>';
             foreach ($data as $key => $value) {
                 $selected = ($value['MUNICIPIO'] == $current) ? ' selected="selected" ' : '';

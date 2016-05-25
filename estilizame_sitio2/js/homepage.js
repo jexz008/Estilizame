@@ -172,7 +172,7 @@ function modales() {
             case 'btnFormPerfilUpdateNombreEmpresa':
                 title = 'Cambia el nombre de tu empresa';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                          <input type="text" class="form-control" name="perfil_empresa" value="' + $("#hdnPerfilNombre").val() + '" required placeholder="Ingresa el nombre de tu empresa o negocio"> \n\
+                          <input type="text" class="form-control" name="perfil_empresa" id="perfil_empresa" value="' + $("#hdnPerfilNombre").val() + '" required placeholder="Ingresa el nombre de tu empresa o negocio"> \n\
                         </div></div> \n\ ';
                 break;
             case 'btnFormPerfilUpdateCategoria':
@@ -201,7 +201,7 @@ function modales() {
             case 'btnFormPerfilUpdateDescripcion':
                 title = 'Cambiar descripción';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                          <textarea name="perfil_descripcion" class="form-control" rows="4" cols="80" size="200" required="required" placeholder="Ingresa una descripción de tu empresa o negocio maximo 200 caracteres">' + $('#hdnPerfilDescripcion').val() +'</textarea> \n\
+                          <textarea name="perfil_descripcion" id="perfil_descripcion" class="form-control" rows="4" cols="80" size="200" required="required" placeholder="Ingresa una descripción de tu empresa o negocio maximo 200 caracteres">' + $('#hdnPerfilDescripcion').val() +'</textarea> \n\
                         </div></div>\n\ ';
                 break;
             case 'btnFormPerfilUpdateEstado':
@@ -210,59 +210,46 @@ function modales() {
                         $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
                             var html = '<input type="hidden" name="registro_estado_nombre" id="registro_estado_nombre" >';
                             $('#formPerfilUpdate').html(html + data.html);
+                            changeEstado();
                         }, 'json');
                 };
                 getEstados();
-                changeEstado();
                 title = 'Cambiar estado';
                 html = '<i class="fa fa-spinner fa-spin"></i>';
                 break;
             case 'btnFormPerfilUpdateMunicipio':
+                var getMunicipios =  function(){
+                        var estadoId = $("#hdnPerfilEstado").val();
+                        $.get('index.php?module=pais_estados&action=getMunicipios&format=raw', {'estado':estadoId}, function(data){
+                            $('#formPerfilUpdate').html(data.html);
+                        }, 'json');
+                };
+                getMunicipios();
                 title = 'Cambiar municipio';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateMunicipio" method="post">\n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateMunicipio" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<i class="fa fa-spinner fa-spin"></i>';
                 break;
             case 'btnFormPerfilUpdateDireccion':
                 title = 'Cambiar dirección';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateDireccion" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><textarea name="perfil_direccion" class="form-control" rows="4" cols="80" required="required" placeholder="Ingresa tu domicilio Completo Ejemplo: Calle, Número y Colonia."></textarea></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateDireccion" data-loading-text="Loading...">Guardar</button>\
-                    ';
-                break;                
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <textarea name="perfil_direccion" id="perfil_direccion" class="form-control" rows="4" cols="80" required="required" placeholder="Ingresa tu domicilio Completo Ejemplo: Calle, Número y Colonia.">' + $("#hdnPerfilDireccion").val() + '</textarea> \n\
+                        </div></div>\n\ ';
+                break;
             case 'btnFormPerfilUpdateTelefono':
                 title = 'Cambiar teléfonos';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateTelefono" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12">\n\
+                html = '<div class="form-group"><div class="col-sm-12">\n\
                             <div class="row">\n\
                                 <div class="col-xs-4">\n\
-                                    <input type="tel" class="form-control" name="perfil_telefono[]" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
+                                    <input type="tel" class="form-control" name="perfil_telefono[]" value="' + $("#hdnPerfilTelefono1").val() + '" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
                                 </div> \n\
                                 <div class="col-xs-4">\n\
-                                    <input type="tel" class="form-control" name="perfil_telefono[]" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
+                                    <input type="tel" class="form-control" name="perfil_telefono[]" value="' + $("#hdnPerfilTelefono2").val() + '" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
                                 </div>  \n\
                                 <div class="col-xs-4"> \n\
-                                    <input type="tel" class="form-control" name="perfil_telefono[]" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
+                                    <input type="tel" class="form-control" name="perfil_telefono[]" value="' + $("#hdnPerfilTelefono3").val() + '" placeholder="Coloca tu numero de teléfono a 10 dígitos"/>\n\
                                 </div>\n\
-                          </div></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateTelefono" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                          </div></div></div> \n\ ';
                 break;
+                
             case 'btnFormPerfilUpdateFPerfil':
                 title = 'Cambiar foto de perfil';
                 html = ' \n\
@@ -298,101 +285,56 @@ function modales() {
                     <button class="btn btn-success" type="submit" id="btnPerfilUpdateGaleria" data-loading-text="Loading...">Guardar</button>\
                     ';
                 break;
+                
            case 'btnFormPerfilUpdateEmail':
                 title = 'Cambiar email';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateEmail" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="mail" name="perfil_email" class="form-control" placeholder="Email" required /></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateEmail" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="mail" name="perfil_email" id="perfil_email" value="' + $("#hdnPerfilEmail").val() + '" class="form-control" placeholder="Email" required /> \n\
+                        </div></div> \n\ ';
                 break;
            case 'btnFormPerfilUpdatePass':
                 title = 'Cambiar contraseña';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdatePass" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="password" name="perfil_contrasena" class="form-control" placeholder="Contraseña" required /></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdatePass" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="password" name="perfil_contrasena3" id="perfil_contrasena3" class="form-control" placeholder="Contraseña actual" required /> \n\
+                          <input type="password" name="perfil_contrasena" id="perfil_contrasena" class="form-control" placeholder="Contraseña nueva" required /> \n\
+                          <input type="password" name="perfil_contrasena2" id="perfil_contrasena2" class="form-control" placeholder="Repetir Contraseña" required /> \n\
+                        </div></div> \n\ ';
                 break;
            case 'btnFormPerfilUpdateUbicacion':
                 title = 'Cambiar ubicacion';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateUbicacion" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><textarea class="form-control" name="perfil_ubicacion" placeholder="Introduce el enlance de Google Maps"></textarea></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateUbicacion" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <textarea class="form-control" name="perfil_ubicacion" id="perfil_ubicacion" value="' + $("#hdnPerfilUbicacion").val() + '" placeholder="Introduce el enlance de Google Maps"></textarea> \n\
+                        </div></div> \n\ ';
                 break;
           case 'btnFormPerfilUpdateVideo':
                 title = 'Cambiar Video';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateVideo" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_video" placeholder="Introduce el ID de tu video de Youtube"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateVideo" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_video" id="perfil_video" value="' + $("#hdnPerfilVideo").val() + '" placeholder="Introduce el ID de tu video de Youtube"> \n\
+                        </div></div> \n\ ';
                 break;
           case 'btnFormPerfilUpdateFacebook':
                 title = 'Cambiar Facebook';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateFacebook" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_facebook" placeholder="Introduce la URL de Facebook"> </div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateFacebook" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_facebook" id="perfil_facebook" value="' + $("#hdnPerfilFacebook").val() + '" placeholder="Introduce la URL de Facebook">  \n\
+                        </div></div> \n\ ';
                 break;
           case 'btnFormPerfilUpdateTwitter':
                 title = 'Cambiar Twitter';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateTwitter" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_twitter" placeholder="Introduce la URL de Twitter"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateTwitter" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_twitter" id="perfil_twitter" value="' + $("#hdnPerfilTwitter").val() + '" placeholder="Introduce la URL de Twitter"> \n\
+                        </div></div> \n\ ';
                 break;
          case 'btnFormPerfilUpdateGoogle':
                 title = 'Cambiar Google';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateGoogle" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_google" placeholder="Introduce la URL de Google Plus"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateGoogle" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_google" id="perfil_google" value="' + $("#hdnPerfilGoogle").val() + '" placeholder="Introduce la URL de Google Plus"> \n\
+                        </div></div> \n\ ';
                 break;
          case 'btnFormPerfilUpdateInstagram':
                 title = 'Cambiar Instagram';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateInstagram" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_instagram" placeholder="Introduce la URL de Instagram"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateInstagram" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_instagram" id="perfil_instagram" value="' + $("#hdnPerfilInstagram").val() + '" placeholder="Introduce la URL de Instagram"> \n\
+                        </div></div> \n\ ';
                 break;
         }
         
@@ -414,38 +356,14 @@ function modales() {
         }
         // Eventos
         switch (id) {
-            case 'btnFormPerfilUpdateNombreEmpresa':
-            case 'btnFormPerfilUpdateCategoria':
-            case 'btnFormPerfilUpdateEspecialidades':
-            case 'btnFormPerfilUpdateDescripcion':
-            case 'btnFormPerfilUpdateEstado':
+            case 'btnFormPerfilUpdateFPerfil':
+            case 'btnFormPerfilUpdateFCabecera':
+            case 'btnFormPerfilUpdateGaleria':
+                break;
+            default:
                 $("#btnPerfilUpdate").on("click", formUpdatePerfil);
             break;
-                
         }
-        /*
-var attrsPerfil = {
-    'btnFormPerfilUpdateNombreEmpresa': 'Nombre Empresa',
-    'btnFormPerfilUpdateCategoria': 'Categoria',
-    'btnFormPerfilUpdateEspecialidades': 'Especialidades',
-    'btnFormPerfilUpdateDescripcion': 'Descripción',
-    'btnFormPerfilUpdateEstado': 'Estado',
-    'btnFormPerfilUpdateMunicipio': 'Municipio',
-    'btnFormPerfilUpdateDireccion': 'Dirección',
-    'btnFormPerfilUpdateTelefono': 'Teléfonos',
-    'btnFormPerfilUpdateFPerfil': 'Foto de perfil',
-    'btnFormPerfilUpdateFCabecera': 'Foto de cabecera',
-    'btnFormPerfilUpdateGaleria': 'Galeria de imagenes',
-    'btnFormPerfilUpdateEmail': 'Email',
-    'btnFormPerfilUpdatePass': 'Contraseña',
-    'btnFormPerfilUpdateUbicacion': 'Ubicación',
-    'btnFormPerfilUpdateVideo': 'Video',
-    'btnFormPerfilUpdateFacebook': 'Facebook',
-    'btnFormPerfilUpdateTwitter': 'Twitter',
-    'btnFormPerfilUpdateGoogle': 'Google+',
-    'btnFormPerfilUpdateInstagram': 'Instragram',*/
-        
-        
     });
     $('#modalPerfilUpdate').on('hidden.bs.modal', function (event) {
         $("#modalPerfilUpdate .modal-body").empty();
