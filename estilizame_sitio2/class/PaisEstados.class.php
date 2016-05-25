@@ -26,7 +26,7 @@ SQL;
             $html .= '<select class="form-control" name="' . $name . '" id="' . $name . '" required="required">';
             $html .= '<option value="">-Selecciona Estado-</option>';
             foreach ($data as $key => $value) {
-                $selected = ($value['CLAVE'] == $current) ? ' selected="selected" ' : '';
+                $selected = ($value['CLAVE'] == $current or $value['ESTADO'] == $current) ? ' selected="selected" ' : '';
                 $html .= <<<HTML
 		<option value="{$value['CLAVE']}" {$selected} >{$value['ESTADO']}</option>
 HTML;

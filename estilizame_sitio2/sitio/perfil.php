@@ -14,6 +14,11 @@ $pathImgs   = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
 
 <input type="hidden" name="hdnPerfilCategoriaId" id="hdnPerfilCategoriaId" value="<?=$Perfil->categoria_id_fk?>" />
 <input type="hidden" name="hdnPerfilId" id="hdnPerfilId" value="<?=$Perfil->id?>" />
+<input type="hidden" name="hdnPerfilNombre" id="hdnPerfilNombre" value="<?=$Perfil->nombre?>" />
+<input type="hidden" name="hdnPerfilDescripcion" id="hdnPerfilDescripcion" value="<?=$Perfil->descripcion?>" />
+<input type="hidden" name="hdnPerfilEstado" id="hdnPerfilEstado" value="<?=$Perfil->estado?>" />
+<input type="hidden" name="hdnPerfilMunicipio" id="hdnPerfilMunicipio" value="<?=$Perfil->municipio?>" />
+
 <div class="container">
 
     <div class="row">

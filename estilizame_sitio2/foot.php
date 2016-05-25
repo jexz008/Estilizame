@@ -30,7 +30,7 @@
                 <h4 class="modal-title" id="myModalLabel">...</h4>
             </div>
             <div class="modal-body">
-                ...
+                <i class="fa fa-spinner fa-spin"></i>
             </div>
             <div class="modal-footer">
                 <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
@@ -49,7 +49,7 @@
                 <h4 class="modal-title" id="modalPerfilUpdateLabel">...</h4>
             </div>
             <div class="modal-body">
-                ...
+                <i class="fa fa-spinner fa-spin"></i>
             </div>
             <div class="modal-footer">
                 <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>

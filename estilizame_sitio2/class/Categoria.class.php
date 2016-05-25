@@ -48,11 +48,11 @@ SQL;
         return $data = $this->db->execute_sql($sql);
     }
 
-    public function selectCategorias($current = "") {
+    public function selectCategorias($current = NULL, $name = 'registro') {
         $data = crearArraySQL($this->getCategorias());
         $html = '';
         if ($data) {
-            $html .= '<select name="registro_categoria" id="registro_categoria" class="form-control">';
+            $html .= '<select name="'.$name.'_categoria" id="'.$name.'_categoria" class="form-control">';
             $html .= '<option value="">-Selecciona Categoría-</option>';
             foreach ($data as $key => $value) {
                 $selected = ($value['id'] == $current) ? ' selected="selected" ' : '';

@@ -171,68 +171,51 @@ function modales() {
         switch(id){
             case 'btnFormPerfilUpdateNombreEmpresa':
                 title = 'Cambia el nombre de tu empresa';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateNombre" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="text" class="form-control" name="perfil_empresa" required placeholder="Ingresa el nombre de tu empresa o negocio"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateNombre" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="perfil_empresa" value="' + $("#hdnPerfilNombre").val() + '" required placeholder="Ingresa el nombre de tu empresa o negocio"> \n\
+                        </div></div> \n\ ';
                 break;
             case 'btnFormPerfilUpdateCategoria':
+                var getCategorias =  function(){
+                        var categoriaId = $("#hdnPerfilCategoriaId").val();
+                        $.get('index.php?module=getCategorias&format=raw', {'categoriaId':categoriaId}, function(data){
+                            $('#formPerfilUpdate').html(data);
+                        });
+                };
+                getCategorias();
                 title = 'Cambia de categoria';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateCategoria" method="post">\n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateCategoria" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<i class="fa fa-spinner fa-spin"></i>';
                 break;
             case 'btnFormPerfilUpdateEspecialidades':
                 var getEspecialidades =  function(){
                         var categoriaId = $("#hdnPerfilCategoriaId").val();
                         var empresaId = $("#hdnPerfilId").val();
                         $.get('index.php?module=getEspecialidades&format=raw', {'categoriaId':categoriaId, 'empresaId':empresaId}, function(data){
-                            $('#formPerfilUpdateEspecialidades').html(data);
+                            $('#formPerfilUpdate').html(data);
                         });
                 };
                 getEspecialidades();
                 title = 'Cambiar especialidades';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateEspecialidades" method="post">\n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateEspecialidades" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<i class="fa fa-spinner fa-spin"></i>';
                 break;
             case 'btnFormPerfilUpdateDescripcion':
                 title = 'Cambiar descripción';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateDescripcion" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><textarea name="descripcion_descripcion" class="form-control" rows="4" cols="80" size="200" required="required" placeholder="Ingresa una descripción de tu empresa o negocio maximo 200 caracteres"></textarea></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateDescripcion" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <textarea name="perfil_descripcion" class="form-control" rows="4" cols="80" size="200" required="required" placeholder="Ingresa una descripción de tu empresa o negocio maximo 200 caracteres">' + $('#hdnPerfilDescripcion').val() +'</textarea> \n\
+                        </div></div>\n\ ';
                 break;
             case 'btnFormPerfilUpdateEstado':
+                var getEstados =  function(){
+                        var estadoId = $("#hdnPerfilEstado").val();
+                        $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
+                            var html = '<input type="hidden" name="registro_estado_nombre" id="registro_estado_nombre" >';
+                            $('#formPerfilUpdate').html(html + data.html);
+                        }, 'json');
+                };
+                getEstados();
+                changeEstado();
                 title = 'Cambiar estado';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateEstado" method="post">\n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateEstado" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<i class="fa fa-spinner fa-spin"></i>';
                 break;
             case 'btnFormPerfilUpdateMunicipio':
                 title = 'Cambiar municipio';
@@ -412,7 +395,13 @@ function modales() {
                     ';
                 break;
         }
-        $("#modalPerfilUpdate .modal-body").html(html);
+        
+        var htmlForm  = '<form class="form-horizontal" action="#" id="formPerfilUpdate" method="post">' + html + '</form>';
+        footer = '\
+                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
+                    <button class="btn btn-success" type="submit" id="btnPerfilUpdate" data-loading-text="Loading...">Guardar</button>\
+                    ';
+        $("#modalPerfilUpdate .modal-body").html(htmlForm);
         $("#modalPerfilUpdate .modal-title").html(title);
         $("#modalPerfilUpdate .modal-footer").html(footer);
         $("#modalPerfilUpdate form input:enabled:visible:first").focus();
@@ -426,14 +415,13 @@ function modales() {
         // Eventos
         switch (id) {
             case 'btnFormPerfilUpdateNombreEmpresa':
-                $("#btnSendMailContact").on("click", formUpdatePerfil);
-            break;
             case 'btnFormPerfilUpdateCategoria':
-                $("#btnSigIn").on("click", formUpdatePerfil);
-            break;
             case 'btnFormPerfilUpdateEspecialidades':
-                $("#btnPerfilUpdateEspecialidades").on("click", formUpdatePerfil);
+            case 'btnFormPerfilUpdateDescripcion':
+            case 'btnFormPerfilUpdateEstado':
+                $("#btnPerfilUpdate").on("click", formUpdatePerfil);
             break;
+                
         }
         /*
 var attrsPerfil = {
@@ -467,7 +455,34 @@ var attrsPerfil = {
 
 /// Update Perfil
 function formUpdatePerfil(){
-      $("#formPerfilUpdateEspecialidades").on("submit", function(event){
+      $("#formPerfilUpdate").on("submit", function(event){
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnPerfilUpdate").button('loading');//.hide();
+        $.ajax({
+            url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    alert(data.message);
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $("modalPerfilUpdate .modal-body").empty();
+                    $("modalPerfilUpdate .modal-title").empty();
+                    $("modalPerfilUpdate .modal-footer").empty();
+                    $('#modalPerfilUpdate').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    $("#btnPerfilUpdate").button('reset');//show();
+                    $("#formPerfilUpdate").off();
+                }
+            }
+        });
+    });
+    $("#formPerfilUpdate").submit();    
+/*      $("#formPerfilUpdateEspecialidades").on("submit", function(event){
         event.stopPropagation();
         event.preventDefault();
         $("#btnPerfilUpdateEspecialidades").button('loading');//.hide();
@@ -493,7 +508,7 @@ function formUpdatePerfil(){
             }
         });
     });
-    $("#formPerfilUpdateEspecialidades").submit();
+    $("#formPerfilUpdateEspecialidades").submit();*/
 }
 // Fin Update Perfil
 function formContactanos() {

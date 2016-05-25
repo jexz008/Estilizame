@@ -84,10 +84,10 @@ SQL;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    private function updateEmpresa($empresaId, $campo, $valor) { //-> cambiar como la de usuario
+    public function updateEmpresa($empresaId, $campo, $valor) { //-> cambiar como la de usuario
         $sql = <<<SQL
 UPDATE empresa AS E 
-INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 ENT.tipo='empresa' 
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa' 
 SET E.{$campo} = '{$valor}'
 WHERE E.id = {$empresaId}
 SQL;
