@@ -208,10 +208,11 @@ function modales() {
                 var getEstados =  function(){
                         var estadoId = $("#hdnPerfilEstado").val();
                         $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
-                            var html = '<input type="hidden" name="registro_estado_nombre" id="registro_estado_nombre" >';
-                            $('#formPerfilUpdate').html(html + data.html);
-                            changeEstado();
-                        }, 'json');
+                            var html = '<input type="hidden" name="perfil_estado_nombre" id="perfil_estado_nombre" >';
+                            var htmlMun = '<div id="div_perfil_municipio"></div>';
+                            $('#formPerfilUpdate').html(html + data.html + htmlMun );
+                            changeEstado('perfil', true);
+                        }, 'json');                        
                 };
                 getEstados();
                 title = 'Cambiar estado';
@@ -289,7 +290,7 @@ function modales() {
            case 'btnFormPerfilUpdateEmail':
                 title = 'Cambiar email';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                          <input type="mail" name="perfil_email" id="perfil_email" value="' + $("#hdnPerfilEmail").val() + '" class="form-control" placeholder="Email" required /> \n\
+                          <input type="email" name="perfil_email" id="perfil_email" value="' + $("#hdnPerfilEmail").val() + '" class="form-control" placeholder="Email" required /> \n\
                         </div></div> \n\ ';
                 break;
            case 'btnFormPerfilUpdatePass':
@@ -472,7 +473,7 @@ function getFormRegistro() {
                 html = data;
                 $("#myModal .modal-body").html(html);
                 changeCategoria();
-                changeEstado();
+                changeEstado('registro', true);
                 //setRegistro();
 
                 $('[data-toggle="popover-maps"]').popover({
@@ -502,24 +503,31 @@ function changeCategoria() {
         $("#categoria_especialidad_" + categoriaId).show();
     });
 }
-function changeEstado() {
-    $("#registro_estado").on("change", function () {
-        $("#registro_estado_nombre").val($("#registro_estado option:selected").text());
-        var estado = $("#registro_estado").val();
-        $.ajax({
-            url: 'index.php?module=pais_estados&action=getMunicipios&format=raw',
-            type: 'POST',
-            data: {'estado': estado},
-            dataType: 'JSON',
-            success: function (data) {
-                if (data.success) {
-                    console.log(data);
-                    $('#div_registro_municipio').html(data.html);
-                } else {
-                    alert("ERROR: " + data.message);
+function changeEstado(selectName, load) {
+    var selectName = (selectName == "") ? "registro" : selectName;
+    var load = (load) ? true : false;
+    $("#" + selectName + "_estado").on("change", function () {
+        
+        $("#" + selectName + "_estado_nombre").val($("#" + selectName + "_estado option:selected").text());
+        var estado = $("#" + selectName + "_estado").val();
+        
+        if(load){
+            $('#div_' + selectName + '_municipio').html('<i class="fa fa-spinner fa-spin"></i>');
+            $.ajax({
+                url: 'index.php?module=pais_estados&action=getMunicipios&format=raw',
+                type: 'POST',
+                data: {'estado': estado},
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
+                        console.log(data);
+                        $('#div_' + selectName + '_municipio').html(data.html);
+                    } else {
+                        alert("ERROR: " + data.message);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 }
 

@@ -84,7 +84,7 @@ SQL;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
-    public function updateEmpresa($empresaId, $campo, $valor) { //-> cambiar como la de usuario
+    public function updateFieldEmpresa($empresaId, $campo, $valor) {
         $sql = <<<SQL
 UPDATE empresa AS E 
 INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa' 
@@ -92,7 +92,11 @@ SET E.{$campo} = '{$valor}'
 WHERE E.id = {$empresaId}
 SQL;
         $this->db->execute_sql($sql);
-        /*$args = get_defined_vars();
+
+    }
+
+    public function updateEmpresa($empresaId, $nombre = NULL, $descripcion = NULL, $email = NULL, $telefono = NULL, $estado = NULL, $municipio = NULL, $direccion = NULL, $video = NULL, $facebook = NULL, $twitter = NULL, $googleplus = NULL, $instagram = NULL, $ubicacion_html = NULL, $categoria_id = NULL, $jerarquia_id = NULL) {
+        $args = get_defined_vars();
         $condiciones = array();
         if($args):foreach ($args as $var => $val) {
             if($key != 'empresaId'){
@@ -101,9 +105,14 @@ SQL;
         }endif;
         if($condiciones){
             $condicion = implode(", ", $condiciones);
-            $sql = "UPDATE `empresa` AS E SET ".$condicion." INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 ENT.tipo='empresa' WHERE E.id=".$empresaId;
+            $sql = <<<SQL
+UPDATE `empresa` AS E
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
+SET ".$condicion."
+WHERE E.id=".$empresaId;
+SQL;
             $this->db->execute_sql($sql);
-        }*/
+        }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
     public function registraEmpresa($data, $files) {

@@ -24,12 +24,14 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 <input type="hidden" name="hdnPerfilTelefono2" id="hdnPerfilTelefono2" value="<?= $tel2 ?>" />
 <input type="hidden" name="hdnPerfilTelefono3" id="hdnPerfilTelefono3" value="<?= $tel3 ?>" />
 <input type="hidden" name="hdnPerfilEmail" id="hdnPerfilEmail" value="<?=$Perfil->email?>" />
-<input type="hidden" name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" value="<?=$Perfil->ubicacion_html?>" />
+<!--<input type="hidden" name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" value="<?=$Perfil->ubicacion_html?>" />-->
 <input type="hidden" name="hdnPerfilVideo" id="hdnPerfilVideo" value="<?=$Perfil->video?>" />
 <input type="hidden" name="hdnPerfilFacebook" id="hdnPerfilFacebook" value="<?=$Perfil->facebook?>" />
 <input type="hidden" name="hdnPerfilTwitter" id="hdnPerfilTwitter" value="<?=$Perfil->twitter?>" />
 <input type="hidden" name="hdnPerfilGoogle" id="hdnPerfilGoogle" value="<?=$Perfil->googleplus?>" />
 <input type="hidden" name="hdnPerfilInstagram" id="hdnPerfilInstagram" value="<?=$Perfil->instagram?>" />
+<textarea name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" style="display: none" ><?=$Perfil->ubicacion_html?></textarea>
+    
 
 <div class="container">
 

@@ -21,6 +21,7 @@ session_start();
 -->
 */
 //$profile = ($_SESSION['xc_usuario_tipo']=="Z" or $_SESSION['xc_usuario_tipo']=="A") ? "administrator" : "sitio"; 
+if(isset($_REQUEST['close_session'])) session_destroy();
 
 include 'sitio/index.php';
 ?>
