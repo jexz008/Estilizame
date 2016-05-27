@@ -29,8 +29,6 @@ try {
         array('post' => 'perfil_twitter', 'field' => 'twitter'),
         array('post' => 'perfil_google', 'field' => 'googleplus'),
         array('post' => 'perfil_instagram', 'field' => 'instagram'),
-        array('post' => 'perfil_empresa', 'field' => 'nombre'),
-        array('post' => 'perfil_empresa', 'field' => 'nombre'),
     );
 
     if(isset($_POST['perfil_especialidad'])){
@@ -43,6 +41,24 @@ try {
             }else{
                 throw new Exception("Es requerido el campo municipio.");
             }
+        }else{
+            throw new Exception("El dato no debe estar vacío.");
+        }
+    }elseif(isset($_FILES['perfil_foto_perfil'])){
+        if(!empty($_FILES['perfil_foto_perfil'])){
+            $registro_foto_perfil   = "perfil-" . str_replace(" ", "", $_REQUEST['perfil_nombre_actual']);
+            $Empresa->deleteImgPerfil($empresaId, $registro_foto_perfil);
+            $Empresa->uploadImgPerfil($_FILES['registro_foto_perfil'], $empresaId, $registro_foto_perfil);
+            $Empresa->updateFieldEmpresa($empresaId, 'foto_perfil', $registro_foto_perfil);
+        }else{
+            throw new Exception("El dato no debe estar vacío.");
+        }
+    }elseif(isset($_FILES['perfil_foto_cabecera'])){
+        if(!empty($_FILES['perfil_foto_cabecera'])){
+            $registro_foto_cabecera   = "cabecera-" . str_replace(" ", "", $_REQUEST['perfil_nombre_actual']);
+            $Empresa->deleteImgCabecera($empresaId, $registro_foto_cabecera);
+            $Empresa->uploadImgCabecera($_FILES['registro_foto_cabecera'], $empresaId, $registro_foto_cabecera);
+            $Empresa->updateFieldEmpresa($empresaId, 'foto_cabecera', $registro_foto_cabecera);
         }else{
             throw new Exception("El dato no debe estar vacío.");
         }

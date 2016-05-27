@@ -145,7 +145,12 @@ SQL;
         $file = new upload($file, 'es_Es');
         $this->uploadImg($file, $name, $path, $_Banners_Width, $_Banners_Height);
     }
-
+    public function deleteImgCabecera($empresaId, $file){
+        global $_Storage_Images, $_Storage_Images_Prefix;
+        $src = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/banners/' . $file;
+        $this->deleteImg($src);
+    }
+    
     public function uploadImgPerfil($file, $empresaId, $name) {
         global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
 
@@ -159,7 +164,12 @@ SQL;
         $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
         $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
     }
-
+    public function deleteImgPerfil($empresaId, $file){
+        global $_Storage_Images, $_Storage_Images_Prefix;
+        $src = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/' . $file;
+        $this->deleteImg($src);
+    }
+    
     public function uploadImgGaleria($file, $empresaId, $name) {
         global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
 
@@ -196,6 +206,9 @@ SQL;
         }
     }
 
+    public function deleteImg($src) {
+        @unlink($src);
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
     public function getEmpresas($empresaId = NULL, $categoriaId = NULL, $estado = NULL, $especialidadId = NULL) {
         $condicion = array();

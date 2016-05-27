@@ -31,7 +31,9 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 <input type="hidden" name="hdnPerfilGoogle" id="hdnPerfilGoogle" value="<?=$Perfil->googleplus?>" />
 <input type="hidden" name="hdnPerfilInstagram" id="hdnPerfilInstagram" value="<?=$Perfil->instagram?>" />
 <textarea name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" style="display: none" ><?=$Perfil->ubicacion_html?></textarea>
-    
+<input type="hidden" name="hdnPerfilFoto" id="hdnPerfilFoto" value="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>" >
+<input type="hidden" name="hdnPerfilCabecera" id="hdnPerfilCabecera" value="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>" >
+
 
 <div class="container">
 

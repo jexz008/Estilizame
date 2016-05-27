@@ -251,30 +251,20 @@ function modales() {
                                 </div>\n\
                           </div></div></div> \n\ ';
                 break;
-                
+
             case 'btnFormPerfilUpdateFPerfil':
                 title = 'Cambiar foto de perfil';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateFPerfilno" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="file" class="form-control" name="perfil_foto_perfil" accept="image/jpg" required="required"> </div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateFPerfil" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilFoto").val() + '"> \n\
+                            <input type="file" class="form-control" name="perfil_foto_perfil" accept="image/jpg" required="required"> \n\
+                        </div></div> \n\  ';
                 break;
             case 'btnFormPerfilUpdateFCabecera':
                 title = 'Cambiar foto de Cabecera';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateFCabecera" method="post">\n\
-                          <div class="form-group"><div class="col-sm-12"><input type="file" class="form-control" name="perfil_foto_cabecera" accept="image/jpg" required="required"></div></div> \n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateFCabecera" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilCabecera").val() + '"> \n\
+                            <input type="file" class="form-control" name="perfil_foto_cabecera" accept="image/jpg" required="required"> \n\
+                        </div></div> \n\ ';
                 break;
             case 'btnFormPerfilUpdateGaleria':
                 title = 'Cambiar fotos de Galeria';
@@ -379,11 +369,18 @@ function formUpdatePerfil(){
         event.stopPropagation();
         event.preventDefault();
         $("#btnPerfilUpdate").button('loading');//.hide();
+        var formData = new FormData(this);
+
         $.ajax({
             url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
+            //urUpdateRegistro: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'JSON',
+            /*data: formData,
+            cache: false,
+            contentType: false,
+            processData: false, */
             success: function (data) {
                 console.log(data);
                 if (data.success) {
@@ -401,34 +398,7 @@ function formUpdatePerfil(){
             }
         });
     });
-    $("#formPerfilUpdate").submit();    
-/*      $("#formPerfilUpdateEspecialidades").on("submit", function(event){
-        event.stopPropagation();
-        event.preventDefault();
-        $("#btnPerfilUpdateEspecialidades").button('loading');//.hide();
-        $.ajax({
-            url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'JSON',
-            success: function (data) {
-                console.log(data);
-                if (data.success) {
-                    alert(data.message);
-                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
-                    $("modalPerfilUpdate .modal-body").empty();
-                    $("modalPerfilUpdate .modal-title").empty();
-                    $("modalPerfilUpdate .modal-footer").empty();
-                    $('#modalPerfilUpdate').modal('hide');
-                } else {
-                    alert("ERROR: " + data.message);
-                    $("#btnSendMailContact").button('reset');//show();
-                    $("#btnPerfilUpdateEspecialidades").off();
-                }
-            }
-        });
-    });
-    $("#formPerfilUpdateEspecialidades").submit();*/
+    $("#formPerfilUpdate").submit();
 }
 // Fin Update Perfil
 function formContactanos() {
