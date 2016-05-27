@@ -208,7 +208,8 @@ function modales() {
                 var getEstados =  function(){
                         var estadoId = $("#hdnPerfilEstado").val();
                         $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
-                            var html = '<input type="hidden" name="perfil_estado_nombre" id="perfil_estado_nombre" >';
+                            var html = '<input type="hidden" name="perfil_estado_nombre" id="perfil_estado_nombre" > \n\
+                                        <input type="hidden" name="perfil_municipio_nombre" id="perfil_municipio_nombre" >';
                             var htmlMun = '<div id="div_perfil_municipio"></div>';
                             $('#formPerfilUpdate').html(html + data.html + htmlMun );
                             changeEstado('perfil', true);
@@ -522,12 +523,18 @@ function changeEstado(selectName, load) {
                     if (data.success) {
                         console.log(data);
                         $('#div_' + selectName + '_municipio').html(data.html);
+                        changeMunicipio(selectName);
                     } else {
                         alert("ERROR: " + data.message);
                     }
                 }
             });
         }
+    });
+}
+function changeMunicipio(selectName){
+    $("#" + selectName + "_municipio").on("change", function () {
+        $("#" + selectName + "_municipio_nombre").val($("#" + selectName + "_municipio option:selected").text());
     });
 }
 

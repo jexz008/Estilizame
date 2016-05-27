@@ -41,7 +41,7 @@ try {
             if(isset($_POST['perfil_municipio_nombre']) && !empty($_POST['perfil_municipio_nombre'])){
                 $Empresa->updateEmpresa($empresaId, NULL, NULL, NULL, NULL, $estado, $municipio);
             }else{
-                throw new Exception("El requerido el campo municipio.");
+                throw new Exception("Es requerido el campo municipio.");
             }
         }else{
             throw new Exception("El dato no debe estar vacío.");

@@ -19,7 +19,7 @@ try {
         if(empty($estado)){
             throw new Exception("No se recibió el parametro estado.");            
         }
-        if ($selectMunicipios = PaisEstados::selectMunicipios($estado, $municipio)) {
+        if ($selectMunicipios = PaisEstados::selectMunicipios($estado, $municipio, 'perfil_estado')) {
             $return['html'] = $selectMunicipios;
             $return['message'] = "Consuta de municipios correcta";
             $return['success'] = TRUE;
