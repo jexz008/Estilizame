@@ -6,15 +6,16 @@ class PaisEstados {
 
     public static function getEstados() {
         $sql = <<<SQL
-SELECT * FROM pais_estados 
+SELECT * FROM pais_estados
 SQL;
         return $data = DB::execute_sql($sql);
     }
 
     public static function getMunicipios($estado) {
+        $estado = (is_numeric($estado)) ? $estado : "(SELECT CLAVE FROM pais_estados WHERE ESTADO = '" . $estado . "')";
         $sql = <<<SQL
 SELECT * FROM pais_estados_codigos
-WHERE ESTADO = '{$estado}' GROUP BY MUNICIPIO
+WHERE ESTADO = {$estado} GROUP BY MUNICIPIO
 SQL;
         return $data = DB::execute_sql($sql);
     }

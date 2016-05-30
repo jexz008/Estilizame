@@ -37,28 +37,54 @@ try {
     }elseif(isset($_POST['perfil_estado_nombre'])){
         if(!empty($_POST['perfil_estado_nombre'])){
             if(isset($_POST['perfil_municipio_nombre']) && !empty($_POST['perfil_municipio_nombre'])){
-                $Empresa->updateEmpresa($empresaId, NULL, NULL, NULL, NULL, $estado, $municipio);
+                $Empresa->updateEmpresa($empresaId, NULL, NULL, NULL, NULL, $_POST['perfil_estado_nombre'], $_POST['perfil_municipio_nombre']);
             }else{
                 throw new Exception("Es requerido el campo municipio.");
             }
         }else{
             throw new Exception("El dato no debe estar vacío.");
         }
+    }elseif(isset($_POST['perfil_municipio'])){
+        if(!empty($_POST['perfil_municipio'])){
+            $Empresa->updateEmpresa($empresaId, NULL, NULL, NULL, NULL, NULL, $_POST['perfil_municipio']);
+        }else{
+            throw new Exception("El dato no debe estar vacío.");
+        }
     }elseif(isset($_FILES['perfil_foto_perfil'])){
         if(!empty($_FILES['perfil_foto_perfil'])){
+            $ext = '.jpg';
             $registro_foto_perfil   = "perfil-" . str_replace(" ", "", $_REQUEST['perfil_nombre_actual']);
-            $Empresa->deleteImgPerfil($empresaId, $registro_foto_perfil);
-            $Empresa->uploadImgPerfil($_FILES['registro_foto_perfil'], $empresaId, $registro_foto_perfil);
-            $Empresa->updateFieldEmpresa($empresaId, 'foto_perfil', $registro_foto_perfil);
+            $Empresa->deleteImgPerfil($empresaId, $_POST['perfil_foto_perfil_actual']);
+            $Empresa->uploadImgPerfil($_FILES['perfil_foto_perfil'], $empresaId, $registro_foto_perfil);
+            $Empresa->updateFieldEmpresa($empresaId, 'foto_perfil', $registro_foto_perfil . $ext);
         }else{
             throw new Exception("El dato no debe estar vacío.");
         }
     }elseif(isset($_FILES['perfil_foto_cabecera'])){
         if(!empty($_FILES['perfil_foto_cabecera'])){
+            $ext = '.jpg';
             $registro_foto_cabecera   = "cabecera-" . str_replace(" ", "", $_REQUEST['perfil_nombre_actual']);
-            $Empresa->deleteImgCabecera($empresaId, $registro_foto_cabecera);
-            $Empresa->uploadImgCabecera($_FILES['registro_foto_cabecera'], $empresaId, $registro_foto_cabecera);
-            $Empresa->updateFieldEmpresa($empresaId, 'foto_cabecera', $registro_foto_cabecera);
+            $Empresa->deleteImgCabecera($empresaId, $_POST['perfil_foto_cabecera_actual']);
+            $Empresa->uploadImgCabecera($_FILES['perfil_foto_cabecera'], $empresaId, $registro_foto_cabecera);
+            $Empresa->updateFieldEmpresa($empresaId, 'foto_cabecera', $registro_foto_cabecera . $ext);
+        }else{
+            throw new Exception("El dato no debe estar vacío.");
+        }
+    }elseif(isset($_FILES['perfil_foto_galeria'])){
+        if(!empty($_FILES['perfil_foto_galeria'])){
+            $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/galeria';
+            $filesImg = scandir($path);
+            $lastImg = $filesImg[count($filesImg) - 5]; // -5 restando thumbs
+            list($prefijo, $consecutivo) = explode('-', substr($lastImg, 0, (strlen($lastImg))-(strlen(strrchr($lastImg, '.')))));
+            $registro_foto_galeria  = "galeria-" . str_pad((int)++$consecutivo, 5, "0", STR_PAD_LEFT); // galeria-0000X
+            $Empresa->uploadImgGaleria($_FILES['perfil_foto_galeria'], $empresaId, $registro_foto_galeria);
+        }else{
+            throw new Exception("El dato no debe estar vacío.");
+        }
+    }elseif(isset($_POST['borra_foto_galeria'])){
+        if(!empty($_POST['borra_foto_galeria'])){
+            $ext = '.jpg';
+            $Empresa->deleteImgGaleria($empresaId, $_POST['borra_foto_galeria']);
         }else{
             throw new Exception("El dato no debe estar vacío.");
         }
@@ -86,34 +112,6 @@ try {
         }
     }
 
-    /*elseif(isset($_POST['perfil_empresa'])){
-        if(!empty($_POST['perfil_empresa'])){
-            $Empresa->updateEmpresa($empresaId, 'nombre', $_POST['perfil_empresa']);
-        }else{
-            throw new Exception("El dato no debe estar vacío");
-        }
-    }elseif(isset($_POST['perfil_categoria'])){
-        if(!empty($_POST['perfil_categoria'])){
-            $Empresa->updateEmpresa($empresaId, 'categoria_id_fk', $_POST['perfil_categoria']);
-        }else{
-            throw new Exception("El dato no debe estar vacío");
-        }
-    }elseif(isset($_POST['perfil_descripcion'])){
-        if(!empty($_POST['perfil_descripcion'])){
-            $Empresa->updateEmpresa($empresaId, 'descripcion', $_POST['perfil_descripcion']);
-        }else{
-            throw new Exception("El dato no debe estar vacío");
-        }
-    }elseif(isset($_POST['registro_estado_nombre'])){
-        if(!empty($_POST['registro_estado_nombre'])){
-            $Empresa->updateEmpresa($empresaId, 'estado', $_POST['registro_estado_nombre']);
-        }else{
-            throw new Exception("El dato no debe estar vacío");
-        }
-    }else{
-            throw new Exception("Acción no encontrada al intentar actualizar.");
-    }*/
-    #$Empresa->updateEmpresa($_POST, $_FILES);
     $return['field'] = $fieldPostName;
     $return['value'] = $fieldPostValue;
     $return['message'] = "Tu información ha sido actualizada correctamente!";

@@ -16,7 +16,6 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 <input type="hidden" name="hdnPerfilCategoriaId" id="hdnPerfilCategoriaId" value="<?=$Perfil->categoria_id_fk?>" />
 <input type="hidden" name="hdnPerfilId" id="hdnPerfilId" value="<?=$Perfil->id?>" />
 <input type="hidden" name="hdnPerfilNombre" id="hdnPerfilNombre" value="<?=$Perfil->nombre?>" />
-<input type="hidden" name="hdnPerfilDescripcion" id="hdnPerfilDescripcion" value="<?=$Perfil->descripcion?>" />
 <input type="hidden" name="hdnPerfilEstado" id="hdnPerfilEstado" value="<?=$Perfil->estado?>" />
 <input type="hidden" name="hdnPerfilMunicipio" id="hdnPerfilMunicipio" value="<?=$Perfil->municipio?>" />
 <input type="hidden" name="hdnPerfilDireccion" id="hdnPerfilDireccion" value="<?= $Perfil->direccion ?>" />
@@ -24,15 +23,17 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 <input type="hidden" name="hdnPerfilTelefono2" id="hdnPerfilTelefono2" value="<?= $tel2 ?>" />
 <input type="hidden" name="hdnPerfilTelefono3" id="hdnPerfilTelefono3" value="<?= $tel3 ?>" />
 <input type="hidden" name="hdnPerfilEmail" id="hdnPerfilEmail" value="<?=$Perfil->email?>" />
-<!--<input type="hidden" name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" value="<?=$Perfil->ubicacion_html?>" />-->
 <input type="hidden" name="hdnPerfilVideo" id="hdnPerfilVideo" value="<?=$Perfil->video?>" />
 <input type="hidden" name="hdnPerfilFacebook" id="hdnPerfilFacebook" value="<?=$Perfil->facebook?>" />
 <input type="hidden" name="hdnPerfilTwitter" id="hdnPerfilTwitter" value="<?=$Perfil->twitter?>" />
 <input type="hidden" name="hdnPerfilGoogle" id="hdnPerfilGoogle" value="<?=$Perfil->googleplus?>" />
 <input type="hidden" name="hdnPerfilInstagram" id="hdnPerfilInstagram" value="<?=$Perfil->instagram?>" />
+<input type="hidden" name="hdnPerfilFoto" id="hdnPerfilFoto" value="<?=$Perfil->foto_perfil?>" >
+<input type="hidden" name="hdnPerfilFotoSrc" id="hdnPerfilFotoSrc" value="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>" >
+<input type="hidden" name="hdnPerfilCabecera" id="hdnPerfilCabecera" value="<?=$Perfil->foto_cabecera?>" >
+<input type="hidden" name="hdnPerfilCabeceraSrc" id="hdnPerfilCabeceraSrc" value="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>" >
 <textarea name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" style="display: none" ><?=$Perfil->ubicacion_html?></textarea>
-<input type="hidden" name="hdnPerfilFoto" id="hdnPerfilFoto" value="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>" >
-<input type="hidden" name="hdnPerfilCabecera" id="hdnPerfilCabecera" value="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>" >
+<textarea name="hdnPerfilDescripcion" id="hdnPerfilDescripcion" style="display: none" ><?=$Perfil->descripcion?></textarea>
 
 
 <div class="container">
@@ -69,14 +70,17 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
                 </div>
                 <div class="panel-body">
 
-                    <div class="row">
+                    <div class="row" id="perfilGaleria">
                         <?php
                         if($Perfil->galeria):foreach ($Perfil->galeria as $key => $img) {
+                            list($imgSinExt) = explode(".jpg", $img);
+                            $thumb = $imgSinExt . '_256x256.jpg';
                             echo <<<HTML
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-6 col-md-3" id="galeria_{$Perfil->id}_{$key}">
                     <a href="{$img}" class="thumbnail grouped_elements" rel="group1">
-                        <img class="img-thumbnai" src="{$img}" style="width: 128px; height: 128px">
+                        <img class="img-thumbnai" src="{$thumb}" style="width: 128px; height: 128px">
                     </a>
+                    <i class="glyphicon glyphicon-trash ico-del-img" onClick="deleteImg('{$img}', {$key});"></i>
                 </div>
 HTML;
                         }else: echo "Sin imágenes"; endif;
@@ -116,16 +120,6 @@ HTML;
                         <dt>Descripción</dt>
                         <dd><p class="text-justify"><?=$Perfil->descripcion?></p></dd>
                     </dl>
-            <!--<h2><?=$Perfil->nombre?></h2>
-            <h3>Categoria: <?=$Perfil->categoria?></h3>
-            <h3>Especialidades:</h3>
-            <?php
-            if($Perfil->especialidad):foreach ($Perfil->especialidad as $key => $value) {
-                echo '<span class="label label-info">'.$value.'</span>';
-            }else: echo '<span class="label label-default">Sin especialidades</span>'; endif;
-            ?>
-            <br><br>
-            <p class="text-justify"><?=$Perfil->descripcion?></p>-->
 
             <address>
                 <strong><?= $Perfil->municipio ?>, <?= $Perfil->estado ?></strong><br>
@@ -166,7 +160,11 @@ HTML;
                     <h3 class="panel-title">Ubicación</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="embed-responsive embed-responsive-4by3"><?=$Perfil->ubicacion_html?></div>
+                    <?php if(!empty($Perfil->ubicacion_html)) { ?>
+                        <div class="embed-responsive embed-responsive-4by3"><?=$Perfil->ubicacion_html?></div>
+                    <?php }else{ ?>
+                        <img class="img-responsive img-rounded center-block" src="img/google-maps-logo.png">
+                    <?php } ?>
                 </div>
             </div>
             
@@ -177,10 +175,12 @@ HTML;
                     <h3 class="panel-title">Video</h3>
                 </div>
                 <div class="panel-body">
-                <?php if($Perfil->video != "http://www.youtube.com/embed/" ){ ?>
+                <?php if($Perfil->video != "http://www.youtube.com/embed/" && !empty($Perfil->video)){ ?>
                     <div class="embed-responsive embed-responsive-4by3">
                         <iframe class="embed-responsive-item" src="<?= $Perfil->video ?>"></iframe>
                     </div>
+                <?php }else{ ?>
+                    <img class="img-responsive img-rounded center-block" src="img/youtubelogo.png">
                 <?php } ?>
                 </div>
             </div>
@@ -188,22 +188,30 @@ HTML;
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <h2 class="text-info text-center">PROMOCIONES</h2>
-            <table class="table table-responsive table-striped table-condensed table-hover table-bordered">
+        <div id="grid-section" class="col-md-12 grid-section">
+            <h3>PROMOCIONES <small>(<?=count($Perfil->promocion)?>)</small></h3>
+            <table class="table table-responsive table-striped table-hover table-condensed">
                 <thead>
                     <tr>
                         <th>Imagen</th>
                         <th>Promoción</th>
+                        <th>Descripción</th>
                         <th>Fecha termino</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($Perfil->promocion) : foreach ($Perfil->promocion as $key => $p) { ?>
+                    <?php if ($Perfil->promocion) : foreach ($Perfil->promocion as $key => $p) {
+                            $imgPromocion = $pathImgs . '/promociones/promocion-' . str_pad($p->id, 10, "0", STR_PAD_LEFT);
+                            $imgPromocionThumb = $imgPromocion . '_48x48.jpg';
+                            $imgPromocion .= '.jpg';
+                    ?>
                             <tr>
-                                <td><img src="<?= $p->img ?>" width="600" height="150" /></td>
+                                <td>
+                                    <a href="<?=$imgPromocion?>" class="thumbnail grouped_elements" rel="groupPromociones" style="width: 48px; height: 48px; margin: 0"><img class="img-thumbnai" src="<?=$imgPromocionThumb?>" ></a>
+                                </td>
                                 <td><?= $p->nombre ?></td>
-                                <td><?= $p->fechaFin ?></td>
+                                <td><?= $p->descripcion ?></td>
+                                <td><?= date('d/m/y', strtotime($p->fecha_fin)) ?></td>
                             </tr>
                         <?php } else: echo '<td colspan="3">Sin Promociones</td>';
                     endif; ?>
@@ -214,12 +222,12 @@ HTML;
 
     <div class="row">
         <div class="col-md-4">
-            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Modal_Promocion">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalPerfilUpdate" id="btnFormPromociones">
                 PUBLICA UNA PROMOCION
             </button>
         </div>
         <div class="col-md-4">
-            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Modal_Eventos">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalPerfilUpdate" id="btnFormEventos">
                 PUBLICA UN EVENTO
             </button>
         </div>

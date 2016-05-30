@@ -96,22 +96,33 @@ SQL;
     }
 
     public function updateEmpresa($empresaId, $nombre = NULL, $descripcion = NULL, $email = NULL, $telefono = NULL, $estado = NULL, $municipio = NULL, $direccion = NULL, $video = NULL, $facebook = NULL, $twitter = NULL, $googleplus = NULL, $instagram = NULL, $ubicacion_html = NULL, $categoria_id = NULL, $jerarquia_id = NULL) {
-        $args = get_defined_vars();
-        $condiciones = array();
-        if($args):foreach ($args as $var => $val) {
-            if($key != 'empresaId'){
-                if(!empty($val)) $condiciones[] = $var . "= '" . $val . "'";
-            }
-        }endif;
-        if($condiciones){
-            $condicion = implode(", ", $condiciones);
-            $sql = <<<SQL
+        try{
+
+            $args = get_defined_vars();
+            $condiciones = array();
+
+            if($args):foreach ($args as $var => $val) {
+                if($var != 'empresaId'){
+                    if(!empty($val)) $condiciones[] = $var . " = '" . $val . "'";
+                }
+            }endif;
+
+            if($condiciones){
+                $condicion = implode(", ", $condiciones);
+                $sql = <<<SQL
 UPDATE `empresa` AS E
 INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
-SET ".$condicion."
-WHERE E.id=".$empresaId;
+SET {$condicion}
+WHERE E.id = {$empresaId};
 SQL;
-            $this->db->execute_sql($sql);
+                $this->db->execute_sql($sql);
+
+            }else{
+                throw new Exception("No se recibieron parámetros.");
+            }
+
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -132,7 +143,7 @@ SQL;
 
         $this->uploadImgCabecera($files['registro_foto_cabecera'], $empresaId, $registro_foto_cabecera);
         $this->uploadImgPerfil($files['registro_foto_perfil'], $empresaId, $registro_foto_perfil);
-        $this->uploadImgPerfil($files['registro_foto_galeria'], $empresaId, $registro_foto_galeria);
+        $this->uploadImgGaleria($files['registro_foto_galeria'], $empresaId, $registro_foto_galeria);
 
         return FALSE;
     }
@@ -150,10 +161,13 @@ SQL;
         $src = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/banners/' . $file;
         $this->deleteImg($src);
     }
-    
+
     public function uploadImgPerfil($file, $empresaId, $name) {
         global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
 
+        if(empty($file)){
+            throw new Exception("El servidor no recibió el archivo.");
+        }
         $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/';
 
         $file = new upload($file, 'es_Es');
@@ -166,43 +180,61 @@ SQL;
     }
     public function deleteImgPerfil($empresaId, $file){
         global $_Storage_Images, $_Storage_Images_Prefix;
-        $src = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/' . $file;
-        $this->deleteImg($src);
+        list($nameFile) = explode('.jpg', $file);
+        $src = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
+        $this->deleteImg($src. '/' . $file);
+        $this->deleteImg($src. '/' . $nameFile . '_256x256' . '.jpg');
+        $this->deleteImg($src. '/' . $nameFile . '_48x48' . '.jpg');
+        $this->deleteImg($src. '/' . $nameFile . '_32x32' . '.jpg');
+        $this->deleteImg($src. '/' . $nameFile . '_16x16' . '.jpg');
     }
-    
+
     public function uploadImgGaleria($file, $empresaId, $name) {
-        global $_Storage_Images, $_Storage_Images_Prefix, $_Perfil_Width, $_Perfil_Height;
+        global $_Storage_Images, $_Storage_Images_Prefix, $_Galeria_Imagen_Width, $_Galeria_Imagen_Height;
 
         $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/galeria/';
 
         $file = new upload($file, 'es_Es');
-        $this->uploadImg($file, $name, $path, $_Perfil_Width, $_Perfil_Height, FALSE);
+        $this->uploadImg($file, $name, $path, $_Galeria_Imagen_Width, $_Galeria_Imagen_Height, FALSE);
         // Creando thumbs
         $this->uploadImg($file, $name . "_256x256", $path, 256, 256, FALSE);
         $this->uploadImg($file, $name . "_48x48", $path, 48, 48, FALSE);
         $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
         $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
     }
-
+    public function deleteImgGaleria($empresaId, $file){
+        list($nameFile) = explode('.jpg', $file);
+        $this->deleteImg($file);
+        $this->deleteImg($nameFile . '_256x256' . '.jpg');
+        $this->deleteImg($nameFile . '_48x48' . '.jpg');
+        $this->deleteImg($nameFile . '_32x32' . '.jpg');
+        $this->deleteImg($nameFile . '_16x16' . '.jpg');
+    }
+    
     public function uploadImg($handle, $name, $path, $width, $height, $clean = TRUE) {
-
-        if ($handle->uploaded) {
-            // Procesando
-            $handle->file_new_name_body = $name; //'image_resized';
-            $handle->image_resize = true;
-            $handle->image_ratio_crop = true;
-            $handle->image_x = $width;
-            $handle->image_y = $height;
-            $handle->image_convert = 'jpg';
-            //$handle->image_ratio_y        = true;
-            $handle->process($path);
-            if ($handle->processed) {
-                if ($clean)
-                    $handle->clean();
-                return TRUE;
-            } else {
+        try{
+            if ($handle->uploaded) {
+                // Procesando
+                $handle->file_new_name_body = $name; //'image_resized';
+                $handle->image_resize = true;
+                $handle->image_ratio_crop = true;
+                $handle->image_x = $width;
+                $handle->image_y = $height;
+                $handle->image_convert = 'jpg';
+                //$handle->image_ratio_y        = true;
+                $handle->process($path);
+                if ($handle->processed) {
+                    if ($clean)
+                        $handle->clean();
+                    return TRUE;
+                } else {
+                    throw new Exception($handle->error);
+                }
+            }else{
                 throw new Exception($handle->error);
             }
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 
@@ -307,6 +339,7 @@ HTML;
         foreach ($empresas as $key => $e) {
             $e = (object) $e;
             $src = $_Storage_Images . $_Storage_Images_Prefix . $e->id . "/" . $e->foto_perfil;
+            $src = substr($src, 0, (strlen($src))-(strlen(strrchr($src, '.')))) . '_256x256.jpg';
 
             $htmlEsp = '';
             foreach ($e->especialidades as $k => $esp) {
@@ -316,7 +349,7 @@ HTML;
             }
             $html .= <<<HTML
                 <tr>
-                    <td><img width="128" height="128" src="{$src}" alt="{$src}"></td>
+                    <td><img width="128" height="128" src="{$src}" alt="{$e->nombre}"></td>
                     <td><i class="glyphicon glyphicon-user" aria-hidden="true"></i>{$e->nombre}</td>
                     <td>
                         <i class="glyphicon glyphicon-home" aria-hidden="true"></i> {$e->direccion} {$e->municipio}
@@ -355,6 +388,11 @@ HTML;
         $imgs = NULL;
         if(file_exists($path)){
             $imgs = array_diff(scandir($path), array('..', '.'));
+            $removeThumbs = function ($var) {
+                if(strlen($var) == 17 ) return $var; // 17 por el formato -> galeria-0000X.jpg
+            };
+            $imgs = array_filter($imgs, $removeThumbs);
+
             $addPath = function(&$val, $key, $path) {
                 $val = $path . "/" . $val;
             };
@@ -375,7 +413,7 @@ SQL;
             return crearArraySQL($this->db->execute_sql($sql));
     }
 
-    public function setPromocion($nombre, $imagen, $descripcion, $fechaFin, $empresaId, $usuarioId) {
+    public function setPromocion($nombre, $imagen = NULL, $descripcion, $fechaFin, $empresaId, $usuarioId) {
             $sql = <<<SQL
 INSERT INTO `promocion` (`nombre`, `imagen`, `descripcion`, `fecha_fin`, `empresa_id_fk`) VALUES
 ('{$nombre}', '{$imagen}', '{$descripcion}', '{$fechaFin}', '{$empresaId}')
@@ -407,6 +445,32 @@ UPDATE entidad SET estatus = 0 WHERE entidad_id_fk = {$promocionId} AND tipo = '
 SQL;
             $this->db->execute_sql($sql);
     }
+
+    public function uploadImgPromocion($file, $empresaId, $name) {
+        global $_Storage_Images, $_Storage_Images_Prefix, $_Promocion_Imagen_Width, $_Promocion_Imagen_Height;
+
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/promociones/';
+
+        try{
+            if(empty($file)){
+                throw new Exception("El servidor no recibió el archivo.");
+            }
+            $file = new upload($file, 'es_Es');
+            if($this->uploadImg($file, $name, $path, $_Promocion_Imagen_Width, $_Promocion_Imagen_Height, FALSE)){
+                // Creando thumbs
+                $this->uploadImg($file, $name . "_256x256", $path, 256, 256, FALSE);
+                $this->uploadImg($file, $name . "_48x48", $path, 48, 48, FALSE);
+                $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
+                $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
+            }else{
+                throw new Exception("Error al intentar guardar la imagen en el servidor.");
+            }
+        }  catch (Exception $e){
+            throw $e;
+        }
+        return TRUE;
+    }
+
 
 }
 

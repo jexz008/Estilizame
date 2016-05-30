@@ -15,7 +15,9 @@
     <!--<script type='text/javascript' src='js/jquery-1.5.1.min.js'></script> -->
     <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <!-- BOOTSTRAP -->
     <!-- Latest compiled and minified CSS -->

@@ -178,7 +178,7 @@ function modales() {
             case 'btnFormPerfilUpdateCategoria':
                 var getCategorias =  function(){
                         var categoriaId = $("#hdnPerfilCategoriaId").val();
-                        $.get('index.php?module=getCategorias&format=raw', {'categoriaId':categoriaId}, function(data){
+                        $.get('index.php?module=getCategorias&format=raw', {'categoriaId':categoriaId, 'prefijoSelectName':'perfil'}, function(data){
                             $('#formPerfilUpdate').html(data);
                         });
                 };
@@ -213,7 +213,7 @@ function modales() {
                             var htmlMun = '<div id="div_perfil_municipio"></div>';
                             $('#formPerfilUpdate').html(html + data.html + htmlMun );
                             changeEstado('perfil', true);
-                        }, 'json');                        
+                        }, 'json');
                 };
                 getEstados();
                 title = 'Cambiar estado';
@@ -221,8 +221,9 @@ function modales() {
                 break;
             case 'btnFormPerfilUpdateMunicipio':
                 var getMunicipios =  function(){
-                        var estadoId = $("#hdnPerfilEstado").val();
-                        $.get('index.php?module=pais_estados&action=getMunicipios&format=raw', {'estado':estadoId}, function(data){
+                        var estado = $("#hdnPerfilEstado").val();
+                        var municipio = $("#hdnPerfilMunicipio").val();
+                        $.get('index.php?module=pais_estados&action=getMunicipios&format=raw', {'estado':estado, 'municipio':municipio}, function(data){
                             $('#formPerfilUpdate').html(data.html);
                         }, 'json');
                 };
@@ -255,27 +256,23 @@ function modales() {
             case 'btnFormPerfilUpdateFPerfil':
                 title = 'Cambiar foto de perfil';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilFoto").val() + '"> \n\
+                            <input type="hidden" name="perfil_foto_perfil_actual" id="perfil_foto_perfil_actual" value="' + $("#hdnPerfilFoto").val() + '" > \n\
+                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilFotoSrc").val() + '"> \n\
                             <input type="file" class="form-control" name="perfil_foto_perfil" accept="image/jpg" required="required"> \n\
                         </div></div> \n\  ';
                 break;
             case 'btnFormPerfilUpdateFCabecera':
                 title = 'Cambiar foto de Cabecera';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilCabecera").val() + '"> \n\
+                            <input type="hidden" name="perfil_foto_cabecera_actual" id="perfil_foto_cabecera_actual" value="' + $("#hdnPerfilCabecera").val() + '" > \n\
+                            <img class="img-responsive img-rounded center-block" src="' + $("#hdnPerfilCabeceraSrc").val() + '"> \n\
                             <input type="file" class="form-control" name="perfil_foto_cabecera" accept="image/jpg" required="required"> \n\
                         </div></div> \n\ ';
                 break;
             case 'btnFormPerfilUpdateGaleria':
                 title = 'Cambiar fotos de Galeria';
-                html = ' \n\
-                          <form class="form-horizontal" action="#" id="formPerfilUpdateGaleria" method="post">\n\
-                          </form>\n\
-                        ';
-                footer = '\
-                    <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
-                    <button class="btn btn-success" type="submit" id="btnPerfilUpdateGaleria" data-loading-text="Loading...">Guardar</button>\
-                    ';
+                html =  $("#perfilGaleria").html()+ ' \n <input type="file" class="form-control" name="perfil_foto_galeria" accept="image/jpg" required="required"> \n\ ';
+                large = true;
                 break;
                 
            case 'btnFormPerfilUpdateEmail':
@@ -328,9 +325,34 @@ function modales() {
                           <input type="text" class="form-control" name="perfil_instagram" id="perfil_instagram" value="' + $("#hdnPerfilInstagram").val() + '" placeholder="Introduce la URL de Instagram"> \n\
                         </div></div> \n\ ';
                 break;
+         case 'btnFormPromociones':
+                var getCategorias =  function(){
+                        var categoriaId = $("#hdnPerfilCategoriaId").val();
+                        $.get('index.php?module=getCategorias&format=raw', {'categoriaId':categoriaId, 'prefijoSelectName':'promocion'}, function(data){
+                            $('#divPromocionCategoria').html(data);
+                        });
+                };
+                getCategorias();             
+                title = 'Registrar Promoción';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="promocion_nombre" id="promocion_nombre" placeholder="Nombre promoción"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12" id="divPromocionCategoria"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <input type="file" class="form-control" name="promocion_imagen" accept="image/jpg" required="required" placeholder="Imagen"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <textarea class="form-control" name="promocion_descripcion" required="required" placeholder="Descripción"></textarea> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <input type="date" class="form-control" name="promocion_fecha_fin" id="promocion_fecha_fin" placeholder="Finaliza en"> \n\
+                        </div></div> \n\
+                        ';
+                break;
         }
-        
-        var htmlForm  = '<form class="form-horizontal" action="#" id="formPerfilUpdate" method="post">' + html + '</form>';
+
+        var htmlForm  = '<form class="form-horizontal" action="#" id="formPerfilUpdate" method="post" enctype="multipart/form-data">' + html + '</form>';
         footer = '\
                     <button data-dismiss="modal" class="btn btn-danger" type="button">Salir</button>\
                     <button class="btn btn-success" type="submit" id="btnPerfilUpdate" data-loading-text="Loading...">Guardar</button>\
@@ -348,10 +370,13 @@ function modales() {
         }
         // Eventos
         switch (id) {
-            case 'btnFormPerfilUpdateFPerfil':
-            case 'btnFormPerfilUpdateFCabecera':
+            case 'btnFormPromociones':
+                $(function() { $( "#promocion_fecha_fin" ).datepicker(); });
+                $("#btnPerfilUpdate").on("click", formPromocion);
+            break;
             case 'btnFormPerfilUpdateGaleria':
-                break;
+                $("#formPerfilUpdate .ico-del-img").show();
+            //    break;
             default:
                 $("#btnPerfilUpdate").on("click", formUpdatePerfil);
             break;
@@ -363,8 +388,34 @@ function modales() {
 
 }
 
-/// Update Perfil
-function formUpdatePerfil(){
+
+function deleteImg(imagen, id){
+
+    if (confirm("¿Seguro que quieres eliminar esta foto? \n Una vez eliminada no podrá recuperarse.")) {
+        var empresaId = $("#hdnPerfilId").val();
+        var id = 'galeria_' + empresaId + '_' + id;
+        $.ajax({
+            url: 'index.php?module=registro_actualizar&format=raw',
+            type: 'POST',
+            data: {'borra_foto_galeria':imagen, 'empresaId':empresaId},
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    $('#' + id).remove();
+                    alert(data.message);
+                } else {
+                    alert("ERROR: " + data.message);
+                    $("#btnPerfilUpdate").button('reset');
+                    $("#formPerfilUpdate").off();
+                }
+            }
+        });
+    }
+}
+
+/// Promocion
+function formPromocion(){
       $("#formPerfilUpdate").on("submit", function(event){
         event.stopPropagation();
         event.preventDefault();
@@ -372,15 +423,15 @@ function formUpdatePerfil(){
         var formData = new FormData(this);
 
         $.ajax({
-            url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
-            //urUpdateRegistro: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
+            //url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
+            url: 'index.php?module=registro_promocion&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val() + '&perfil_nombre_actual='+$("#hdnPerfilNombre").val(),
             type: 'POST',
-            data: $(this).serialize(),
+            //data: $(this).serialize(),
             dataType: 'JSON',
-            /*data: formData,
+            data: formData,
             cache: false,
             contentType: false,
-            processData: false, */
+            processData: false,
             success: function (data) {
                 console.log(data);
                 if (data.success) {
@@ -428,7 +479,7 @@ function formContactanos() {
                 }
             }
         });
-        //return false;         
+        //return false;
     });
     $("#formContactanos").submit();
 }
@@ -478,10 +529,10 @@ function changeEstado(selectName, load) {
     var selectName = (selectName == "") ? "registro" : selectName;
     var load = (load) ? true : false;
     $("#" + selectName + "_estado").on("change", function () {
-        
+
         $("#" + selectName + "_estado_nombre").val($("#" + selectName + "_estado option:selected").text());
         var estado = $("#" + selectName + "_estado").val();
-        
+
         if(load){
             $('#div_' + selectName + '_municipio').html('<i class="fa fa-spinner fa-spin"></i>');
             $.ajax({

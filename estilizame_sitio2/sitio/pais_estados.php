@@ -14,12 +14,12 @@ try {
             $return['success'] = TRUE;
         } else {
             throw new Exception("Error al intentar obtener estados.");
-        }        
+        }
     }elseif($action == 'getMunicipios'){
         if(empty($estado)){
-            throw new Exception("No se recibió el parametro estado.");            
+            throw new Exception("No se recibió el parametro estado.");
         }
-        if ($selectMunicipios = PaisEstados::selectMunicipios($estado, $municipio, 'perfil_estado')) {
+        if ($selectMunicipios = PaisEstados::selectMunicipios($estado, $municipio, 'perfil_municipio')) {
             $return['html'] = $selectMunicipios;
             $return['message'] = "Consuta de municipios correcta";
             $return['success'] = TRUE;

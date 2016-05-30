@@ -158,3 +158,15 @@ footer{
 #tip7-title b { display: block; margin-right: 80px; }
 
 #tip7-title span { float: right; }
+
+.ico-del-img{
+    background: #fff none repeat scroll 0 0;
+    border-radius: 1px;
+    box-shadow: 0 0 1px #a6a6a6;
+    cursor: pointer;
+    display: none;
+    padding: 5px;
+    position: absolute;
+    right: 22px;
+    top: 107px;
+}

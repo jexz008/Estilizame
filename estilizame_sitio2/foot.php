@@ -21,7 +21,7 @@
 <!-- End Footer -->
 
 <!-- -------------------------------------- Modales ---------------------------------------- -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <!--<form class="form-horizontal" action="#" id="form_modal" method="post">-->
         <div class="modal-content">
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalPerfilUpdate" tabindex="-1" role="dialog" aria-labelledby="modalPerfilUpdateLabel">
+<div class="modal" id="modalPerfilUpdate" tabindex="-1" role="dialog" aria-labelledby="modalPerfilUpdateLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
