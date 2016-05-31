@@ -144,9 +144,6 @@ HTML;
             }
             ?>
 
-
-
-
                 </div>
             </div>
 
@@ -167,7 +164,7 @@ HTML;
                     <?php } ?>
                 </div>
             </div>
-            
+
 
             <!-- Video Youtube -->
             <div class="panel panel-default">

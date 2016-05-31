@@ -274,14 +274,14 @@ function modales() {
                 html =  $("#perfilGaleria").html()+ ' \n <input type="file" class="form-control" name="perfil_foto_galeria" accept="image/jpg" required="required"> \n\ ';
                 large = true;
                 break;
-                
-           case 'btnFormPerfilUpdateEmail':
+
+            case 'btnFormPerfilUpdateEmail':
                 title = 'Cambiar email';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="email" name="perfil_email" id="perfil_email" value="' + $("#hdnPerfilEmail").val() + '" class="form-control" placeholder="Email" required /> \n\
                         </div></div> \n\ ';
                 break;
-           case 'btnFormPerfilUpdatePass':
+            case 'btnFormPerfilUpdatePass':
                 title = 'Cambiar contraseña';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="password" name="perfil_contrasena3" id="perfil_contrasena3" class="form-control" placeholder="Contraseña actual" required /> \n\
@@ -289,64 +289,114 @@ function modales() {
                           <input type="password" name="perfil_contrasena2" id="perfil_contrasena2" class="form-control" placeholder="Repetir Contraseña" required /> \n\
                         </div></div> \n\ ';
                 break;
-           case 'btnFormPerfilUpdateUbicacion':
+            case 'btnFormPerfilUpdateUbicacion':
                 title = 'Cambiar ubicacion';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <textarea class="form-control" name="perfil_ubicacion" id="perfil_ubicacion" value="' + $("#hdnPerfilUbicacion").val() + '" placeholder="Introduce el enlance de Google Maps"></textarea> \n\
                         </div></div> \n\ ';
                 break;
-          case 'btnFormPerfilUpdateVideo':
+            case 'btnFormPerfilUpdateVideo':
                 title = 'Cambiar Video';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="perfil_video" id="perfil_video" value="' + $("#hdnPerfilVideo").val() + '" placeholder="Introduce el ID de tu video de Youtube"> \n\
                         </div></div> \n\ ';
                 break;
-          case 'btnFormPerfilUpdateFacebook':
+            case 'btnFormPerfilUpdateFacebook':
                 title = 'Cambiar Facebook';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="perfil_facebook" id="perfil_facebook" value="' + $("#hdnPerfilFacebook").val() + '" placeholder="Introduce la URL de Facebook">  \n\
                         </div></div> \n\ ';
                 break;
-          case 'btnFormPerfilUpdateTwitter':
+            case 'btnFormPerfilUpdateTwitter':
                 title = 'Cambiar Twitter';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="perfil_twitter" id="perfil_twitter" value="' + $("#hdnPerfilTwitter").val() + '" placeholder="Introduce la URL de Twitter"> \n\
                         </div></div> \n\ ';
                 break;
-         case 'btnFormPerfilUpdateGoogle':
+            case 'btnFormPerfilUpdateGoogle':
                 title = 'Cambiar Google';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="perfil_google" id="perfil_google" value="' + $("#hdnPerfilGoogle").val() + '" placeholder="Introduce la URL de Google Plus"> \n\
                         </div></div> \n\ ';
                 break;
-         case 'btnFormPerfilUpdateInstagram':
+            case 'btnFormPerfilUpdateInstagram':
                 title = 'Cambiar Instagram';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="perfil_instagram" id="perfil_instagram" value="' + $("#hdnPerfilInstagram").val() + '" placeholder="Introduce la URL de Instagram"> \n\
                         </div></div> \n\ ';
                 break;
-         case 'btnFormPromociones':
+            case 'btnFormPromociones':
                 var getCategorias =  function(){
                         var categoriaId = $("#hdnPerfilCategoriaId").val();
                         $.get('index.php?module=getCategorias&format=raw', {'categoriaId':categoriaId, 'prefijoSelectName':'promocion'}, function(data){
                             $('#divPromocionCategoria').html(data);
                         });
                 };
-                getCategorias();             
+                getCategorias();
                 title = 'Registrar Promoción';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
-                          <input type="text" class="form-control" name="promocion_nombre" id="promocion_nombre" placeholder="Nombre promoción"> \n\
+                          <input type="text" class="form-control" name="promocion_nombre" id="promocion_nombre" placeholder="Nombre promoción" required="required"> \n\
                         </div></div> \n\
                         <div class="form-group"><div class="col-sm-12" id="divPromocionCategoria"> \n\
                         </div></div> \n\
                         <div class="form-group"><div class="col-sm-12"> \n\
-                            <input type="file" class="form-control" name="promocion_imagen" accept="image/jpg" required="required" placeholder="Imagen"> \n\
+                            <input type="file" class="form-control" name="promocion_imagen" id="promocion_imagen" accept="image/jpg" required="required" placeholder="Imagen"> \n\
                         </div></div> \n\
                         <div class="form-group"><div class="col-sm-12"> \n\
-                            <textarea class="form-control" name="promocion_descripcion" required="required" placeholder="Descripción"></textarea> \n\
+                            <textarea class="form-control" name="promocion_descripcion" id="promocion_descripcion" required="required" placeholder="Descripción"></textarea> \n\
                         </div></div> \n\
                         <div class="form-group"><div class="col-sm-12"> \n\
                             <input type="date" class="form-control" name="promocion_fecha_fin" id="promocion_fecha_fin" placeholder="Finaliza en"> \n\
+                        </div></div> \n\
+                        ';
+                break;
+            case 'btnFormEventos':
+                var getEstados =  function(){
+                        var estadoId = $("#hdnPerfilEstado").val();
+                        $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
+                            var html = '<input type="hidden" name="evento_estado_nombre" id="evento_estado_nombre" > \n\
+                                        <input type="hidden" name="evento_municipio_nombre" id="evento_municipio_nombre" >';
+                            $('#eventoSelectEstado').html(html + data.html );
+                            changeEstado('evento', true);
+                        }, 'json');
+                };
+                var getTiposEvento =  function(){
+                        $.get('index.php?module=eventos_tipos&action=getSelectTiposEventos&format=raw', function(data){
+                            $('#eventoSelectTipoEvento').html( data.html );
+                        }, 'json');
+                };
+                getEstados();
+                getTiposEvento();
+                title = 'Registrar Evento';
+                html = '<div class="form-group"><div class="col-sm-12"> \n\
+                          <input type="text" class="form-control" name="evento_nombre" id="evento_nombre" placeholder="Nombre evento"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <textarea class="form-control" name="evento_descripcion" id="evento_descripcion" required="required" placeholder="Descripción"></textarea> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-6"> \n\
+                            <input type="date" class="form-control" name="evento_fecha_ini" id="evento_fecha_ini" placeholder="Fecha de inicio"> \n\
+                        </div><div class="col-sm-6">\n\
+                            <input type="time" class="form-control" name="evento_hora_ini" id="evento_hora_ini" placeholder="Hora de inicio"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-6"> \n\
+                            <input type="date" class="form-control" name="evento_fecha_fin" id="evento_fecha_fin" placeholder="Fecha de termino"> \n\
+                        </div><div class="col-sm-6"> \n\
+                            <input type="date" class="form-control" name="evento_hora_fin" id="evento_hora_fin" placeholder="Hora de termino"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12" id="eventoSelectTipoEvento"> \n\
+                            <i class="fa fa-spinner fa-spin"></i> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12" id="eventoSelectEstado"> \n\
+                            <i class="fa fa-spinner fa-spin"></i> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12" id="div_evento_municipio"> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <textarea class="form-control" name="evento_direccion" id="evento_direccion" required="required" placeholder="Dirección"></textarea> \n\
+                        </div></div> \n\
+                        <div class="form-group"><div class="col-sm-12"> \n\
+                            <input type="file" class="form-control" name="evento_imagen" id="evento_imagen" accept="image/jpg" > \n\
                         </div></div> \n\
                         ';
                 break;
@@ -373,6 +423,9 @@ function modales() {
             case 'btnFormPromociones':
                 $(function() { $( "#promocion_fecha_fin" ).datepicker(); });
                 $("#btnPerfilUpdate").on("click", formPromocion);
+            break;
+            case 'btnFormEventos':
+                $("#btnPerfilUpdate").on("click", formEvento);
             break;
             case 'btnFormPerfilUpdateGaleria':
                 $("#formPerfilUpdate .ico-del-img").show();
@@ -414,6 +467,44 @@ function deleteImg(imagen, id){
     }
 }
 
+/// Evento
+function formEvento(){
+      $("#formPerfilUpdate").on("submit", function(event){
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnPerfilUpdate").button('loading');//.hide();
+        var formData = new FormData(this);
+
+        $.ajax({
+            //url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val(),
+            url: 'index.php?module=registro_evento&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val() + '&perfil_nombre_actual='+$("#hdnPerfilNombre").val(),
+            type: 'POST',
+            //data: $(this).serialize(),
+            dataType: 'JSON',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    alert(data.message);
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $("modalPerfilUpdate .modal-body").empty();
+                    $("modalPerfilUpdate .modal-title").empty();
+                    $("modalPerfilUpdate .modal-footer").empty();
+                    $('#modalPerfilUpdate').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    $("#btnPerfilUpdate").button('reset');//show();
+                    $("#formPerfilUpdate").off();
+                }
+            }
+        });
+    });
+    $("#formPerfilUpdate").submit();
+}
+
 /// Promocion
 function formPromocion(){
       $("#formPerfilUpdate").on("submit", function(event){
@@ -451,6 +542,7 @@ function formPromocion(){
     });
     $("#formPerfilUpdate").submit();
 }
+
 // Fin Update Perfil
 function formContactanos() {
       $("#formContactanos").on("submit", function(event){

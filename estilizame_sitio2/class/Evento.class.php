@@ -29,7 +29,7 @@ SQL;
             return crearArraySQL($this->db->execute_sql($sql));
     }
 
-    public function setEvento($nombre, $descripcion, $fechaInicio, $horaInicio, $fechaFin, $horaFin, $estado, $municipio, $direccion, $imagen, $tipoEventoId, $empresaId, $usuarioId) {
+    public function setEvento($nombre, $descripcion, $fechaInicio, $horaInicio, $fechaFin, $horaFin, $estado, $municipio, $direccion, $imagen = NULL, $tipoEventoId, $empresaId, $usuarioId) {
             $sql = <<<SQL
 INSERT INTO `evento` (`nombre`, `descripcion`, `fecha_inicio`, `hora_inicio`, `fecha_fin`, `hora_fin`, `estado`, `municipio`, `direccion`, `imagen`, `tipo_evento_id_fk`, `empresa_id_fk`) VALUES
 ('{$nombre}', '{$descripcion}', '{$fechaInicio}', '{$horaInicio}', '{$fechaFin}', '{$horaFin}', '{$estado}', '{$municipio}', '{$direccion}', '{$imagen}', '{$tipoEventoId}', '{$empresaId}')

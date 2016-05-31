@@ -22,9 +22,11 @@ try {
             throw new Exception ("Error al intentar guardar la imagen en el servidor.");
         }
     }else{
-        throw new Exception ("Error al intentar registrar la promoción.");        
+        throw new Exception ("Error al intentar registrar la promoción.");
     }
 } catch (Exception $e) {
     $return['message'] = 'Excepción capturada: ' . $e->getMessage() . "\n";
 }
 echo json_encode($return);
+
+?>

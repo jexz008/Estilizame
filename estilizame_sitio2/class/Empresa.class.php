@@ -471,6 +471,30 @@ SQL;
         return TRUE;
     }
 
+    public function uploadImgEvento($file, $empresaId, $name) {
+        global $_Storage_Images, $_Storage_Images_Prefix, $_Promocion_Imagen_Width, $_Promocion_Imagen_Height;
+
+        $path = $_Storage_Images . $_Storage_Images_Prefix . $empresaId . '/eventos/';
+
+        try{
+            if(empty($file)){
+                throw new Exception("El servidor no recibió el archivo.");
+            }
+            $file = new upload($file, 'es_Es');
+            if($this->uploadImg($file, $name, $path, $_Promocion_Imagen_Width, $_Promocion_Imagen_Height, FALSE)){
+                // Creando thumbs
+                $this->uploadImg($file, $name . "_256x256", $path, 256, 256, FALSE);
+                $this->uploadImg($file, $name . "_48x48", $path, 48, 48, FALSE);
+                $this->uploadImg($file, $name . "_32x32", $path, 32, 32, FALSE);
+                $this->uploadImg($file, $name . "_16x16", $path, 16, 16);
+            }else{
+                throw new Exception("Error al intentar guardar la imagen en el servidor.");
+            }
+        }  catch (Exception $e){
+            throw $e;
+        }
+        return TRUE;
+    }
 
 }
 
