@@ -207,7 +207,7 @@ function modales() {
             case 'btnFormPerfilUpdateEstado':
                 var getEstados =  function(){
                         var estadoId = $("#hdnPerfilEstado").val();
-                        $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
+                        $.get('index.php?module=pais_estados&action=getEstados&format=raw&selectNameEstado=perfil_estado', {'estado':estadoId}, function(data){
                             var html = '<input type="hidden" name="perfil_estado_nombre" id="perfil_estado_nombre" > \n\
                                         <input type="hidden" name="perfil_municipio_nombre" id="perfil_municipio_nombre" >';
                             var htmlMun = '<div id="div_perfil_municipio"></div>';
@@ -223,7 +223,7 @@ function modales() {
                 var getMunicipios =  function(){
                         var estado = $("#hdnPerfilEstado").val();
                         var municipio = $("#hdnPerfilMunicipio").val();
-                        $.get('index.php?module=pais_estados&action=getMunicipios&format=raw', {'estado':estado, 'municipio':municipio}, function(data){
+                        $.get('index.php?module=pais_estados&action=getMunicipios&format=raw&selectNameMunicipio=perfil_municipio', {'estado':estado, 'municipio':municipio}, function(data){
                             $('#formPerfilUpdate').html(data.html);
                         }, 'json');
                 };
@@ -352,8 +352,7 @@ function modales() {
                 break;
             case 'btnFormEventos':
                 var getEstados =  function(){
-                        var estadoId = $("#hdnPerfilEstado").val();
-                        $.get('index.php?module=pais_estados&action=getEstados&format=raw', {'estado':estadoId}, function(data){
+                        $.get('index.php?module=pais_estados&action=getEstados&format=raw&selectNameEstado=evento_estado', function(data){
                             var html = '<input type="hidden" name="evento_estado_nombre" id="evento_estado_nombre" > \n\
                                         <input type="hidden" name="evento_municipio_nombre" id="evento_municipio_nombre" >';
                             $('#eventoSelectEstado').html(html + data.html );
@@ -361,12 +360,13 @@ function modales() {
                         }, 'json');
                 };
                 var getTiposEvento =  function(){
-                        $.get('index.php?module=eventos_tipos&action=getSelectTiposEventos&format=raw', function(data){
-                            $('#eventoSelectTipoEvento').html( data.html );
-                        }, 'json');
+                        $.get('index.php?module=getTipoEvento&action=getSelectTiposEventos&format=raw', function(data){
+                            $('#eventoSelectTipoEvento').html( data );
+                        });
                 };
                 getEstados();
                 getTiposEvento();
+
                 title = 'Registrar Evento';
                 html = '<div class="form-group"><div class="col-sm-12"> \n\
                           <input type="text" class="form-control" name="evento_nombre" id="evento_nombre" placeholder="Nombre evento"> \n\
@@ -425,6 +425,8 @@ function modales() {
                 $("#btnPerfilUpdate").on("click", formPromocion);
             break;
             case 'btnFormEventos':
+                $(function() { $( "#evento_fecha_ini" ).datepicker(); });
+                $(function() { $( "#evento_fecha_fin" ).datepicker(); });
                 $("#btnPerfilUpdate").on("click", formEvento);
             break;
             case 'btnFormPerfilUpdateGaleria':

@@ -20,7 +20,7 @@ SQL;
         return $data = DB::execute_sql($sql);
     }
 
-    public static function selectEstados($name, $current = "") {
+    public static function selectEstados($name = 'registro_estado', $current = "") {
         $data = crearArraySQL(self::getEstados());
         $html = '';
         if ($data) {

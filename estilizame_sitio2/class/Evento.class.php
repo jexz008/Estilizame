@@ -29,9 +29,17 @@ SQL;
             return crearArraySQL($this->db->execute_sql($sql));
     }
 
+public function getTiposEvento() {
+            $sql = <<<SQL
+SELECT EVT.* FROM evento_tipo AS EVT
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = EVT.id AND ENT.estatus = 1 AND ENT.tipo='tipoevento'
+SQL;
+            return $this->db->execute_sql($sql);
+    }
+
     public function setEvento($nombre, $descripcion, $fechaInicio, $horaInicio, $fechaFin, $horaFin, $estado, $municipio, $direccion, $imagen = NULL, $tipoEventoId, $empresaId, $usuarioId) {
             $sql = <<<SQL
-INSERT INTO `evento` (`nombre`, `descripcion`, `fecha_inicio`, `hora_inicio`, `fecha_fin`, `hora_fin`, `estado`, `municipio`, `direccion`, `imagen`, `tipo_evento_id_fk`, `empresa_id_fk`) VALUES
+INSERT INTO `evento` (`nombre`, `descripcion`, `fecha_inicio`, `hora_inicio`, `fecha_fin`, `hora_fin`, `estado`, `municipio`, `direccion`, `imagen`, `evento_tipo_id_fk`, `empresa_id_fk`) VALUES
 ('{$nombre}', '{$descripcion}', '{$fechaInicio}', '{$horaInicio}', '{$fechaFin}', '{$horaFin}', '{$estado}', '{$municipio}', '{$direccion}', '{$imagen}', '{$tipoEventoId}', '{$empresaId}')
 SQL;
             $this->db->execute_sql($sql);
@@ -60,5 +68,22 @@ SQL;
 UPDATE entidad SET estatus = 0 WHERE entidad_id_fk = {$eventoId} AND tipo = 'evento'
 SQL;
             $this->db->execute_sql($sql);
+    }
+
+    public function selectEventos($current = NULL, $name = 'evento') {
+        $data = crearArraySQL($this->getTiposEvento());
+        $html = '';
+        if ($data) {
+            $html .= '<select name="'.$name.'_tipo_evento" id="'.$name.'_tipo_event" class="form-control">';
+            $html .= '<option value="">-Selecciona Evento-</option>';
+            foreach ($data as $key => $value) {
+                $selected = ($value['id'] == $current) ? ' selected="selected" ' : '';
+                $html .= <<<HTML
+			<option value="{$value['id']}" {$selected} >{$value['nombre']}</option>
+HTML;
+            }
+            $html .= '</select>';
+        }
+        return $html;
     }
 }
