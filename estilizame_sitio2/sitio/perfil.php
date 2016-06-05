@@ -3,8 +3,11 @@ session_start();
 /* if (!isset($_SESSION['xc_usuario_id']) or $_SESSION['xc_usuario_tipo']!="S"){
   header ("Location: ../index.php");
   } */
-$empresaId  = $_SESSION[$_app->prefijo . '_usuario_empresa_id'];
-if($_Pruebas) { $empresaId = $_REQUEST['perfil']?:$empresaId; } //Pruebas
+#$empresaId  = $_SESSION[$_app->prefijo . '_usuario_empresa_id'];
+#if($_Pruebas) { $empresaId = $_REQUEST['perfil']?:$empresaId; } //Pruebas
+$empresaId  = ($_SESSION[$_app->prefijo . '_usuario_empresa_id']) ? : $_REQUEST['perfil'];
+#$empresaId  = $_REQUEST['perfil'];
+
 $Empresa    = new Empresa();
 $Perfil     = $Empresa->getPerfil($empresaId);
 $pathImgs   = $_Storage_Images . $_Storage_Images_Prefix . $empresaId;
@@ -59,10 +62,12 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
             </div>
         </div>
         <div class="col-md-7">
+            <?php if( $sesion_id ){ ?>
             <button data-target="#Modal_Premium" data-toggle="modal" class="btn btn-primary btn-lg btn-block" type="button">
                 ADQUIERE TU MEMBRESIA PREMIUM
             </button>
             <br>
+            <?php } ?>
             <!-- Galería -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -217,6 +222,7 @@ HTML;
         </div>
     </div>
 
+    <?php if( $sesion_id ){ ?>
     <div class="row">
         <div class="col-md-4">
             <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalPerfilUpdate" id="btnFormPromociones">
@@ -234,4 +240,5 @@ HTML;
             </button>
         </div>
     </div>
+    <?php } ?>
 </div>

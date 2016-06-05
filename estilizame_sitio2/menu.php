@@ -53,7 +53,7 @@ HTML;
                     <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSignIn"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li>
                     <li><a href="#" data-target="#myModal" data-toggle="modal" id="btnFormSignUp"><i class="fa fa-user-plus"></i> Registrate</a></li>
                     <?php }else{ ?>
-                    <li><a href="index.php?module=perfil&perfil=<?=$_SESSION[$_app->prefijo.'_usuario_empresa_id']?>"><i class="glyphicon glyphicon-user"></i> <?= $_SESSION[$_app->prefijo.'_usuario_nombre'] ?></a></li>
+                    <li><a href="index.php?module=perfil&perfil=<?=$_SESSION[$_app->prefijo.'_usuario_empresa_id']?>"><i class="glyphicon glyphicon-user"></i> <?= $_SESSION[$_app->prefijo.'_usuario_empresa'] ?></a></li>
                     <li><a href="index.php?close_session=true" id="btnFormSignOut"><i class="fa fa-sign-out"></i> Cerrar Sesión</a></li>
                     <?php } ?>
                 </ul>

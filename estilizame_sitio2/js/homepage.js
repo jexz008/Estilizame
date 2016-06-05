@@ -1,7 +1,8 @@
 $(document).ajaxStart(function () {
     //html = '<div id="ajax-loader" style="position:fixed; z-index:10000000; top:1px; left:1px; "><div style="margin:auto; text-align:center;  "><img src="img/ajax-loader.gif" alt="LOADING" /></div></div>';
-    var html = '<div id="ajax-loader" style="position:fixed; z-index:999999999999999; top:1px; left:1px; "><div style="margin:auto; text-align:center;  "><i class="fa fa-spinner fa-5x fa-spin fa-fw" aria-hidden="true"></i><span class="sr-only">Cargando...</span></div></div>';
-    $("html").append(html);
+    var html = '<div id="ajax-loader" style="position:fixed; z-index:999999999999999; top:1px; left:1px; text-shadow:0 0 10px #08088A, 0 0 14px #81bef7; color:white "><div style="margin:auto; text-align:center;  "><i class="fa fa-spinner fa-5x fa-spin fa-fw" aria-hidden="true"></i><span class="sr-only">Cargando...</span></div></div>';
+    //$("html").append(html);
+    $("body").append(html);
 });
 $(document).ajaxStop(function () {
     $("#ajax-loader").remove();
@@ -544,8 +545,43 @@ function formPromocion(){
     });
     $("#formPerfilUpdate").submit();
 }
+//  Update Perfil
+function formUpdatePerfil(){
+      $("#formPerfilUpdate").on("submit", function(event){
+        event.stopPropagation();
+        event.preventDefault();
+        $("#btnPerfilUpdate").button('loading');//.hide();
+        var formData = new FormData(this);
 
-// Fin Update Perfil
+        $.ajax({
+            url: 'index.php?module=registro_actualizar&format=raw&empresaId=' + $("#hdnPerfilId").val() + '&categoriaId='+$("#hdnPerfilCategoriaId").val()+ '&perfil_nombre_actual='+$("#hdnPerfilNombre").val(),
+            type: 'POST',
+            //data: $(this).serialize(),
+            dataType: 'JSON',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    alert(data.message);
+                    //$("#row_"+id).removeClass("info").removeClass("danger").addClass("success");
+                    $("modalPerfilUpdate .modal-body").empty();
+                    $("modalPerfilUpdate .modal-title").empty();
+                    $("modalPerfilUpdate .modal-footer").empty();
+                    $('#modalPerfilUpdate').modal('hide');
+                } else {
+                    alert("ERROR: " + data.message);
+                    $("#btnPerfilUpdate").button('reset');//show();
+                    $("#formPerfilUpdate").off();
+                }
+            }
+        });
+    });
+    $("#formPerfilUpdate").submit();
+}
+
 function formContactanos() {
       $("#formContactanos").on("submit", function(event){
         event.stopPropagation();
@@ -630,7 +666,7 @@ function changeEstado(selectName, load) {
         if(load){
             $('#div_' + selectName + '_municipio').html('<i class="fa fa-spinner fa-spin"></i>');
             $.ajax({
-                url: 'index.php?module=pais_estados&action=getMunicipios&format=raw',
+                url: 'index.php?module=pais_estados&action=getMunicipios&format=raw&selectNameMunicipio=' + selectName + '_municipio',
                 type: 'POST',
                 data: {'estado': estado},
                 dataType: 'JSON',

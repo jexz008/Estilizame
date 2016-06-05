@@ -83,15 +83,31 @@ SQL;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////	
+////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function updateFieldEmpresa($empresaId, $campo, $valor) {
+
+        $sqlUser = <<<SQL
+UPDATE usuario AS U
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = U.id AND ENT.estatus = 1 AND ENT.tipo='usuario'
+SET U.{$campo} = '{$valor}'
+WHERE U.empresa_id_fk = {$empresaId}
+SQL;
         $sql = <<<SQL
-UPDATE empresa AS E 
-INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa' 
+UPDATE empresa AS E
+INNER JOIN entidad ENT ON ENT.entidad_id_fk = E.id AND ENT.estatus = 1 AND ENT.tipo='empresa'
 SET E.{$campo} = '{$valor}'
 WHERE E.id = {$empresaId}
 SQL;
-        $this->db->execute_sql($sql);
+
+        if($campo != 'contrasena'){
+            $this->db->execute_sql($sql);
+            if($campo == 'email'){
+                $this->db->execute_sql($sqlUser);
+            }
+        }
+        if ($campo == 'contrasena') {
+            $this->db->execute_sql($sqlUser);
+        }
 
     }
 
