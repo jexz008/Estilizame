@@ -12,21 +12,21 @@ try {
     $categoriaId = $_REQUEST['categoriaId'];
 
     $attrsPerfil = array(
-        array('post' => 'perfil_empresa', 'field' => 'nombre'),
-        array('post' => 'perfil_categoria', 'field' => 'categoria_id_fk'),
-        array('post' => 'perfil_descripcion', 'field' => 'descripcion'),
+        array('post' => 'perfil_empresa',           'field' => 'nombre',            'hdnField' => 'hdnPerfilNombre',        'content' => 'cntPerfilNombre'),
+        array('post' => 'perfil_categoria',         'field' => 'categoria_id_fk',   'hdnField' => 'hdnPerfilCategoriaId',   'content' => 'cntPerfilCategoriaId'),
+        array('post' => 'perfil_descripcion',       'field' => 'descripcion',       'hdnField' => 'hdnPerfilDescripcion',   'content' => 'cntPerfilDescripcion'),
 //        array('post' => 'perfil_estado_nombre', 'field' => 'estado'),
-        array('post' => 'perfil_municipio_nombre', 'field' => 'municipio'),
-        array('post' => 'perfil_direccion', 'field' => 'direccion'),
-        array('post' => 'perfil_telefono', 'field' => 'telefono'),
-        array('post' => 'perfil_email', 'field' => 'email'),
+        array('post' => 'perfil_municipio_nombre',  'field' => 'municipio',         'hdnField' => 'hdnPerfilMunicipio',     'content' => 'cntPerfilMunicipio'),
+        array('post' => 'perfil_direccion',         'field' => 'direccion',         'hdnField' => 'hdnPerfilDireccion',     'content' => 'cntPerfilDireccion'),
+        array('post' => 'perfil_telefono',          'field' => 'telefono',          'hdnField' => 'hdnPerfilTelefono1',     'content' => 'cntPerfilTelefono1'),
+        array('post' => 'perfil_email',             'field' => 'email',             'hdnField' => 'hdnPerfilEmail',         'content' => 'cntPerfilEmail'),
 //        array('post' => 'perfil_contrasena', 'field' => 'contrasena'),
-        array('post' => 'perfil_ubicacion', 'field' => 'ubicacion_html'),
-        array('post' => 'perfil_video', 'field' => 'video'),
-        array('post' => 'perfil_facebook', 'field' => 'facebook'),
-        array('post' => 'perfil_twitter', 'field' => 'twitter'),
-        array('post' => 'perfil_google', 'field' => 'googleplus'),
-        array('post' => 'perfil_instagram', 'field' => 'instagram'),
+        array('post' => 'perfil_ubicacion',         'field' => 'ubicacion_html',    'hdnField' => 'hdnPerfilUbicacion',     'content' => 'cntPerfilUbicacion'),
+        array('post' => 'perfil_video',             'field' => 'video',             'hdnField' => 'hdnPerfilVideo',         'content' => 'cntPerfilVideo'),
+        array('post' => 'perfil_facebook',          'field' => 'facebook',          'hdnField' => 'hdnPerfilFacebook',      'content' => 'cntPerfilFacebook'),
+        array('post' => 'perfil_twitter',           'field' => 'twitter',           'hdnField' => 'hdnPerfilTwitter',       'content' => 'cntPerfilTwitter'),
+        array('post' => 'perfil_google',            'field' => 'googleplus',        'hdnField' => 'hdnPerfilGoogle',        'content' => 'cntPerfilGoogle'),
+        array('post' => 'perfil_instagram',         'field' => 'instagram',         'hdnField' => 'hdnPerfilInstagram',     'content' => 'cntPerfilInstagram'),
     );
 
     if (isset($_POST['perfil_especialidad'])) {
@@ -103,9 +103,11 @@ try {
     } else {
         $issetField = FALSE;
         foreach ($attrsPerfil as $key => $value) {
-            $fieldPostName = $value['post'];
+            $fieldPostName  = $value['post'];
             $fieldPostValue = $_POST[$fieldPostName];
-            $fieldDBName = $value['field'];
+            $fieldDBName    = $value['field'];
+            $hdnField       = $value['hdnField'];
+            $content        = $value['content'];
 
             if (isset($_POST[$fieldPostName])) {
 
@@ -125,10 +127,12 @@ try {
         }
     }
 
-    $return['field'] = $fieldPostName;
-    $return['value'] = $fieldPostValue;
-    $return['message'] = "Tu información ha sido actualizada correctamente!";
-    $return['success'] = TRUE;
+    $return['content']  = $content;
+    $return['hdnField'] = $hdnField;
+    $return['field']    = $fieldPostName;
+    $return['value']    = $fieldPostValue;
+    $return['message']  = "Tu información ha sido actualizada correctamente!";
+    $return['success']  = TRUE;
 } catch (Exception $e) {
     $return['message'] = 'Excepción capturada: ' . $e->getMessage() . "\n";
 }

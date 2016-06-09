@@ -458,7 +458,8 @@ function deleteImg(imagen, id){
             success: function (data) {
                 console.log(data);
                 if (data.success) {
-                    $('#' + id).remove();
+                    //$('#' + id).remove();
+                    $('div[id^=' + id + ']').remove();
                     alert(data.message);
                 } else {
                     alert("ERROR: " + data.message);
@@ -571,6 +572,10 @@ function formUpdatePerfil(){
                     $("modalPerfilUpdate .modal-title").empty();
                     $("modalPerfilUpdate .modal-footer").empty();
                     $('#modalPerfilUpdate').modal('hide');
+                    
+                    // Actualizando
+                    $('.' + data.content).text(data.value);
+                    $('#' + data.hdnField).val(data.value)
                 } else {
                     alert("ERROR: " + data.message);
                     $("#btnPerfilUpdate").button('reset');//show();

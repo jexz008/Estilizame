@@ -44,7 +44,7 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
     <div class="row">
         <div class="col-md-12 grid-section" id="grid-section">
             <div class="page-header">
-                <h1><?=$Perfil->nombre?> <small><?=$Perfil->categoria?></small></h1>
+                <h1 class="cntPerfilNombre"><?=$Perfil->nombre?> <small class="cntPerfilCategoriaNombre"><?=$Perfil->categoria?></small></h1>
             </div>
             <img style="width: 100%; height: 250px" class="img-responsive" src="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>">
         </div>
@@ -109,9 +109,9 @@ HTML;
 
                     <dl>
                         <!--<dt>Nombre</dt>-->
-                        <dd><h2><?=$Perfil->nombre?></h2></dd>
+                        <dd><h2 class="cntPerfilNombre"><?=$Perfil->nombre?></h2></dd>
                         <dt>Categoria</dt>
-                        <dd><?=$Perfil->categoria?></dd>
+                        <dd class="cntPerfilCategoriaNombre"><?=$Perfil->categoria?></dd>
                         <br>
                         <dt>Especialidades</dt>
                         <dd>
@@ -123,17 +123,23 @@ HTML;
                         </dd>
                         <br>
                         <dt>Descripción</dt>
-                        <dd><p class="text-justify"><?=$Perfil->descripcion?></p></dd>
+                        <dd><p class="text-justify cntPerfilDescripcion"><?=$Perfil->descripcion?></p></dd>
                     </dl>
 
             <address>
-                <strong><?= $Perfil->municipio ?>, <?= $Perfil->estado ?></strong><br>
-                <?= $Perfil->direccion ?><br>
-                <abbr title="Teléfonos">Tels:</abbr> <?= $Perfil->telefono ?><br>
-                <a href="mailto:#"><?=$Perfil->email?></a>
+                <strong><span class="cntPerfilMunicipio"><?= $Perfil->municipio ?></span>, <span class="cntPerfilEstado"><?= $Perfil->estado ?></span></strong><br>
+                <div class="cntPerfilDireccion"><?= $Perfil->direccion ?></div>
+                <abbr title="Teléfonos">Tels:</abbr> <span class="cntPerfilTelefono1"><?= $Perfil->telefono ?></span><br>
+                <a href="mailto:#" class="cntPerfilEmail"><?=$Perfil->email?></a>
             </address>
 
             <!-- Redes Sociales -->
+            <?php
+            $visibFacebook  = (empty($Perfil->facebook)) ? 'style="visibility: hidden"' : '';
+            $visibTwitter   = (empty($Perfil->twitter)) ? 'style="visibility: hidden"' : '';
+            $visibGoogle    = (empty($Perfil->googleplus)) ? 'style="visibility: hidden"' : '';
+            $visibInstagram = (empty($Perfil->instagram)) ? 'style="visibility: hidden"' : '';
+            ?>
             <?php
             if(!empty($Perfil->facebook)){
                 echo '<a href="'.$Perfil->facebook.'" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
@@ -215,7 +221,7 @@ HTML;
                                 <td><?= $p->descripcion ?></td>
                                 <td><?= date('d/m/y', strtotime($p->fecha_fin)) ?></td>
                             </tr>
-                        <?php } else: echo '<td colspan="3">Sin Promociones</td>';
+                        <?php } else: echo '<td colspan="4">Sin Promociones</td>';
                     endif; ?>
                 </tbody>
             </table>
