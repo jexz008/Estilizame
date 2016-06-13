@@ -1,5 +1,5 @@
 <?php
-$sitio = new sitio();
+$sitio = new Sitio();
 $sliders = $sitio->createSliders();
 ?>
 

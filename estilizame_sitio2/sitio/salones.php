@@ -1,5 +1,5 @@
 <?php
-$sitio = new sitio();
+$sitio = new Sitio();
 $categoriaId = 1; // Salones
 ?>
 
