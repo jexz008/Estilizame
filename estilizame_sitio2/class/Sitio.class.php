@@ -12,7 +12,7 @@ class Sitio {
     public function getBanners($celda = 1, $fila = 1, $jerarquia = "") {
         if (empty($jerarquia)) {
             $sql = <<<SQL
-SELECT B.imagen_url, B.nombre, B.empresa_id_fk FROM banner AS B
+SELECT B.imagen_url, B.nombre AS banner_nombre, B.empresa_id_fk FROM banner AS B
 INNER JOIN entidad EN ON EN.entidad_id_fk = B.id AND EN.estatus = 1 AND EN.tipo='banner'
 WHERE 
 B.celda = {$celda}
@@ -21,7 +21,7 @@ AND B.empresa_id_fk <= 0
 SQL;
         } else {
             $sql = <<<SQL
-SELECT E.id, E.nombre, B.imagen_url, B.nombre, B.empresa_id_fk FROM banner AS B
+SELECT E.id, E.nombre, B.imagen_url, B.nombre AS banner_nombre, B.empresa_id_fk, J.nombre as jerarquia_nombre FROM banner AS B
 INNER JOIN empresa E ON B.empresa_id_fk = E.id 
 INNER JOIN jerarquia J ON E.jerarquia_id_fk = J.id 
 INNER JOIN entidad EN ON EN.entidad_id_fk = B.id AND EN.estatus = 1 AND EN.tipo='banner'
@@ -51,7 +51,7 @@ SQL;
         $html = '';
         foreach ($banners as $key => $value) {
             $html .= <<<HTML
-            <img src="{$value['imagen_url']}" alt="{$value['nombre']}">
+            <img src="{$value['imagen_url']}" alt="{$value['banner_nombre']}">
 HTML;
         }
         $bannersArray[] = $html;
@@ -60,7 +60,7 @@ HTML;
         $html = '';
         foreach ($banners as $key => $value) {
             $html .= <<<HTML
-            <img src="{$value['imagen_url']}" alt="{$value['nombre']}" >
+            <img src="{$value['imagen_url']}" alt="{$value['banner_nombre']}" >
 HTML;
         }
         $bannersArray[] = $html;
@@ -134,10 +134,14 @@ SQL;
         $html = '';
         foreach ($data as $key => $value) {
             $active = ($i++ == 0) ? "active" : "";
-            $src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path . $value['empresa_id_fk'] . $carpeta . "/" . $value['imagen_url'];
+            //$src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path . $value['empresa_id_fk'] . $carpeta . "/" . $value['imagen_url'];
+            //$src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path . $value['empresa_id_fk'] . $carpeta . "/cabecera-" . elimina_acentos(str_replace(" ", "", $value['nombre'])) . ".jpg";
+            $src = ($value['empresa_id_fk'] == 0) ? $value['imagen_url'] : $path . $value['empresa_id_fk'] . "/perfil-" . elimina_acentos(str_replace(" ", "", $value['nombre'])) . "_256x256.jpg";
+            $al = ($value['jerarquia_nombre'] == 'Premium') ? '<a href="index.php?module=perfil&perfil=' . $value['empresa_id_fk'] . '" >': '';
+            $ar = empty($al) ? '' : '</a>';
             $html .= <<<HTML
             <div class="item {$active}">
-                <img src="{$src}" alt="{$value['nombre']}">
+                {$al}<img src="{$src}" alt="{$value['nombre']}">{$ar}
                 <div class="carousel-caption">
                 &nbsp;
                 </div>

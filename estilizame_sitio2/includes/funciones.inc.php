@@ -356,63 +356,13 @@ function NumeroSemanasTieneUnAno($ano){
         return 52;
 }
 
-function elimina_acentos($text)
-    {
-        $text = htmlentities($text, ENT_QUOTES, 'UTF-8');
-        $text = strtolower($text);
-        $patron = array (
-            // Espacios, puntos y comas por guion
-            //'/[\., ]+/' => ' ',
- 
-            // Vocales
-            '/\+/' => '',
-            '/&agrave;/' => 'a',
-            '/&egrave;/' => 'e',
-            '/&igrave;/' => 'i',
-            '/&ograve;/' => 'o',
-            '/&ugrave;/' => 'u',
- 
-            '/&aacute;/' => 'a',
-            '/&eacute;/' => 'e',
-            '/&iacute;/' => 'i',
-            '/&oacute;/' => 'o',
-            '/&uacute;/' => 'u',
- 
-            '/&acirc;/' => 'a',
-            '/&ecirc;/' => 'e',
-            '/&icirc;/' => 'i',
-            '/&ocirc;/' => 'o',
-            '/&ucirc;/' => 'u',
- 
-            '/&atilde;/' => 'a',
-            '/&etilde;/' => 'e',
-            '/&itilde;/' => 'i',
-            '/&otilde;/' => 'o',
-            '/&utilde;/' => 'u',
- 
-            '/&auml;/' => 'a',
-            '/&euml;/' => 'e',
-            '/&iuml;/' => 'i',
-            '/&ouml;/' => 'o',
-            '/&uuml;/' => 'u',
- 
-            '/&auml;/' => 'a',
-            '/&euml;/' => 'e',
-            '/&iuml;/' => 'i',
-            '/&ouml;/' => 'o',
-            '/&uuml;/' => 'u',
- 
-            // Otras letras y caracteres especiales
-            '/&aring;/' => 'a',
-            '/&ntilde;/' => 'n',
- 
-            // Agregar aqui mas caracteres si es necesario
- 
-        );
- 
-        $text = preg_replace(array_keys($patron),array_values($patron),$text);
-        return $text;
-    }
+function elimina_acentos($incoming_string){
+        $tofind = "ÀÁÂÄÅàáâäÒÓÔÖòóôöÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ";
+        $replac = "AAAAAaaaaOOOOooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn";
+        return utf8_encode(strtr(utf8_decode($incoming_string),
+                                utf8_decode($tofind),
+                                $replac));
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////// FUNCIONES  ///////////////////////////////////////////////////////////////////////////////////////////////

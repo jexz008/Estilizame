@@ -498,6 +498,7 @@ function formEvento(){
                     $("modalPerfilUpdate .modal-title").empty();
                     $("modalPerfilUpdate .modal-footer").empty();
                     $('#modalPerfilUpdate').modal('hide');
+                    location.reload();
                 } else {
                     alert("ERROR: " + data.message);
                     $("#btnPerfilUpdate").button('reset');//show();
@@ -536,6 +537,7 @@ function formPromocion(){
                     $("modalPerfilUpdate .modal-title").empty();
                     $("modalPerfilUpdate .modal-footer").empty();
                     $('#modalPerfilUpdate').modal('hide');
+                    location.reload();
                 } else {
                     alert("ERROR: " + data.message);
                     $("#btnPerfilUpdate").button('reset');//show();
@@ -572,10 +574,13 @@ function formUpdatePerfil(){
                     $("modalPerfilUpdate .modal-title").empty();
                     $("modalPerfilUpdate .modal-footer").empty();
                     $('#modalPerfilUpdate').modal('hide');
-                    
-                    // Actualizando
-                    $('.' + data.content).text(data.value);
-                    $('#' + data.hdnField).val(data.value)
+                    location.reload();
+                    /*// Actualizando
+                    $('.' + data.content + ':not(a)').text(data.value);
+                    $('#' + data.hdnField).val(data.value);
+                    $('a .' + data.content).attr('href',data.value);
+                    if(data.value != ""){ $('.' + data.content).css('visibility',''); alert();}else{ $('.' + data.content).css('visibility','hidden'); }
+                    */
                 } else {
                     alert("ERROR: " + data.message);
                     $("#btnPerfilUpdate").button('reset');//show();

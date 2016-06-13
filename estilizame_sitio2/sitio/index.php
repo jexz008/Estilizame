@@ -42,7 +42,7 @@ if ($format == "raw") {
         ?>
 
         <body>
-            <div class="blur-background"></div>
+            <!--<div class="blur-background"></div>-->
             <?php
             include "social.php";
 

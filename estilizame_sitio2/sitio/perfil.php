@@ -31,10 +31,10 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
 <input type="hidden" name="hdnPerfilTwitter" id="hdnPerfilTwitter" value="<?=$Perfil->twitter?>" />
 <input type="hidden" name="hdnPerfilGoogle" id="hdnPerfilGoogle" value="<?=$Perfil->googleplus?>" />
 <input type="hidden" name="hdnPerfilInstagram" id="hdnPerfilInstagram" value="<?=$Perfil->instagram?>" />
-<input type="hidden" name="hdnPerfilFoto" id="hdnPerfilFoto" value="<?=$Perfil->foto_perfil?>" >
-<input type="hidden" name="hdnPerfilFotoSrc" id="hdnPerfilFotoSrc" value="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>" >
-<input type="hidden" name="hdnPerfilCabecera" id="hdnPerfilCabecera" value="<?=$Perfil->foto_cabecera?>" >
-<input type="hidden" name="hdnPerfilCabeceraSrc" id="hdnPerfilCabeceraSrc" value="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>" >
+<input type="hidden" name="hdnPerfilFoto" id="hdnPerfilFoto" value="<?=elimina_acentos($Perfil->foto_perfil)?>" >
+<input type="hidden" name="hdnPerfilFotoSrc" id="hdnPerfilFotoSrc" value="<?=$pathImgs?>/<?=elimina_acentos($Perfil->foto_perfil)?>" >
+<input type="hidden" name="hdnPerfilCabecera" id="hdnPerfilCabecera" value="<?=elimina_acentos($Perfil->foto_cabecera)?>" >
+<input type="hidden" name="hdnPerfilCabeceraSrc" id="hdnPerfilCabeceraSrc" value="<?=$pathImgs?>/banners/<?=elimina_acentos($Perfil->foto_cabecera)?>" >
 <textarea name="hdnPerfilUbicacion" id="hdnPerfilUbicacion" style="display: none" ><?=$Perfil->ubicacion_html?></textarea>
 <textarea name="hdnPerfilDescripcion" id="hdnPerfilDescripcion" style="display: none" ><?=$Perfil->descripcion?></textarea>
 
@@ -46,7 +46,7 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
             <div class="page-header">
                 <h1 class="cntPerfilNombre"><?=$Perfil->nombre?> <small class="cntPerfilCategoriaNombre"><?=$Perfil->categoria?></small></h1>
             </div>
-            <img style="width: 100%; height: 250px" class="img-responsive" src="<?=$pathImgs?>/banners/<?=$Perfil->foto_cabecera?>">
+            <img style="width: 100%; height: 250px" class="img-responsive" src="<?=$pathImgs?>/banners/<?=elimina_acentos($Perfil->foto_cabecera)?>">
         </div>
     </div>
 
@@ -57,7 +57,7 @@ list($tel1, $tel2, $tel3) = explode(",", $Perfil->telefono);
                     <h3 class="panel-title">Foto de perfil</h3>
                 </div>
                 <div class="panel-body">
-                    <img class="img-responsive img-rounded center-block" src="<?=$pathImgs?>/<?=$Perfil->foto_perfil?>">
+                    <img class="img-responsive img-rounded center-block" src="<?=$pathImgs?>/<?=elimina_acentos($Perfil->foto_perfil)?>">
                 </div>
             </div>
         </div>
@@ -140,7 +140,11 @@ HTML;
             $visibGoogle    = (empty($Perfil->googleplus)) ? 'style="visibility: hidden"' : '';
             $visibInstagram = (empty($Perfil->instagram)) ? 'style="visibility: hidden"' : '';
             ?>
-            <?php
+            <a href="<?=$Perfil->facebook?>" target="_blank" class="cntPerfilFacebook" <?=$visibFacebook?> ><i class="fa fa-facebook-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+            <a href="<?=$Perfil->twitter?>" target="_blank" class="cntPerfilTwitter" <?=$visibTwitter?> ><i class="fa fa-twitter-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+            <a href="<?=$Perfil->googleplus?>" target="_blank" class="cntPerfilGoogle" <?=$visibGoogle?> ><i class="fa fa-google-plus fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+            <a href="<?=$Perfil->instagram?>" target="_blank" class="cntPerfilInstagram" <?=$visibInstagram?> ><i class="fa fa-instagram fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+            <?php /*
             if(!empty($Perfil->facebook)){
                 echo '<a href="'.$Perfil->facebook.'" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
             }
@@ -152,7 +156,7 @@ HTML;
             }
             if(!empty($Perfil->instagram)){
                 echo '<a href="'.$Perfil->instagram.'" target="_blank"><i class="fa fa-facebook-instagram fa-2x"></i></a>&nbsp;&nbsp;&nbsp;';
-            }
+            }*/
             ?>
 
                 </div>

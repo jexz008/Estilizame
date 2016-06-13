@@ -148,8 +148,8 @@ SQL;
         $ext = ".jpg";
         $registro_telefono      = implode(",", $registro_telefono);
         $registro_estado        = $registro_estado_nombre;
-        $registro_foto_perfil   = "perfil-" . str_replace(" ", "", $registro_empresa);
-        $registro_foto_cabecera = "cabecera-" . str_replace(" ", "", $registro_empresa);
+        $registro_foto_perfil   = "perfil-" . str_replace(" ", "", elimina_acentos($registro_empresa));
+        $registro_foto_cabecera = "cabecera-" . str_replace(" ", "", elimina_acentos($registro_empresa));
         $registro_foto_galeria  = "galeria-" . str_pad("1", 5, "0", STR_PAD_LEFT); // galeria-00001
 
         $registro_especialidades = $registro_especialidad[$registro_categoria];
