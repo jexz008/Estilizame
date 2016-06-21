@@ -699,7 +699,7 @@ function changeMunicipio(selectName){
     });
 }
 
-function setRegistro() {
+function setRegistro() { 
 
     $("form#formRegistro").on("submit", function (event) {
         event.stopPropagation();
@@ -709,7 +709,7 @@ function setRegistro() {
         //var formData = new FormData(document.getElementById('form_modal'));
         //formData.append("dato", "valor");
         $.ajax({
-            ursetRegistrol: 'index.php?module=registro_registrar&action=registro_registrar&format=raw',
+            url: 'index.php?module=registro_registrar&action=registro_registrar&format=raw',
             type: 'POST',
             data: formData, ///$( this ).serialize(),
             dataType: 'JSON',
@@ -735,7 +735,7 @@ function setRegistro() {
         });
         //return false;         
     });
-    $("#formContactanos").submit();    
+    $("#formRegistro").submit();    
 }
 
 function formLogin() {

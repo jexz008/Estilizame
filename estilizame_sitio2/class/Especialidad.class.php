@@ -5,7 +5,7 @@ class Especialidad {
     public $db;
 
     function __construct() {
-        $this->db = new db();
+        $this->db = new DB();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////	
