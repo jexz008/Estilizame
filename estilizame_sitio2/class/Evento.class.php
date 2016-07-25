@@ -18,14 +18,30 @@ class Evento {
         $this->db = new DB();
     }
 
-    public function getEventos($empresaId) {
+    public function getEventos($empresaId = NULL, $eventoTipoId = NULL, $estado = NULL) {
+        $condicion = array();
             $sql = <<<SQL
-SELECT EV.* FROM evento AS EV
+SELECT EV.*, EVT.nombre AS tipo_evento FROM evento AS EV
 LEFT JOIN evento_tipo AS EVT ON EVT.id = EV.evento_tipo_id_fk
 INNER JOIN entidad ENT ON ENT.entidad_id_fk = EV.id AND ENT.estatus = 1 AND ENT.tipo='evento'
 INNER JOIN empresa AS E ON E.id = EV.empresa_id_fk
-WHERE EV.empresa_id_fk = {$empresaId}
 SQL;
+
+        if ($empresaId) {
+            $condicion[] = " EV.empresa_id_fk = {$empresaId} ";
+        }
+        if ($estado) {
+            $condicion[] = " EV.estado = '{$estado}' ";
+        }
+        if ($eventoTipoId) {
+            $condicion[] = " EV.evento_tipo_id_fk = {$eventoTipoId} ";
+        }
+
+        if (!empty($condicion)) {
+            $condicion = implode("AND", $condicion);
+            $sql .= " WHERE {$condicion} ";
+        }
+
             return crearArraySQL($this->db->execute_sql($sql));
     }
 
@@ -75,7 +91,7 @@ SQL;
         $html = '';
         if ($data) {
             $html .= '<select name="'.$name.'_tipo_evento" id="'.$name.'_tipo_event" class="form-control">';
-            $html .= '<option value="">-Selecciona Evento-</option>';
+            $html .= '<option value="">-Selecciona Tipo Evento-</option>';
             foreach ($data as $key => $value) {
                 $selected = ($value['id'] == $current) ? ' selected="selected" ' : '';
                 $html .= <<<HTML
@@ -86,4 +102,60 @@ HTML;
         }
         return $html;
     }
+
+    public function createGridEventos($eventoTipoId, $estado = NULL) {
+        $eventos = $this->getEventos(NULL, $eventoTipoId, $estado);
+        return $this->gridEventos($eventos);
+    }
+
+    public function gridEventos($eventos) {
+        global $_Modulo, $_Storage_Images, $_Storage_Images_Prefix;
+
+        $count = count($eventos);
+        $html = <<<HTML
+            <h3>Eventos <small>({$count} Resultados)</small> </h3>
+            <table class="table table-hover table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Descripción</th>
+                    <th>Dirección</th>
+                    <th>Inicia</th>
+                    <th>Hora</th>
+                    <th>Termina</th>
+                    <th>Hora</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                <tr/>
+            </thead>
+            <tbody>
+HTML;
+        foreach ($eventos as $key => $e) {
+            $e = (object) $e;
+            $imgName = "evento-" . str_pad($e->id, 10, "0", STR_PAD_LEFT); // promocion-000000000X
+            $src = $_Storage_Images . $_Storage_Images_Prefix . $e->empresa_id_fk . "/eventos/" . $imgName;
+            $src = substr($src, 0, (strlen($src))-(strlen(strrchr($src, '.')))) . '_256x256.jpg';
+
+
+            $html .= <<<HTML
+                <tr>
+                    <td><img width="128" height="128" src="{$src}" alt="{$e->nombre}"></td>
+                    <td>{$e->descripcion}</td>
+                    <td>{$e->direccion}</td>
+                    <td>{$e->fecha_inicio}</td>
+                    <td>{$e->hora_inicio}</td>
+                    <td>{$e->fecha_fin}</td>
+                    <td>{$e->hora_fin}</td>
+                    <td>{$e->tipo_evento}</td>
+                    <td>{$e->estado}</td>
+                </tr>
+HTML;
+        }
+        $html .= <<<HTML
+            </tbody>
+        </table>
+HTML;
+        return $html;
+    }
+
 }

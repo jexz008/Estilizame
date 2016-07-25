@@ -16,6 +16,7 @@ $(document).ready(function () {
     //formContactanos();
     //formLogin();
     filtroEmpresas();
+    filtroEventos();
 
     $("a.grouped_elements").fancybox({
 		/*'transitionIn'	:	'elastic',
@@ -103,6 +104,7 @@ function modales() {
                           <form class="form-horizontal" action="#" id="formLogin" method="post">\n\
                           <div class="form-group"><div class="col-sm-12"><input type="email" name="login_mail" class="form-control" placeholder="Email" required></div></div> \n\
                           <div class="form-group"><div class="col-sm-12"><input type="password" name="login_password" class="form-control" placeholder="Contraseña" required></div></div> \n\
+                    <a href="recuperapass/">Olvide mi contraseña</a>\n\
                           </form>\n\
                         ';
                 footer = '\
@@ -784,6 +786,32 @@ function filtroEmpresas() {
         event.preventDefault();
         $.ajax({
             url: 'index.php?module=getGrid&action=getGrid&format=raw',
+            type: 'POST',
+            data: $(this).serialize(),
+            //dataType:'JSON',
+            success: function (data) {
+                if (data) {
+                    console.log(data);
+                    $('#grid-section').html(data);
+                } else {
+                    alert("ERROR: al intentar obtener los datos");
+                }
+            }
+        });
+        return false;
+    });
+}
+
+function filtroEventos() {
+    $("#filtro_estado").on("change", function () {
+        $("#filtro_estado_nombre").val($("#filtro_estado option:selected").text());
+    });
+
+    $("#form_filtro_grid_eventos").on("submit", function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $.ajax({
+            url: 'index.php?module=getGridEventos&action=getGridEventos&format=raw',
             type: 'POST',
             data: $(this).serialize(),
             //dataType:'JSON',

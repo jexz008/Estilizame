@@ -62,4 +62,48 @@ SQL;
         return $return;
     }
 
+    public static function setTokenForNewPass($idUsuario, $email) {
+        // Se genera una cadena para validar el cambio de contraseña
+        $cadena = $idUsuario . $email . rand(1, 9999999) . date('Y-m-d');
+        $token = sha1($cadena);
+
+        $sql = <<<SQL
+INSERT INTO usuario_token
+    (idusuario, token, creado)
+VALUES
+    ({$idUsuario}, '{$token}', NOW() )
+SQL;
+        DB::execute_sql($sql);
+        if(DB::last_insert()){
+            return $token;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public static function getTokenData($token){
+
+        $sql = "SELECT * FROM usuario_token WHERE token = '$token'";
+        $rs = DB::execute_sql($sql);
+        if (!$rs)
+            return FALSE;
+
+        if(DB::num_rows($rs)){
+            $fila = crearArraySQL($rs);
+            return $fila[0];
+        }
+        return FALSE;
+    }
+
+    public static function deleteToken($idUsuario){
+
+        $sql = "DELETE FROM usuario_token WHERE token WHERE idusuario = '$idUsuario'";
+        $rs = DB::execute_sql($sql);
+        if (!$rs){
+            return FALSE;
+        }else{
+            return TRUE;;
+        }
+    }
+
 }

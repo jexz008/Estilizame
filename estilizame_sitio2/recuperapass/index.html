@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+        <script src="http://code.jquery.com/jquery-3.0.0.min.js" type="text/javascript"></script>  
+  </head>
+  <body>
+      <form id="frmRestablecer" action="validaremail.php" method="post">
+          <div class="login">
+          <h1>Recupera tu cuenta</h1>
+          <h5>Ingresa tu correo electrónico para buscar tu cuenta.</h5>
+          <fieldset>
+            <input id="email" name="email" type="email" placeholder="Email" required />
+          </fieldset>
+          <input type="submit" value="Recuperar" />
+          <div id="mensaje"></div><br>
+          </div>
+        </form>
+  </body>
+  <script>
+    $(document).ready(function(){
+    $("#frmRestablecer").submit(function(event){
+      event.preventDefault();
+      $.ajax({
+      url:'validaremail.php',
+      type:'post',
+      dataType:'json',
+      data:$("#frmRestablecer").serializeArray()
+      }).done(function(respuesta){
+      $("#mensaje").html(respuesta.mensaje);
+      $("#email").val('');
+      });
+    });
+    });
+  </script>
+</html>

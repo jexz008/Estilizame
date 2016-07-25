@@ -21,7 +21,7 @@ class Usuario {
     public function setUsuario($email, $password, $nombre, $empresaId = NULL) {
         $sql = <<<SQL
 INSERT INTO `usuario` (`email`, `contrasena`, `empresa_id_fk`, `nombre`) VALUES
-('{$email}', SHA1({$password}), {$empresaId}, '{$nombre}')
+('{$email}', SHA1({$password}), '{$empresaId}', '{$nombre}')
 SQL;
         $this->db->execute_sql($sql);
         $usuarioId = $this->db->last_insert();
@@ -34,12 +34,12 @@ SQL;
          return $usuarioId;
     }
 
-    public function updateUsuario($usuarioId, $email = NULL, $password = NULL, $nombre = NULL, $empresaId = NULL) {
+    public function updateUsuario($usuarioId, $email = NULL, $password = NULL, $nombre = NULL, $empresa_id_fk = NULL) {
         $args = get_defined_vars();
         $condiciones = array();
 
         if($args):foreach ($args as $var => $val) {
-            if($key != 'usuarioId'){
+            if($var != 'usuarioId'){
                 if(!empty($val)) $condiciones[] = $var . "= '" . $val . "'";
             }
         }endif;
@@ -59,8 +59,8 @@ SQL;
             $condicion = " WHERE " . implode("AND ", $condiciones);
         }
         $sql = <<<SQL
-SELECT U.* FROM usuarios AS U
-INNER JOIN entidad AS ENT ON ENT.entidad_id_fk = U.id AND ENT.estatus = 1 ENT.tipo='usuario'
+SELECT U.* FROM usuario AS U
+INNER JOIN entidad AS ENT ON ENT.entidad_id_fk = U.id AND ENT.estatus = 1 AND ENT.tipo='usuario'
 {$condicion}
 SQL;
         return crearArraySQL($this->db->execute_sql($sql));
@@ -70,5 +70,12 @@ SQL;
         return $this->getUsuarios(NULL, $usuarioId);
     }
 
-
+    public function getUsuarioByEmail($email) {
+        $sql = <<<SQL
+SELECT U.* FROM usuario AS U
+INNER JOIN entidad AS ENT ON ENT.entidad_id_fk = U.id AND ENT.estatus = 1 AND ENT.tipo='usuario'
+WHERE U.email = '{$email}'
+SQL;
+        return crearArraySQL($this->db->execute_sql($sql));
+    }
 }

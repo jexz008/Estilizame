@@ -15,7 +15,7 @@ $sesion_id = (!isset($_SESSION[$_app->prefijo.'_usuario_id'])) ? FALSE : $_SESSI
 
 $sections = array('uploadfw', 'reports', 'mydata', 'mail_contacto', 'registro_form', 'registro_registrar', 'pais_estados', 'academias'
     , 'distribuidores', 'marcas', 'salones', 'getGrid', 'login', 'perfil', 'getEspecialidades', 'registro_actualizar', 'getCategorias', 
-    'registro_promocion', 'getTipoEvento', 'registro_evento');
+    'registro_promocion', 'getTipoEvento', 'registro_evento', 'eventos', 'getGridEventos');
 
 if ($module == "inicio") {
     $include = "main.php";
